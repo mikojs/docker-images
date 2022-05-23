@@ -24,6 +24,7 @@ RUN mkdir ~/.local ~/.local/lib ~/.local/bin && \
   sed -i 's/"$ROOT\/lib\/node"/node/g' ~/.local/lib/code-server/bin/code-server && \
   ln -s ~/.local/lib/code-server/bin/code-server ~/.local/bin/code-server
 
-# work directory
+# run code-server
 ENV PATH="/root/.local/bin:$PATH"
 WORKDIR /root
+ENTRYPOINT ["code-server"]
