@@ -3,5 +3,8 @@
 *.log
 .DS_Store
 
+# configs folder
+configs
+
 # TODO
 README.md
