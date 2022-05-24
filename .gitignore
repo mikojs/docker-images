@@ -3,12 +3,12 @@
 *.log
 .DS_Store
 
-# config folder
-config
-
 # act
 .actrc
 .cache
+
+# config folder
+config
 
 # TODO
 README.md
