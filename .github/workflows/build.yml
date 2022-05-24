@@ -5,21 +5,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: create config folder
+      - name: build images
         run: |
           if [[ ! -d config ]]; then
             mkdir config
-
-            for file in $(ls); do
-              if [[ -f $file/Dockerfile ]]; then
-                mkdir config/$file
-              fi
-            done
           fi
-      - name: build images
-        run: |
+
           for file in $(ls); do
             if [[ -f $file/Dockerfile ]]; then
+              echo "[$file] start"
+              mkdir config/$file
               docker build -t $file -f ./$file/Dockerfile .
+              echo "[$file] end"
             fi
           done

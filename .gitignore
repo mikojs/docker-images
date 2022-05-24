@@ -3,7 +3,7 @@
 *.log
 .DS_Store
 
-# configs folder
+# config folder
 config
 
 # act
