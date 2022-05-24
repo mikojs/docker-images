@@ -6,5 +6,8 @@
 # configs folder
 config
 
+# act
+.actrc
+
 # TODO
 README.md
