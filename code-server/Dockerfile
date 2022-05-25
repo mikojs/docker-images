@@ -6,17 +6,19 @@ RUN apk add \
   github-cli \
   vim \
   zsh \
-  nodejs \
-  npm \
   docker
 
 # npm packages
+RUn apk add \
+  nodejs \
+  npm
 RUN npm install -g commitizen cz-conventional-changelog
 RUN echo '{ "path": "cz-conventional-changelog" }' > ~/.czrc
 
 # code-server
 # FIXME: https://github.com/coder/code-server/issues/5184, use: npm install -g code-server
-RUN apk add gcompat
+RUN apk add \
+  gcompat
 RUN wget https://github.com/cdr/code-server/releases/download/v4.4.0/code-server-4.4.0-linux-amd64.tar.gz && \
   tar x -zf code-server-4.4.0-linux-amd64.tar.gz && \
   rm code-server-4.4.0-linux-amd64.tar.gz
@@ -25,7 +27,13 @@ RUN mkdir ~/.local ~/.local/lib ~/.local/bin && \
   sed -i 's/"$ROOT\/lib\/node"/node/g' ~/.local/lib/code-server/bin/code-server && \
   ln -s ~/.local/lib/code-server/bin/code-server ~/.local/bin/code-server
 
+# code-server script
+RUN apk add \
+  curl \
+  openssl
+COPY ./code-server/code-server.sh /code-server.sh
+
 # run
 ENV PATH="/root/.local/bin:$PATH"
 WORKDIR /root
-ENTRYPOINT ["code-server"]
+ENTRYPOINT ["/code-server.sh"]

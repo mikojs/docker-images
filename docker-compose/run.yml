@@ -9,7 +9,8 @@ services:
       - /var/run/docker.sock
       - work:/root/work
     environment:
-      - PASSWORD=$CODE_SERVER_PASSWORD
+      - SLACK_BOT_TOKEN=$SLACK_BOT_TOKEN
+      - SLACK_BOT_CHANNEL=$SLACK_BOT_CHANNEL
   ngrok:
     image: ngrok/ngrok:alpine
     command: start --all
