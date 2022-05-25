@@ -5,11 +5,6 @@ services:
     build:
       context: .
       dockerfile: ./code-server/Dockerfile
-  ngrok:
-    image: ngrok:latest
-    build:
-      context: .
-      dockerfile: ./ngrok/Dockerfile
   act:
     image: act:latest
     build:
