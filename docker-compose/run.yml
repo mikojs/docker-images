@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  code-server:
+    image: code-server:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - work:/root/work
+      - ../config/code-server:/root/.config/code-server
+    ports:
+      - 8080:8080
+    environment:
+      - PASSWORD=$CODE_SERVER_PASSWORD
+volumes:
+  work:
+    external: true

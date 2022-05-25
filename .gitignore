@@ -6,5 +6,8 @@
 # config folder
 config
 
+# env
+.env
+
 # TODO
 TODO.md
