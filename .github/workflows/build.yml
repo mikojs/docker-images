@@ -8,6 +8,6 @@ jobs:
       - name: build images
         run: |
           docker compose \
-            -f ./docker-compose/build.yml
-            --project-directory .
+            -f ./docker-compose/build.yml \
+            --project-directory . \
             build
