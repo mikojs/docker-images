@@ -1,5 +1,6 @@
 FROM alpine
 
+# install packages
 RUN apk add \
   git \
   github-cli \
@@ -27,7 +28,7 @@ RUN mkdir ~/.local ~/.local/lib ~/.local/bin && \
 # copy config
 COPY ./config/code-server /root/.config/code-server
 
-# run code-server
+# run
 ENV PATH="/root/.local/bin:$PATH"
 WORKDIR /root
 ENTRYPOINT ["code-server"]

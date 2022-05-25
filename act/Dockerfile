@@ -1,5 +1,6 @@
 FROM alpine
 
+# install packages
 RUN apk add \
   git \
   go \
@@ -10,11 +11,11 @@ RUN git clone https://github.com/nektos/act.git
 RUN act/install.sh && \
   rm -rf act
 
-# Remove not used
+# remove not used packages
 RUN apk del \
   git \
   go
 
-# run act
+# run
 WORKDIR /repo
 ENTRYPOINT ["act"]

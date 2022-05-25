@@ -6,4 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: build images
-        run: ./build.sh
+        run: |
+          docker compose \
+            -f ./docker-compose/build.yml
+            --project-directory .
+            build

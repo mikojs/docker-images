@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  act:
+    image: act:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $(pwd):/repo
