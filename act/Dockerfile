@@ -16,5 +16,5 @@ RUN apk del \
   go
 
 # run act
-WORKDIR /root
+WORKDIR /repo
 ENTRYPOINT ["act"]
