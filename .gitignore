@@ -3,10 +3,6 @@
 *.log
 .DS_Store
 
-# act
-.actrc
-.cache
-
 # config folder
 config
 

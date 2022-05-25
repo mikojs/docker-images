@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  code-server:
+    image: code-server:latest
+    build:
+      context: .
+      dockerfile: ./code-server/Dockerfile
+    ports:
+      - 8080:8080
+  ngrok:
+    image: ngrok:latest
+    build:
+      context: .
+      dockerfile: ./ngrok/Dockerfile
+  act:
+    image: act:latest
+    build:
+      context: .
+      dockerfile: ./act/Dockerfile
