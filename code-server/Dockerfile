@@ -7,7 +7,8 @@ RUN apk add \
   github-cli \
   vim \
   zsh \
-  docker
+  docker \
+  docker-compose
 
 # npm packages
 RUn apk add \
