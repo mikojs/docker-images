@@ -24,6 +24,12 @@ RUN yarn global add \
   commitizen \
   cz-conventional-changelog \
   code-server
+
+# zsh
+RUN curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | \
+  sh
+
+# commitizen
 RUN echo '{ "path": "cz-conventional-changelog" }' > ~/.czrc
 
 # code-server
