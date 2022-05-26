@@ -1,38 +1,33 @@
-FROM alpine
+FROM node:lts-alpine
 
 # install packages
 RUN apk add \
-  openssh \
   git \
   github-cli \
   vim \
   zsh \
   docker \
-  docker-compose
+  docker-compose \
+  # other packages
+  curl \
+  openssh \
+  openssl \
+  # code-server packages
+  alpine-sdk \
+  bash \
+  libstdc++ \
+  libc6-compat
+RUN npm config set python python3
 
 # npm packages
-RUn apk add \
-  nodejs \
-  npm
-RUN npm install -g commitizen cz-conventional-changelog
+RUN yarn global add \
+  commitizen \
+  cz-conventional-changelog \
+  code-server
 RUN echo '{ "path": "cz-conventional-changelog" }' > ~/.czrc
 
 # code-server
-# FIXME: https://github.com/coder/code-server/issues/5184, use: npm install -g code-server
-RUN apk add \
-  gcompat
-RUN wget https://github.com/cdr/code-server/releases/download/v4.4.0/code-server-4.4.0-linux-amd64.tar.gz && \
-  tar x -zf code-server-4.4.0-linux-amd64.tar.gz && \
-  rm code-server-4.4.0-linux-amd64.tar.gz
-RUN mkdir ~/.local ~/.local/lib ~/.local/bin && \
-  mv code-server-4.4.0-linux-amd64 ~/.local/lib/code-server && \
-  sed -i 's/"$ROOT\/lib\/node"/node/g' ~/.local/lib/code-server/bin/code-server && \
-  ln -s ~/.local/lib/code-server/bin/code-server ~/.local/bin/code-server
-
-# code-server script
-RUN apk add \
-  curl \
-  openssl
+RUN mkdir -p /root/.local/share/code-server/logs
 COPY ./code-server/code-server.sh /code-server.sh
 
 # run
