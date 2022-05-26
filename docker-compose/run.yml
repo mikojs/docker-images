@@ -8,6 +8,7 @@ services:
       - ../config/code-server:/root/.config/code-server
       - /var/run/docker.sock
       - work:/root/work
+      - ssh:/root/.ssh
     environment:
       - SLACK_BOT_TOKEN=$SLACK_BOT_TOKEN
       - SLACK_BOT_CHANNEL=$SLACK_BOT_CHANNEL
@@ -21,4 +22,6 @@ services:
     network_mode: host
 volumes:
   work:
+    external: true
+  ssh:
     external: true

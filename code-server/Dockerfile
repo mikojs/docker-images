@@ -2,6 +2,7 @@ FROM alpine
 
 # install packages
 RUN apk add \
+  openssh \
   git \
   github-cli \
   vim \
