@@ -34,7 +34,7 @@ RUN echo '{ "path": "cz-conventional-changelog" }' > ~/.czrc
 
 # code-server
 RUN mkdir -p /root/.local/share/code-server/logs
-COPY ./code-server/code-server.sh /code-server.sh
+COPY ./code-server.sh /code-server.sh
 
 # run
 ENV PATH="/root/.local/bin:$PATH"

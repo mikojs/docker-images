@@ -3,10 +3,8 @@ services:
   code-server:
     image: code-server:latest
     build:
-      context: .
-      dockerfile: ./code-server/Dockerfile
+      context: ./code-server
   act:
     image: act:latest
     build:
-      context: .
-      dockerfile: ./act/Dockerfile
+      context: ./act

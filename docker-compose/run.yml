@@ -5,7 +5,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ../config/code-server:/root/.config/code-server
+      - ./config/code-server:/root/.config/code-server
       - /var/run/docker.sock:/var/run/docker.sock
       - work:/root/work
       - ssh:/root/.ssh
@@ -15,7 +15,7 @@ services:
     image: ngrok/ngrok:alpine
     command: start --all
     volumes:
-      - ../config/ngrok:/var/lib/ngrok
+      - ./config/ngrok:/var/lib/ngrok
     env_file:
       - ./.env
     network_mode: host
