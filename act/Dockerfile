@@ -1,20 +1,20 @@
-FROM alpine
+FROM golang:alpine as build
 
 # install packages
 RUN apk add \
-  git \
-  go \
-  docker
+  git
 
 # act
 RUN git clone https://github.com/nektos/act.git
-RUN act/install.sh && \
-  rm -rf act
+RUN act/install.sh
 
-# remove not used packages
-RUN apk del \
-  git \
-  go
+FROM alpine
+
+COPY --from=build /go/bin/act /bin/act
+
+# install packages
+RUN apk add \
+  docker
 
 # run
 WORKDIR /repo
