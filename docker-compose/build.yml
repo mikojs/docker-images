@@ -3,8 +3,8 @@ services:
   code-server:
     image: code-server:latest
     build:
-      context: ./code-server
+      context: ../code-server
   act:
     image: act:latest
     build:
-      context: ./act
+      context: ../act
