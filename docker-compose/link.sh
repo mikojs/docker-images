@@ -9,6 +9,11 @@ if [[ ! -d /storage/config ]]; then
   git clone $CONFIG_URL /storage/config
 fi
 
+if [[ -z $STORAGE_NAME ]]; then
+  echo "could not find storage name"
+  exit 1
+fi
+
 for cache_path in $(cat /storage/config/.$STORAGE_NAME); do
   cache_type=$(echo $cache_path | grep cache | sed 's/:.*//')
   cache_file=$(echo $cache_path | sed 's/.*://' | sed 's/^/\//')
