@@ -2,29 +2,22 @@ version: "3.9"
 services:
   code-server:
     image: code-server:latest
+    entrypoint: /config/sync.sh && /code-server.sh
     ports:
       - 8080:8080
     volumes:
-      - ./config/root:/root
-      - ./config/code-server:/root/.config/code-server
+      - config:/config
       - /var/run/docker.sock:/var/run/docker.sock
-      - work:/root/work
-      - ssh:/root/.ssh
-      - vim:/root/.vim
     env_file:
       - ./.env
   ngrok:
     image: ngrok/ngrok:alpine
-    command: start --all
+    entrypoint: /config/sync.sh && ngrok start --all
+    network_mode: host
     volumes:
-      - ./config/ngrok:/var/lib/ngrok
+      - config:/config
     env_file:
       - ./.env
-    network_mode: host
 volumes:
-  work:
-    external: true
-  ssh:
-    external: true
-  vim:
+  config:
     external: true
