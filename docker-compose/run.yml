@@ -10,13 +10,14 @@ services:
       - work:/root/work
       - /var/run/docker.sock:/var/run/docker.sock
       - ./link.sh:/storage/link.sh
+      - ./TODO.md:/root/work/TODO.md
     env_file:
       - ./.env
     environment:
       - STORAGE_NAME=code-server
   ngrok:
     image: ngrok/ngrok:alpine
-    entrypoint: sh -c "/storage/link.sh && ngrok start --all"
+    entrypoint: sh -c "/storage/link.sh && /entrypoint.sh start --all"
     network_mode: host
     volumes:
       - storage:/storage
