@@ -9,13 +9,7 @@ if [ ! -d /storage/config ]; then
   git clone $CONFIG_URL /storage/config
 fi
 
-files=$(find /storage/config -type f | \
-  grep -v .git/ | \
-  grep -v .gitignore | \
-  grep -v .swp | \
-  sed "s/\/storage\/config//")
-
-for file in $files; do
+for file in $(cat /storage/config/.$STORAGE_NAME); do
   if [ ! -d $(dirname $file) ]; then
     mkdir -p $(dirname $file)
   fi
