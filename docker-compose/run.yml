@@ -7,6 +7,7 @@ services:
       - 8080:8080
     volumes:
       - storage:/storage
+      - work:/root/work
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - ./.env
@@ -24,4 +25,6 @@ services:
       - STORAGE_NAME=ngrok
 volumes:
   storage:
+    external: true
+  work:
     external: true
