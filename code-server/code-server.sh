@@ -9,6 +9,7 @@ result=$(curl \
   https://slack.com/api/chat.postMessage)
 
 if [ ! -z $(echo $result | grep -v "\"ok\":true") ]; then
+  echo "could not send the password to the slack channel"
   exit 1
 fi
 
