@@ -12,6 +12,7 @@ RUN apk add \
   curl \
   openssh \
   openssl \
+  tree \
   # code-server packages
   alpine-sdk \
   bash \

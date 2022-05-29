@@ -2,23 +2,25 @@ version: "3.9"
 services:
   code-server:
     image: code-server:latest
-    entrypoint: /storage/link.sh && /code-server.sh
+    entrypoint: sh -c "/storage/link.sh && /code-server.sh"
     ports:
       - 8080:8080
     volumes:
       - storage:/storage
       - work:/root/work
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./link.sh:/storage/link.sh
     env_file:
       - ./.env
     environment:
       - STORAGE_NAME=code-server
   ngrok:
     image: ngrok/ngrok:alpine
-    entrypoint: /storage/link.sh && ngrok start --all
+    entrypoint: sh -c "/storage/link.sh && ngrok start --all"
     network_mode: host
     volumes:
       - storage:/storage
+      - ./link.sh:/storage/link.sh
     env_file:
       - ./.env
     environment:

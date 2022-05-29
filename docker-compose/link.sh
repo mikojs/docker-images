@@ -35,6 +35,10 @@ for cache_path in $(cat /storage/config/.$STORAGE_NAME); do
   fi
 
   if [[ ! -L $cache_file ]]; then
+    if [[ -f $cache_file ]] || [[ -d $cache_file ]]; then
+      rm -rf $cache_file
+    fi
+
     if [[ -z $cache_type ]]; then
       ln -s "/storage/config$cache_file" $cache_file
     else
