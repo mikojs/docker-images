@@ -1,6 +1,13 @@
 name: build
 on: [push]
 jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - run: ./test/bats/bin/bats ./test
   build-images:
     runs-on: ubuntu-latest
     steps:
