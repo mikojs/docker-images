@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  ngrok:
+    image: ngrok/ngrok:alpine
+    entrypoint: sh -c "/storage/link.sh && /entrypoint.sh start --all"
+    network_mode: host
+    volumes:
+      - storage:/storage
+      - ./link.sh:/storage/link.sh
+    env_file:
+      - ./.env
+    environment:
+      - STORAGE_NAME=ngrok
+volumes:
+  storage:
+    external: true
