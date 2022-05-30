@@ -5,9 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     container: bats/bats
     steps:
+      - run: apk add git
       - uses: actions/checkout@v3
         with:
-          submodules: recursive
+          submodules: true
       - run: bats ./test
   build-images:
     runs-on: ubuntu-latest
