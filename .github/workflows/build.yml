@@ -6,8 +6,7 @@ jobs:
     container: bats/bats
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: recursive
+      - run: git submodule update --init --recursive
       - run: bats ./test
   build-images:
     runs-on: ubuntu-latest
