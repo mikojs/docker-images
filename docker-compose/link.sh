@@ -10,8 +10,7 @@ if [[ ! -d /storage/config ]]; then
 fi
 
 if [[ -z $STORAGE_NAME ]]; then
-  echo "could not find storage name"
-  exit 1
+  exit 0
 fi
 
 for cache_path in $(cat /storage/config/.$STORAGE_NAME); do
