@@ -4,7 +4,7 @@ setup() {
   load 'test_helper/bats-support/load'
   load 'test_helper/bats-assert/load'
   load 'test_helper/common_setup'
-  
+
   load_script docker-compose/link.sh
   mkdir -p /storage/config
   STORAGE_NAME=config
@@ -20,13 +20,6 @@ teardown() {
   run clone_config
   assert_failure
   assert_output "could not get the url of the config repository"
-}
-
-@test "skip to clone config when config folder exists" {
-  run clone_config
-  run ls -a /storage/config
-  assert_output ".
-.."
 }
 
 @test "could link files" {

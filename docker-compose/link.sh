@@ -1,14 +1,12 @@
 #/bin/sh
 
 clone_config() {
-  if [[ ! -d /storage/config ]]; then
-    if [[ -z $CONFIG_URL ]]; then
-      echo "could not get the url of the config repository"
-      exit 1
-    fi
-
-    git clone $CONFIG_URL /storage/config
+  if [[ -z $CONFIG_URL ]]; then
+    echo "could not get the url of the config repository"
+    exit 1
   fi
+
+  git clone $CONFIG_URL /storage/config
 }
 
 link_files() {
@@ -47,7 +45,16 @@ link_files() {
 }
 
 if [[ -z $BATS_TEST_FILENAME ]]; then
-  clone_config
+  if [[ ! -z $INIT_STORAGE ]]; then
+    apk add \
+      git \
+      openssh
+    clone_config
+
+    if [[ -d /root/.ssh ]] && [[ -d /storage/config/root/.ssh ]]; then
+      cp /root/.ssh/* /storage/config/root/.ssh
+    fi
+  fi
 
   if [[ -z $STORAGE_NAME ]]; then
     exit 0

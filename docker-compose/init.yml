@@ -2,13 +2,14 @@ version: "3.9"
 services:
   init:
     image: alpine
-    command: sh -c "apk add git openssh && mkdir -p /storage/cache/root/.ssh && cp /root/.ssh/* /storage/cache/root/.ssh && /storage/link.sh"
+    command: /storage/link.sh
     volumes:
       - storage:/storage
       - ./link.sh:/storage/link.sh
       - ~/.ssh:/root/.ssh
     env_file:
       - ./.env
+      - INIT_STORAGE=true
 volumes:
   storage:
     external: true
