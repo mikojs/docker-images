@@ -2,6 +2,7 @@ name: build
 on: [push]
 jobs:
   testing:
+    runs-on: ubuntu-latest
     container: bats/bats
     steps:
       - uses: actions/checkout@v3
