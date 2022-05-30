@@ -7,6 +7,7 @@ setup() {
   
   load_script docker-compose/link.sh
   mkdir -p /storage/config
+  STORAGE_NAME=config
 }
 
 teardown() {
@@ -22,9 +23,79 @@ teardown() {
 }
 
 @test "skip to clone config when config folder exists" {
-  clone_config
-
+  run clone_config
   run ls -a /storage/config
   assert_output ".
 .."
+}
+
+@test "could link files" {
+  echo "test/a
+test/b/a
+cache-dir:test/c
+cache-file:test/d" >> /storage/config/.config
+  mkdir -p /storage/config/test/b
+  touch /storage/config/test/a
+  touch /storage/config/test/b/c
+
+  run link_files
+  run ls -a -R /test
+  assert_output "/test:
+.
+..
+a
+b
+c
+d
+
+/test/b:
+.
+..
+a"
+
+  run touch /test/c/a
+  assert_success
+
+  run touch /test/d/a
+  assert_failure
+
+  run ls -a -R /storage
+  assert_output "/storage:
+.
+..
+cache
+config
+
+/storage/cache:
+.
+..
+test
+
+/storage/cache/test:
+.
+..
+c
+d
+
+/storage/cache/test/c:
+.
+..
+a
+
+/storage/config:
+.
+..
+.config
+test
+
+/storage/config/test:
+.
+..
+a
+b
+
+/storage/config/test/b:
+.
+..
+c"
 }

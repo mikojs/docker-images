@@ -11,11 +11,7 @@ clone_config() {
   fi
 }
 
-link() {
-  if [[ -z $STORAGE_NAME ]]; then
-    exit 0
-  fi
-
+link_files() {
   for cache_path in $(cat /storage/config/.$STORAGE_NAME); do
     cache_type=$(echo $cache_path | grep cache | sed 's/:.*//')
     cache_file=$(echo $cache_path | sed 's/.*://' | sed 's/^/\//')
@@ -49,3 +45,13 @@ link() {
     fi
   done
 }
+
+if [[ -z $BATS_TEST_FILENAME ]]; then
+  clone_config
+
+  if [[ -z $STORAGE_NAME ]]; then
+    exit 0
+  fi
+
+  line_files
+fi
