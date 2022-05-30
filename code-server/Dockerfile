@@ -3,6 +3,7 @@ FROM node:lts-alpine
 # install packages
 RUN apk add \
   git \
+ 	git-diff-highlight \
   github-cli \
   vim \
   zsh \
