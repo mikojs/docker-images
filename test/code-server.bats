@@ -19,3 +19,25 @@ setup() {
   run generate_password
   assert_output 123456
 }
+
+@test "send to slack" {
+  SLACK_BOT_TOKEN="test"
+  SLACK_BOT_CHANNEL="test"
+  curl() {
+    echo "\"ok\":true"
+  }
+
+  run send_slack_or_echo 123456
+  refute_output "code-server: 123456"
+}
+
+@test "echo password" {
+  SLACK_BOT_TOKEN=""
+  SLACK_BOT_CHANNEL=""
+  curl() {
+    exit 1
+  }
+
+  run send_slack_or_echo 123456
+  assert_output "code-server: 123456"
+}

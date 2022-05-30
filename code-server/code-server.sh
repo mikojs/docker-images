@@ -2,7 +2,7 @@
 
 generate_password() {
   local password
-  
+
   if [[ -z "$PASSWORD" ]]; then
     password=$(openssl rand -base64 45)
   else
@@ -12,13 +12,13 @@ generate_password() {
   echo $password
 }
 
-code_server() {
+send_slack_or_echo() {
   if [[ ! -z "$SLACK_BOT_TOKEN" ]] && [[ ! -z "$SLACK_BOT_CHANNEL" ]]; then
     result=$(curl \
       -X POST \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
-      -d "{\"channel\": \"$SLACK_BOT_CHANNEL\", \"text\": \"$password\" }" \
+      -d "{\"channel\": \"$SLACK_BOT_CHANNEL\", \"text\": \"$1\" }" \
       https://slack.com/api/chat.postMessage)
 
     if [[ ! -z $(echo $result | grep -v "\"ok\":true") ]]; then
@@ -26,8 +26,13 @@ code_server() {
       exit 1
     fi
   else
-    echo "code-server: $password"
+    echo "code-server: $1"
   fi
-
-  PASSWORD=$password code-server
 }
+
+if [[ -z $BATS_TEST_FILENAME ]]; then
+  local password=$(generate_password)
+
+  send_slack_or_echo $password
+  PASSWORD=$password code-server
+fi
