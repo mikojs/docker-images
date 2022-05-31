@@ -1,8 +1,6 @@
 #!/bin/sh
 
 generate_password() {
-  local password
-
   if [[ -z "$PASSWORD" ]]; then
     password=$(openssl rand -base64 45)
   else
@@ -31,8 +29,8 @@ send_slack_or_echo() {
 }
 
 if [[ -z $BATS_TEST_FILENAME ]]; then
-  local password=$(generate_password)
+  password=$(generate_password)
 
   send_slack_or_echo $password
-  PASSWORD=$password code-server
+  PASSWORD=$password code-server $@
 fi
