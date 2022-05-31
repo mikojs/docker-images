@@ -4,7 +4,7 @@ setup() {
   load 'test_helper/bats-support/load'
   load 'test_helper/bats-assert/load'
   load 'test_helper/common_setup'
-  
+
   load_script code-server/code-server.sh
 }
 

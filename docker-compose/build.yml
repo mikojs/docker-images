@@ -1,10 +1,10 @@
 version: "3.9"
 services:
-  code-server:
-    image: code-server:latest
-    build:
-      context: ../code-server
   act:
     image: act:latest
     build:
       context: ../act
+  code-server:
+    image: code-server:latest
+    build:
+      context: ../code-server
