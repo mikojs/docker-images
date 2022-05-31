@@ -15,9 +15,4 @@ jobs:
     needs: testing
     steps:
       - uses: actions/checkout@v3
-      - name: build images
-        run: |
-          cd docker-compose
-          docker compose \
-            -f build.yml \
-            build
+      - run: docker compose build
