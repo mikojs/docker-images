@@ -22,8 +22,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - image: mikojs/act
-            context: ./act
           - image: mikojs/code-server
             context: ./code-server
     steps:
