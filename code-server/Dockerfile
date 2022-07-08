@@ -8,7 +8,10 @@ RUN apk add \
   alpine-sdk \
   bash \
   libstdc++ \
-  libc6-compat
+  libc6-compat \
+  # docker
+  docker \
+  docker-compose
 RUN npm config set python python3
 RUN yarn global add \
   node-pty \
