@@ -31,3 +31,17 @@ run_container() {
     -w $work_dir \
     $@
 }
+
+load_plugins() {
+  local dind_folder=${DIND_FOLDER:=/bin/dind}
+
+  if [[ -f $dind_folder ]]; then
+    for file in $(ls $dind_folder); do
+      source $dind_folder/$file
+    done
+  fi
+}
+
+if [[ -z $BATS_TEST_FILENAME ]]; then
+  load_plugins
+fi
