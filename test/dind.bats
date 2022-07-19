@@ -6,11 +6,6 @@ setup() {
   load 'test_helper/common_setup'
 }
 
-@test "check volume name" {
-  run check_volume_name
-  assert_failure
-}
-
 @test "the current directory is under the product directory" {
   pwd() {
     printf "/project/a/b/c"
