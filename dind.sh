@@ -11,9 +11,7 @@ get_work_dir() {
 if [[ -z $BATS_TEST_FILENAME ]]; then
   docker run \
     -it \
-    -v $VOLUME_NAME:/project \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -e VOLUME_NAME=$VOLUME_NAME \
+    --volumes-from $(cat /etc/hostname) \
     -w $(get_work_dir) \
     $@
 fi
