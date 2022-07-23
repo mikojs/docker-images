@@ -8,7 +8,16 @@
   "license": "MIT",
   "private": true,
   "packageManager": "yarn@3.2.2",
+  "scripts": {
+    "build": "babel src -d lib --verbose --delete-dir-on-start",
+    "dind": "node ./lib/bin/index.js"
+  },
   "dependencies": {
     "clipanion": "^3.2.0-rc.11"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.18.9",
+    "@babel/core": "^7.18.9",
+    "@babel/preset-env": "^7.18.9"
   }
 }
