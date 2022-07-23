@@ -4,22 +4,18 @@ setup() {
   load 'test_helper/bats-support/load'
   load 'test_helper/bats-assert/load'
   load 'test_helper/common_setup'
+
+  DIND_FOLDER=$BATS_TEST_DIRNAME/plugins_folder
+  mkdir $BATS_TEST_DIRNAME/plugins_folder
 }
 
-@test "the current directory is under the product directory" {
-  pwd() {
-    printf "/project/a/b/c"
-  }
-
-  run get_work_dir
-  assert_output "/project/a/b/c"
+teardown() {
+  rm -rf $BATS_TEST_DIRNAME/plugins_folder
 }
 
-@test "the current directory isn't under the product directory" {
-  pwd() {
-    printf "/root/a/b/c"
-  }
+@test "load plugins" {
+  printf "echo test" > $BATS_TEST_DIRNAME/plugins_folder/a.sh
 
-  run get_work_dir
-  assert_output "/project"
+  run load_plugins
+  assert_output "test"
 }

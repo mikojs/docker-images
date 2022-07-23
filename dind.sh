@@ -35,7 +35,7 @@ run_container() {
 load_plugins() {
   local dind_folder=${DIND_FOLDER:=/bin/dind}
 
-  if [[ -f $dind_folder ]]; then
+  if [[ -d $dind_folder ]]; then
     for file in $(ls $dind_folder); do
       source $dind_folder/$file
     done
