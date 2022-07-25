@@ -3,11 +3,14 @@
 import { Cli } from 'clipanion';
 
 import { version } from '../../package.json';
- 
+
+import Run from '../run';
+
 const cli = new Cli({
   binaryLabel: 'dind',
   binaryName: 'node dind',
   binaryVersion: version,
 });
  
+cli.register(Run);
 cli.runExit(process.argv.slice(2));
