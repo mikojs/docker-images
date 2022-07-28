@@ -8,15 +8,30 @@ export default class Rm extends Command {
 
   async execute() {
     const { stdin, stdout, stderr } = this.context;
+    const [type] = this.path;
+    const result = await spawn.sync(
+      'docker',
+      type === 'rm'
+        ? ['ps', '-aqf', 'status=exited']
+        : ['images', '-qf', 'dangling=true'],
+    );
+    const ids = result.stdout
+      .toString()
+      .split('\n')
+      .filter(Boolean);
 
-    console.log(this.paths);
-    /*
-    await spawn.sync('docker', [
-      ...args,
-      ...this.args,
-    ], {
-      stdio: [stdin, stdout, stderr],
-    });
-    */
+    if (ids.length !== 0)
+      await spawn.sync('docker', [
+        type,
+        ...ids,
+      ], {
+        stdio: [stdin, stdout, stderr],
+      });
+    else
+      stdout.write(
+        `Here doesn't have any must-remove ${
+          type === 'rm' ? 'containers' : 'images'
+        }.\n`,
+      );
   }
 }
