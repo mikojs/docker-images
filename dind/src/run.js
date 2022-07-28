@@ -32,6 +32,13 @@ export default class Run extends Command {
   args = Option.Proxy();
 
   async execute() {
+    if (this.args.includes('-h') || this.args.includes('--help')) {
+      const { stdout } = this.context;
+
+      stdout.write(this.cli.usage(Run, { detailed: true }));
+      return;
+    }
+
     const args = [
       'run',
       '-w',

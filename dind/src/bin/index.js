@@ -15,6 +15,5 @@ const cli = new Cli({
  
 cli.register(Run);
 cli.register(Rm);
-cli.register(Builtins.HelpCommand);
 cli.register(Builtins.VersionCommand);
 cli.runExit(process.argv.slice(2));
