@@ -3,6 +3,8 @@ import fs from 'fs';
 import { Command, Option } from 'clipanion';
 import spawn from 'cross-spawn';
 
+import getStdio from './utils/getStdio';
+
 const HOSTNAME_FILE_PATH = '/etc/hostname';
 
 export default class Run extends Command {
@@ -11,7 +13,6 @@ export default class Run extends Command {
   args = Option.Proxy();
 
   async execute() {
-    const { stdin, stdout, stderr } = this.context;
     const args = [
       'run',
       '-it',
@@ -31,8 +32,6 @@ export default class Run extends Command {
     await spawn.sync('docker', [
       ...args,
       ...this.args,
-    ], {
-      stdio: [stdin, stdout, stderr],
-    });
+    ], getStdio(this.context));
   }
 }
