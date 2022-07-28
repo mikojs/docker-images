@@ -11,4 +11,5 @@ node_modules
 lib
 
 # pkg
-bin
+bin/*
+!dind/bin

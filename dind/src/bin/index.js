@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-import { Cli } from 'clipanion';
+import { Cli, Builtins } from 'clipanion';
 
 import { version } from '../../package.json';
 
 import Run from '../run';
+import Rm from '../rm';
 
 const cli = new Cli({
   binaryLabel: 'dind',
@@ -13,4 +14,7 @@ const cli = new Cli({
 });
  
 cli.register(Run);
+cli.register(Rm);
+cli.register(Builtins.HelpCommand);
+cli.register(Builtins.VersionCommand);
 cli.runExit(process.argv.slice(2));
