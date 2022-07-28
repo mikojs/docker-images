@@ -12,8 +12,7 @@
     "dind": "./lib/bin/index.js"
   },
   "scripts": {
-    "build": "babel src -d lib --verbose --delete-dir-on-start",
-    "dind": "node ./lib/bin/index.js"
+    "build": "babel src -d lib --verbose --delete-dir-on-start"
   },
   "dependencies": {
     "clipanion": "^3.2.0-rc.11",
