@@ -8,7 +8,7 @@ import Run from '../run';
 
 const cli = new Cli({
   binaryLabel: 'dind',
-  binaryName: 'node dind',
+  binaryName: 'dind',
   binaryVersion: version,
 });
  
