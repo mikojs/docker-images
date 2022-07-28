@@ -9,3 +9,6 @@ node_modules
 
 # babel
 lib
+
+# pkg
+bin

@@ -8,6 +8,9 @@
   "license": "MIT",
   "private": true,
   "packageManager": "yarn@3.2.2",
+  "bin": {
+    "dind": "./lib/bin/index.js"
+  },
   "scripts": {
     "build": "babel src -d lib --verbose --delete-dir-on-start",
     "dind": "node ./lib/bin/index.js"
@@ -19,6 +22,13 @@
   "devDependencies": {
     "@babel/cli": "^7.18.9",
     "@babel/core": "^7.18.9",
-    "@babel/preset-env": "^7.18.9"
+    "@babel/preset-env": "^7.18.9",
+    "pkg": "^5.8.0"
+  },
+  "pkg": {
+    "targets": [
+      "alpine"
+    ],
+    "outputPath": "bin"
   }
 }
