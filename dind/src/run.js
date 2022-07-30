@@ -32,6 +32,7 @@ export default class Run extends Command {
   args = Option.Proxy();
 
   async execute() {
+    // FIXME: https://github.com/arcanis/clipanion/issues/88
     if (this.args.includes('-h') || this.args.includes('--help')) {
       const { stdout } = this.context;
 
