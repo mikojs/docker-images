@@ -1,7 +1,6 @@
 import fs from 'fs';
 
 import { Command, Option } from 'clipanion';
-import spawn from 'cross-spawn';
 
 import dockerWithWorkdir from './utils/dockerWithWorkdir';
 
