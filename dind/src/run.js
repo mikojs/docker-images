@@ -3,6 +3,8 @@ import fs from 'fs';
 import { Command, Option } from 'clipanion';
 import spawn from 'cross-spawn';
 
+import showHelp from './utils/showHelp';
+import workdir from './utils/workdir';
 import getStdio from './utils/getStdio';
 
 const HOSTNAME_FILE_PATH = '/etc/hostname';
@@ -32,20 +34,13 @@ export default class Run extends Command {
   args = Option.Proxy();
 
   async execute() {
-    // FIXME: https://github.com/arcanis/clipanion/issues/88
-    if (this.args.includes('-h') || this.args.includes('--help')) {
-      const { stdout } = this.context;
-
-      stdout.write(this.cli.usage(Run, { detailed: true }));
+    if (showHelp(Run, this))
       return;
-    }
 
     const args = [
       'run',
       '-w',
-      /^\/project/.test(process.cwd())
-        ? process.cwd()
-        : '/project',
+      workdir,
     ];
 
     if (fs.existsSync(HOSTNAME_FILE_PATH))
