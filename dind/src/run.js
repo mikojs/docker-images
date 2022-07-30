@@ -37,21 +37,19 @@ export default class Run extends Command {
     if (showHelp(Run, this))
       return;
 
-    const args = [
+    const volumes = !fs.existsSync(HOSTNAME_FILE_PATH)
+      ? []
+      : [
+          '--volumes-from',
+          fs.readFileSync(HOSTNAME_FILE_PATH, 'utf-8')
+            .replace(/\n/g, ''),
+        ];
+
+    await spawn.sync('docker', [
       'run',
       '-w',
       workdir,
-    ];
-
-    if (fs.existsSync(HOSTNAME_FILE_PATH))
-      args.push(
-        '--volumes-from',
-        fs.readFileSync(HOSTNAME_FILE_PATH, 'utf-8')
-          .replace(/\n/g, ''),
-      );
-
-    await spawn.sync('docker', [
-      ...args,
+      ...volumes,
       ...this.args,
     ], getStdio(this.context));
   }
