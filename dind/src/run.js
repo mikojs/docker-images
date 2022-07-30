@@ -3,9 +3,7 @@ import fs from 'fs';
 import { Command, Option } from 'clipanion';
 import spawn from 'cross-spawn';
 
-import showHelp from './utils/showHelp';
-import workdir from './utils/workdir';
-import getStdio from './utils/getStdio';
+import dockerWithWorkdir from './utils/dockerWithWorkdir';
 
 const HOSTNAME_FILE_PATH = '/etc/hostname';
 
@@ -33,24 +31,15 @@ export default class Run extends Command {
 
   args = Option.Proxy();
 
-  async execute() {
-    if (showHelp(Run, this))
-      return;
-
-    const volumes = !fs.existsSync(HOSTNAME_FILE_PATH)
+  execute = () => dockerWithWorkdir(
+    Run,
+    this,
+    !fs.existsSync(HOSTNAME_FILE_PATH)
       ? []
       : [
           '--volumes-from',
           fs.readFileSync(HOSTNAME_FILE_PATH, 'utf-8')
             .replace(/\n/g, ''),
-        ];
-
-    await spawn.sync('docker', [
-      'run',
-      '-w',
-      workdir,
-      ...volumes,
-      ...this.args,
-    ], getStdio(this.context));
-  }
+        ],
+  );
 }
