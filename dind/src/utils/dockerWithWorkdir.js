@@ -12,7 +12,6 @@ export default async (
     args,
     context,
   },
-  externalArgs = [],
 ) => {
   // FIXME: https://github.com/arcanis/clipanion/issues/88
   if (args.includes('-h') || args.includes('--help')) {
@@ -28,7 +27,6 @@ export default async (
     /^\/project/.test(process.cwd())
       ? process.cwd()
       : '/project',
-    ...externalArgs,
     ...args,
   ], getStdio(context));
 }

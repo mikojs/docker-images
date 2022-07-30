@@ -31,15 +31,15 @@ export default class Run extends Command {
 
   args = Option.Proxy();
 
-  execute = () => dockerWithWorkdir(
-    Run,
-    this,
-    !fs.existsSync(HOSTNAME_FILE_PATH)
-      ? []
-      : [
-          '--volumes-from',
-          fs.readFileSync(HOSTNAME_FILE_PATH, 'utf-8')
-            .replace(/\n/g, ''),
-        ],
-  );
+  execute = () => {
+    if (fs.existsSync(HOSTNAME_FILE_PATH))
+      this.args = [
+        '--volumes-from',
+        fs.readFileSync(HOSTNAME_FILE_PATH, 'utf-8')
+          .replace(/\n/g, ''),
+        ...this.args,
+      ];
+
+    return dockerWithWorkdir(Run, this);
+  };
 }
