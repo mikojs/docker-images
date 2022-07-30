@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import { Command } from 'clipanion';
 import spawn from 'cross-spawn';
 
