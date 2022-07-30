@@ -6,6 +6,7 @@ import { version } from '../../package.json';
 
 import Run from '../run';
 import Rm from '../rm';
+import Rmi from '../rmi';
 
 const cli = new Cli({
   binaryLabel: 'dind',
@@ -15,6 +16,7 @@ const cli = new Cli({
  
 cli.register(Run);
 cli.register(Rm);
+cli.register(Rmi);
 cli.register(Builtins.HelpCommand);
 cli.register(Builtins.VersionCommand);
 cli.runExit(process.argv.slice(2));
