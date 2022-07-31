@@ -4,10 +4,10 @@ import { Cli, Builtins } from 'clipanion';
 
 import { version } from '../../package.json';
 
-import Run from '../run';
-import Exec from '../exec';
-import Rm from '../rm';
-import Rmi from '../rmi';
+import Run from '../Run';
+import Exec from '../Exec';
+import Rm from '../Rm';
+import Rmi from '../Rmi';
 
 const cli = new Cli({
   binaryLabel: 'dind',
