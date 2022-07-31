@@ -28,6 +28,6 @@
     "targets": [
       "alpine"
     ],
-    "outputPath": "bin"
+    "outputPath": "../bin"
   }
 }
