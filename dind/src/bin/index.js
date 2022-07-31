@@ -5,6 +5,7 @@ import { Cli, Builtins } from 'clipanion';
 import { version } from '../../package.json';
 
 import Run from '../run';
+import Exec from '../exec';
 import Rm from '../rm';
 import Rmi from '../rmi';
 
@@ -15,6 +16,7 @@ const cli = new Cli({
 });
  
 cli.register(Run);
+cli.register(Exec);
 cli.register(Rm);
 cli.register(Rmi);
 cli.register(Builtins.HelpCommand);
