@@ -1,9 +1,8 @@
 import fs from 'fs';
 
 import { Command, Option } from 'clipanion';
-import spawn from 'cross-spawn';
 
-import getStdio from './utils/getStdio';
+import dockerWithWorkdir from './utils/dockerWithWorkdir';
 
 const HOSTNAME_FILE_PATH = '/etc/hostname';
 
@@ -12,7 +11,7 @@ export default class Run extends Command {
 
   static usage = Command.Usage({
     category: 'Docker in docker',
-    description: 'Rnu \`docker run\` in the docker container',
+    description: 'Rnu `docker run` in the docker container',
     details: `
       This command is based on \`docker in docker\` concept, but this one adds some helpful features.
       You could learn more \`docker in docker\` information from the website: \`https://hub.docker.com/_/docker\`
@@ -31,33 +30,15 @@ export default class Run extends Command {
 
   args = Option.Proxy();
 
-  async execute() {
-    // FIXME: https://github.com/arcanis/clipanion/issues/88
-    if (this.args.includes('-h') || this.args.includes('--help')) {
-      const { stdout } = this.context;
-
-      stdout.write(this.cli.usage(Run, { detailed: true }));
-      return;
-    }
-
-    const args = [
-      'run',
-      '-w',
-      /^\/project/.test(process.cwd())
-        ? process.cwd()
-        : '/project',
-    ];
-
+  execute = () => {
     if (fs.existsSync(HOSTNAME_FILE_PATH))
-      args.push(
+      this.args = [
         '--volumes-from',
         fs.readFileSync(HOSTNAME_FILE_PATH, 'utf-8')
           .replace(/\n/g, ''),
-      );
+        ...this.args,
+      ];
 
-    await spawn.sync('docker', [
-      ...args,
-      ...this.args,
-    ], getStdio(this.context));
-  }
+    return dockerWithWorkdir(Run, this);
+  };
 }
