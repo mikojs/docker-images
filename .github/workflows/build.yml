@@ -3,6 +3,13 @@ on: [push]
 env:
   REGISTRY: ghcr.io
 jobs:
+  build-dind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - uses: yarn --cwd ./dind pkg .
+
   build-and-push-images:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/TODO' }}
@@ -13,7 +20,7 @@ jobs:
       matrix:
         include:
           - image: mikojs/code-server
-            context: ./code-server
+            file: ./code-server/Dockerfile
     steps:
       - uses: actions/checkout@v3
       - uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -27,7 +34,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ matrix.image }}
       - uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
