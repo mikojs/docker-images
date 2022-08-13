@@ -8,7 +8,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - uses: yarn --cwd ./dind pkg .
+        with:
+          cache: yarn
+          working-directory: dind
+      - run: cd ./dind && yarn
+      - run: |
+          yarn --cwd ./dind build
+          yarn --cwd ./dind pkg .
 
   build-and-push-images:
     runs-on: ubuntu-latest
