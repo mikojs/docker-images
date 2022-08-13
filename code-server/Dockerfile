@@ -20,4 +20,7 @@ RUN yarn global add \
 # code-server
 RUN mkdir -p /root/.local/share/code-server/logs
 
+# dind
+COPY ./bin/dind /bin/dind
+
 ENTRYPOINT ["code-server"]

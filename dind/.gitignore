@@ -9,7 +9,3 @@ node_modules
 
 # babel
 lib
-
-# pkg
-bin/*
-!dind/bin

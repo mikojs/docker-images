@@ -2,3 +2,7 @@
 *.swp
 *.log
 .DS_Store
+
+# pkg
+bin/*
+!dind/bin

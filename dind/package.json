@@ -8,9 +8,7 @@
   "license": "MIT",
   "private": true,
   "packageManager": "yarn@3.2.2",
-  "bin": {
-    "dind": "./lib/bin/dind.js"
-  },
+  "bin": "./lib/bin/dind.js",
   "scripts": {
     "build": "babel src -d lib --verbose --delete-dir-on-start"
   },
@@ -28,6 +26,6 @@
     "targets": [
       "alpine"
     ],
-    "outputPath": "bin"
+    "outputPath": "../bin"
   }
 }
