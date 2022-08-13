@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: yarn
-          working-directory: dind
+          cache-dependency-path: ./dind/yarn.lock
       - run: cd ./dind && yarn
       - run: |
           yarn --cwd ./dind build
