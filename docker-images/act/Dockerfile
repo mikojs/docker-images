@@ -17,7 +17,7 @@ RUN apk add \
   docker
 
 # dind
-COPY ./bin/dind /bin/dind
+COPY ./dind /bin/dind
 
 # run
 ENTRYPOINT ["act"]

@@ -27,6 +27,6 @@
     "targets": [
       "alpine"
     ],
-    "outputPath": "../bin"
+    "outputPath": "./docker-images"
   }
 }

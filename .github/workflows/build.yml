@@ -38,6 +38,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ matrix.image }}
       - uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
+          context: ./docker-images
           file: ${{ matrix.file }}
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.meta.outputs.tags }}
