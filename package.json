@@ -10,7 +10,8 @@
   "packageManager": "yarn@3.2.2",
   "bin": "./lib/bin/dind.js",
   "scripts": {
-    "build": "babel src -d lib --verbose --delete-dir-on-start"
+    "build": "babel src -d lib --verbose --delete-dir-on-start",
+    "prod": "yarn build && pkg ."
   },
   "dependencies": {
     "clipanion": "^3.2.0-rc.11",
@@ -26,6 +27,6 @@
     "targets": [
       "alpine"
     ],
-    "outputPath": "../bin"
+    "outputPath": "./docker-images"
   }
 }
