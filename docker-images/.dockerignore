@@ -6,6 +6,3 @@
 # docker
 .dockerignore
 Dockerfile
-
-# dind
-dind/*
