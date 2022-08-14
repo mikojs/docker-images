@@ -10,15 +10,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: yarn
-          cache-dependency-path: ./dind/yarn.lock
-      - run: cd ./dind && yarn
-      - run: |
-          yarn --cwd ./dind build
-          yarn --cwd ./dind pkg .
+      - run: yarn prod
 
   build-and-push-images:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
     permissions:
       contents: read
       packages: write
@@ -26,9 +21,9 @@ jobs:
       matrix:
         include:
           - image: mikojs/code-server
-            file: ./code-server/Dockerfile
+            file: ./docker-images/code-server/Dockerfile
           - image: mikojs/act
-            file: ./act/Dockerfile
+            file: ./docker-images/act/Dockerfile
     steps:
       - uses: actions/checkout@v3
       - uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -43,6 +38,6 @@ jobs:
       - uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           file: ${{ matrix.file }}
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
