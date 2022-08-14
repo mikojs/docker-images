@@ -10,6 +10,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: yarn
+      - run: yarn
       - run: yarn prod
 
   build-and-push-images:
