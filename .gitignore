@@ -3,6 +3,14 @@
 *.log
 .DS_Store
 
-# pkg
-bin/*
-!dind/bin
+# yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+node_modules
+
+# babel
+lib
