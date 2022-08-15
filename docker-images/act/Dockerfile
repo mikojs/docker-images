@@ -16,8 +16,5 @@ COPY --from=build /go/bin/act /bin/act
 RUN apk add \
   docker
 
-# dind
-COPY ./dind /bin/dind
-
 # run
 ENTRYPOINT ["act"]
