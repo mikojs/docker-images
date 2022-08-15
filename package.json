@@ -1,7 +1,7 @@
 {
   "name": "@mikojs/dind",
   "version": "1.0.0",
-  "description": "This is a command for docker-in-docker.",
+  "description": "There are commands for docker-in-docker.",
   "main": "./lib/index.js",
   "repository": "https://github.com/mikojs/docker-images",
   "author": "mikojs",
