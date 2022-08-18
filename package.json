@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "clipanion": "^3.2.0-rc.11",
-    "cross-spawn": "^7.0.3"
+    "cross-spawn": "^7.0.3",
+    "glob": "^8.0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.9",
