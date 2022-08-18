@@ -1363,9 +1363,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikojs/dind@workspace:.":
+"@mikojs/docker-images@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@mikojs/dind@workspace:."
+  resolution: "@mikojs/docker-images@workspace:."
   dependencies:
     "@babel/cli": ^7.18.9
     "@babel/core": ^7.18.9
