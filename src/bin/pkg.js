@@ -16,7 +16,15 @@ fs.readdirSync(__dirname)
       if (filePath === __filename)
         return;
 
-      await exec([filePath, '--target', 'alpine', '--out-path', './docker-images/bin']);
+      await exec([
+        filePath,
+        '--target',
+        'alpine',
+        '--out-path',
+        './docker-images/bin',
+        '--compress',
+        'GZip',
+      ]);
     },
     Promise.resolve(),
   )
