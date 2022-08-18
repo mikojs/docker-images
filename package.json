@@ -8,7 +8,10 @@
   "license": "MIT",
   "private": true,
   "packageManager": "yarn@3.2.2",
-  "bin": "./lib/bin/dind.js",
+  "bin": {
+    "code": "./lib/bin/code.js",
+    "dind": "./lib/bin/dind.js"
+  },
   "scripts": {
     "build": "babel src -d lib --verbose --delete-dir-on-start",
     "prod": "yarn build && pkg ."

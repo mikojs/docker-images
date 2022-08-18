@@ -1375,6 +1375,7 @@ __metadata:
     glob: ^8.0.3
     pkg: ^5.8.0
   bin:
+    code: ./lib/bin/code.js
     dind: ./lib/bin/dind.js
   languageName: unknown
   linkType: soft
