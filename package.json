@@ -1,5 +1,5 @@
 {
-  "name": "@mikojs/dind",
+  "name": "@mikojs/docker-images",
   "version": "1.0.0",
   "description": "There are commands for docker images.",
   "main": "./lib/index.js",
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "babel src -d lib --verbose --delete-dir-on-start",
-    "prod": "yarn build && pkg ."
+    "prod": "yarn build && ./lib/bin/pkg.js"
   },
   "dependencies": {
     "clipanion": "^3.2.0-rc.11",
@@ -27,11 +27,5 @@
     "@babel/core": "^7.18.9",
     "@babel/preset-env": "^7.18.9",
     "pkg": "^5.8.0"
-  },
-  "pkg": {
-    "targets": [
-      "alpine"
-    ],
-    "outputPath": "./docker-images"
   }
 }
