@@ -51,6 +51,9 @@ export default class Code extends Command {
       })
     )).flat();
 
-    await spawn.sync('code-server', files, getStdio(this.context));
+    if (files.length === 0)
+      await spawn.sync('code-server', ['-v'], getStdio(this.context));
+    else
+      await spawn.sync('code-server', files, getStdio(this.context));
   };
 }
