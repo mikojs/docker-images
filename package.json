@@ -1,21 +1,26 @@
 {
   "name": "@mikojs/dind",
   "version": "1.0.0",
-  "description": "There are commands for docker-in-docker.",
+  "description": "There are commands for docker images.",
   "main": "./lib/index.js",
   "repository": "https://github.com/mikojs/docker-images",
   "author": "mikojs",
   "license": "MIT",
   "private": true,
   "packageManager": "yarn@3.2.2",
-  "bin": "./lib/bin/dind.js",
+  "bin": {
+    "code": "./lib/bin/code.js",
+    "dind": "./lib/bin/dind.js"
+  },
   "scripts": {
     "build": "babel src -d lib --verbose --delete-dir-on-start",
     "prod": "yarn build && pkg ."
   },
   "dependencies": {
     "clipanion": "^3.2.0-rc.11",
-    "cross-spawn": "^7.0.3"
+    "cross-spawn": "^7.0.3",
+    "enquirer": "^2.3.6",
+    "glob": "^8.0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.9",
