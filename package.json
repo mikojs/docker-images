@@ -1,5 +1,5 @@
 {
-  "name": "@mikojs/dind",
+  "name": "@mikojs/docker-images",
   "version": "1.0.0",
   "description": "There are commands for docker images.",
   "main": "./lib/index.js",
@@ -32,6 +32,6 @@
     "targets": [
       "alpine"
     ],
-    "outputPath": "./docker-images"
+    "outputPath": "./docker-images/bin"
   }
 }
