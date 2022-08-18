@@ -26,6 +26,8 @@ jobs:
     strategy:
       matrix:
         include:
+          - image: mikojs/base
+            file: ./docker-images/base/Dockerfile
           - image: mikojs/code-server
             file: ./docker-images/code-server/Dockerfile
           - image: mikojs/act
