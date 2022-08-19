@@ -23,7 +23,7 @@ RUN mkdir -p /root/.local/share/code-server/logs
 
 # bin
 COPY ./bin/code /bin/code
-COPY ./bin/dind /bin/dind
+COPY ./bin/ddocker /bin/ddocker
 
 # run
 ENTRYPOINT ["code-server"]
