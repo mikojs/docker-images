@@ -1377,7 +1377,7 @@ __metadata:
     pkg: ^5.8.0
   bin:
     code: ./lib/bin/code.js
-    dind: ./lib/bin/dind.js
+    ddocker: ./lib/bin/ddocker.js
   languageName: unknown
   linkType: soft
 
