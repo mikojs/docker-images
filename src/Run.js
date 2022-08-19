@@ -10,7 +10,6 @@ export default class Run extends Command {
   static paths = [['run']];
 
   static usage = Command.Usage({
-    category: 'Docker in docker',
     description: 'Rnu `docker run` in the docker container',
     details: `
       This command is based on \`docker in docker\` concept, but this one adds some helpful features.

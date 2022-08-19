@@ -6,7 +6,6 @@ export default class Rmi extends Command {
   static paths = [['rmi']];
 
   static usage = Command.Usage({
-    category: 'Docker',
     description: 'Remove the none images',
     details: `
       This command would find the ids of the none images and remove them.

@@ -6,7 +6,6 @@ export default class Rm extends Command {
   static paths = [['rm']];
 
   static usage = Command.Usage({
-    category: 'Docker',
     description: 'Remove the not used containers',
     details: `
       This command would find the ids of the stopped container and remove them.
