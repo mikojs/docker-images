@@ -13,7 +13,7 @@ export default class Exec extends Command {
     `,
     examples: [[
       'Execuate a container',
-      'dind exec -it <id> sh',
+      'ddocker exec -it <id> sh',
     ]],
   });
 

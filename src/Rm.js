@@ -13,7 +13,7 @@ export default class Rm extends Command {
     `,
     examples: [[
       'Remove the stopped container',
-      'dind rm',
+      'ddocker rm',
     ]],
   });
 

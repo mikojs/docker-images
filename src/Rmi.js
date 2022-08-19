@@ -13,7 +13,7 @@ export default class Rmi extends Command {
     `,
     examples: [[
       'Remove the none images',
-      'dind rmi',
+      'ddocker rmi',
     ]],
   });
 
