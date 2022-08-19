@@ -2,6 +2,7 @@ FROM node:lts-alpine
 
 # install packages
 RUN apk add \
+  # code-server
   curl \
   openssl \
   python3 \
@@ -20,7 +21,9 @@ RUN yarn global add \
 # code-server
 RUN mkdir -p /root/.local/share/code-server/logs
 
-# dind
+# bin
+COPY ./bin/code /bin/code
 COPY ./bin/dind /bin/dind
 
+# run
 ENTRYPOINT ["code-server"]
