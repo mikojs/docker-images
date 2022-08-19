@@ -3,7 +3,7 @@ on: [push]
 env:
   REGISTRY: ghcr.io
 jobs:
-  build-dind:
+  build-bin:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,7 +19,7 @@ jobs:
 
   build-and-push-images:
     runs-on: ubuntu-latest
-    needs: build-dind
+    needs: build-bin
     permissions:
       contents: read
       packages: write
