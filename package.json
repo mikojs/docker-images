@@ -10,7 +10,7 @@
   "packageManager": "yarn@3.2.2",
   "bin": {
     "code": "./lib/bin/code.js",
-    "dind": "./lib/bin/dind.js"
+    "ddocker": "./lib/bin/ddocker.js"
   },
   "scripts": {
     "build": "babel src -d lib --verbose --delete-dir-on-start",

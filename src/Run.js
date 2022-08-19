@@ -7,10 +7,9 @@ import dockerWithWorkdir from './utils/dockerWithWorkdir';
 const HOSTNAME_FILE_PATH = '/etc/hostname';
 
 export default class Run extends Command {
-  static paths = [['run'], Command.Default];
+  static paths = [['run']];
 
   static usage = Command.Usage({
-    category: 'Docker in docker',
     description: 'Rnu `docker run` in the docker container',
     details: `
       This command is based on \`docker in docker\` concept, but this one adds some helpful features.
@@ -21,10 +20,10 @@ export default class Run extends Command {
     `,
     examples: [[
       'Run a alpine container',
-      'dind run -it alpine /bin/sh',
+      'ddocker run -it alpine /bin/sh',
     ], [
       'Execute a command in a new container',
-      'dind run alpine echo test',
+      'ddocker run alpine echo test',
     ]],
   });
 

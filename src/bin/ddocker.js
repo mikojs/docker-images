@@ -8,7 +8,7 @@ import Rmi from '../Rmi';
 import runCli from '../utils/runCli';
 
 runCli(
-  'dind',
+  'ddocker',
   Run,
   Exec,
   Rm,
