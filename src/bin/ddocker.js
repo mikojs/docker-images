@@ -5,6 +5,6 @@ import Exec from '../Exec';
 import Rm from '../Rm';
 import Rmi from '../Rmi';
 
-import runCli from '../utils/runCli';
+import runExit from '../utils/runExit';
 
-runCli(__filename, Run, Exec, Rm, Rmi);
+runExit(__filename, Run, Exec, Rm, Rmi);

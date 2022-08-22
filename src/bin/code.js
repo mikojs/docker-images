@@ -2,6 +2,6 @@
 
 import Code from '../Code';
 
-import runCli from '../utils/runCli';
+import runExit from '../utils/runExit';
 
-runCli(__filename, Code);
+runExit(__filename, Code);
