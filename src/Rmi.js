@@ -1,8 +1,9 @@
 import { Command } from 'clipanion';
 
+import Base from './Base';
 import remove from './utils/remove';
 
-export default class Rmi extends Command {
+export default class Rmi extends Base {
   static paths = [['rmi']];
 
   static usage = Command.Usage({

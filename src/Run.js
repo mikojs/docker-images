@@ -2,11 +2,12 @@ import fs from 'fs';
 
 import { Command, Option } from 'clipanion';
 
+import Base from './Base';
 import dockerWithWorkdir from './utils/dockerWithWorkdir';
 
 const HOSTNAME_FILE_PATH = '/etc/hostname';
 
-export default class Run extends Command {
+export default class Run extends Base {
   static paths = [['run']];
 
   static usage = Command.Usage({
