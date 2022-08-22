@@ -1,7 +1,6 @@
 import { Command } from 'clipanion';
 
 import Base from './Base';
-import remove from './utils/remove';
 
 export default class Rm extends Base {
   static paths = [['rm']];
@@ -17,5 +16,19 @@ export default class Rm extends Base {
     ]],
   });
 
-  execute = () => remove(this.path[0], this.context);
+  execute = async () => {
+    const ids = (await this.execResult('docker', 'ps', '-aqf', 'status=exited'))
+      .stdout.toString()
+      .split('\n')
+      .filter(Boolean);
+
+    if (ids.length === 0) {
+      const { stdout } = this.context;
+
+      stdout.write('No containers need to be removed.\n');
+      return;
+    }
+
+    await spawn.sync('docker', 'rm', ...ids);
+  };
 }
