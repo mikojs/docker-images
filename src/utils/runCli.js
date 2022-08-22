@@ -1,8 +1,11 @@
+import path from 'path';
+
 import { Cli, Builtins } from 'clipanion';
 
 import { version } from '../../package.json';
 
-export default (binaryLabel, ...commands) => {
+export default (filePath, ...commands) => {
+  const binaryLabel = path.basename(filePath);
   const cli = new Cli({
     binaryLabel,
     binaryName: binaryLabel,
