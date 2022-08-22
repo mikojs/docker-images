@@ -6,9 +6,10 @@ import glob from 'glob';
 import { Confirm } from 'enquirer';
 import spawn from 'cross-spawn';
 
+import Base from './Base';
 import getStdio from './utils/getStdio';
 
-export default class Code extends Command {
+export default class Code extends Base {
   static paths = [Command.Default];
 
   static usage = Command.Usage({

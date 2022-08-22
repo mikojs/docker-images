@@ -1,8 +1,9 @@
 import { Command, Option } from 'clipanion';
 
+import Base from './Base';
 import dockerWithWorkdir from './utils/dockerWithWorkdir';
 
-export default class Exec extends Command {
+export default class Exec extends Base {
   static paths = [['exec']];
 
   static usage = Command.Usage({
