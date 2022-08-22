@@ -4,7 +4,4 @@ import Code from '../Code';
 
 import runCli from '../utils/runCli';
 
-runCli(
-  'code',
-  Code,
-);
+runCli(__filename, Code);

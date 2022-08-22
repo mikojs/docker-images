@@ -7,10 +7,4 @@ import Rmi from '../Rmi';
 
 import runCli from '../utils/runCli';
 
-runCli(
-  'ddocker',
-  Run,
-  Exec,
-  Rm,
-  Rmi,
-);
+runCli(__filename, Run, Exec, Rm, Rmi);
