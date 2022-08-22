@@ -2,9 +2,6 @@
 
 import Code from '../Code';
 
-import runCli from '../utils/runCli';
+import runExit from '../utils/runExit';
 
-runCli(
-  'code',
-  Code,
-);
+runExit(__filename, Code);
