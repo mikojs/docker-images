@@ -4,10 +4,8 @@ import path from 'path';
 import { Command, Option } from 'clipanion';
 import glob from 'glob';
 import { Confirm } from 'enquirer';
-import spawn from 'cross-spawn';
 
 import Base from './Base';
-import getStdio from './utils/getStdio';
 
 export default class Code extends Base {
   static paths = [Command.Default];
@@ -58,7 +56,7 @@ export default class Code extends Base {
     )).flat();
 
     if (files.length !== 0) {
-      await spawn.sync('code-server', files, getStdio(this.context));
+      await this.exec('code-server', ...files);
       return;
     }
 
