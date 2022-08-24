@@ -27,5 +27,8 @@
     "@babel/core": "^7.18.9",
     "@babel/preset-env": "^7.18.9",
     "pkg": "^5.8.0"
+  },
+  "resolutions": {
+    "clipanion@3.2.0-rc.11": "patch:clipanion@npm:3.2.0-rc.11#.yarn/patches/clipanion-npm-3.2.0-rc.11-c6a6690408.patch"
   }
 }

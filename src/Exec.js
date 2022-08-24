@@ -1,7 +1,6 @@
 import { Command, Option } from 'clipanion';
 
 import Base from './Base';
-import dockerWithWorkdir from './utils/dockerWithWorkdir';
 
 export default class Exec extends Base {
   static paths = [['exec']];
@@ -17,7 +16,16 @@ export default class Exec extends Base {
     ]],
   });
 
-  args = Option.Proxy();
+  args = Option.Proxy({ useHelp: true });
 
-  execute = () => dockerWithWorkdir(Exec, this);
+  execute = () =>
+    this.exec(
+      'docker',
+      'exec',
+      '-w',
+      /^\/project/.test(process.cwd())
+        ? process.cwd()
+        : '/project',
+      ...this.args,
+    );
 }
