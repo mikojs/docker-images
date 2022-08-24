@@ -1,0 +1,65 @@
+diff --git a/lib/advanced/options/Proxy.d.ts b/lib/advanced/options/Proxy.d.ts
+index 63800974dd82087f489eeedf7b00aedbbb7ebeb4..936e15f91609fd536183d01363f0f2ddabae3e53 100644
+--- a/lib/advanced/options/Proxy.d.ts
++++ b/lib/advanced/options/Proxy.d.ts
+@@ -1,6 +1,7 @@
+ export declare type ProxyFlags = {
+     name?: string;
+     required?: number;
++    useHelp?: boolean;
+ };
+ /**
+  * Used to annotate that the command wants to retrieve all trailing
+diff --git a/lib/advanced/options/Proxy.js b/lib/advanced/options/Proxy.js
+index df3c8a6937b529f4a45991b2fee326f2b63bff72..3f98269a05e0fdd398a65c1bcdaf1a39cba027ee 100644
+--- a/lib/advanced/options/Proxy.js
++++ b/lib/advanced/options/Proxy.js
+@@ -24,6 +24,7 @@ function Proxy(opts = {}) {
+             builder.addProxy({
+                 name: (_a = opts.name) !== null && _a !== void 0 ? _a : key,
+                 required: opts.required,
++                useHelp: opts.useHelp,
+             });
+         },
+         transformer(builder, key, state) {
+diff --git a/lib/core.d.ts b/lib/core.d.ts
+index 93a11ae88cb9614cc9df1f66dbee99bec8bd0c3b..ec07fa4b5c11036a844e7b408bee92020aa7ccbd 100644
+--- a/lib/core.d.ts
++++ b/lib/core.d.ts
+@@ -410,9 +410,10 @@ export declare class CommandBuilder<Context> {
+         name?: string;
+         required?: number;
+     }): void;
+-    addProxy({ required }?: {
++    addProxy({ required, useHelp }?: {
+         name?: string;
+         required?: number;
++        useHelp?: boolean;
+     }): void;
+     addOption({ names, description, arity, hidden, required, allowBinding }: Partial<OptDefinition> & {
+         names: Array<string>;
+diff --git a/lib/core.js b/lib/core.js
+index 202fd7fbc7386d701f3d3ea3cb476806ea389581..b17c737442a303654258ccd4af4d10d2ee34b7ce 100644
+--- a/lib/core.js
++++ b/lib/core.js
+@@ -568,9 +568,10 @@ class CommandBuilder {
+             this.addPositional({ name });
+         this.arity.extra = NoLimits;
+     }
+-    addProxy({ required = 0 } = {}) {
++    addProxy({ required = 0, useHelp = false } = {}) {
+         this.addRest({ required });
+         this.arity.proxy = true;
++        this.arity.proxyWithHelp = useHelp;
+     }
+     addOption({ names, description, arity = 0, hidden = false, required = false, allowBinding = true }) {
+         if (!allowBinding && arity > 1)
+@@ -648,7 +649,7 @@ class CommandBuilder {
+                 registerStatic(machine, lastPathNode, path[t], nextPathNode, `pushPath`);
+                 lastPathNode = nextPathNode;
+             }
+-            if (this.arity.leading.length > 0 || !this.arity.proxy) {
++            if (this.arity.leading.length > 0 || this.arity.proxyWithHelp || !this.arity.proxy) {
+                 const helpNode = injectNode(machine, makeNode());
+                 registerDynamic(machine, lastPathNode, `isHelp`, helpNode, [`useHelp`, this.cliIndex]);
+                 registerStatic(machine, helpNode, constants.END_OF_INPUT, constants.NODE_SUCCESS, [`setSelectedIndex`, constants.HELP_COMMAND_INDEX]);
