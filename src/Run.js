@@ -3,9 +3,6 @@ import fs from 'fs';
 import { Command, Option } from 'clipanion';
 
 import Base from './Base';
-import dockerWithWorkdir from './utils/dockerWithWorkdir';
-
-const HOSTNAME_FILE_PATH = '/etc/hostname';
 
 export default class Run extends Base {
   static paths = [['run']];
@@ -30,15 +27,17 @@ export default class Run extends Base {
 
   args = Option.Proxy({ useHelp: true });
 
-  execute = () => {
-    if (fs.existsSync(HOSTNAME_FILE_PATH))
-      this.args = [
-        '--volumes-from',
-        fs.readFileSync(HOSTNAME_FILE_PATH, 'utf-8')
-          .replace(/\n/g, ''),
-        ...this.args,
-      ];
-
-    return dockerWithWorkdir(Run, this);
-  };
+  execute = () =>
+    this.exec(
+      'docker',
+      'run',
+      '-w',
+      /^\/project/.test(process.cwd())
+        ? process.cwd()
+        : '/project',
+      '--volumes-from',
+      fs.readFileSync('/etc/hostname', 'utf-8')
+        .replace(/\n/g, ''),
+      ...this.args,
+    );
 }
