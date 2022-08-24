@@ -28,7 +28,7 @@ export default class Run extends Base {
     ]],
   });
 
-  args = Option.Proxy();
+  args = Option.Proxy({ useHelp: true });
 
   execute = () => {
     if (fs.existsSync(HOSTNAME_FILE_PATH))

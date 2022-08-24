@@ -17,7 +17,7 @@ export default class Exec extends Base {
     ]],
   });
 
-  args = Option.Proxy();
+  args = Option.Proxy({ useHelp: true });
 
   execute = () => dockerWithWorkdir(Exec, this);
 }
