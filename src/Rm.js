@@ -12,7 +12,7 @@ export default class Rm extends Base {
     `,
     examples: [[
       'Remove the stopped container',
-      'ddocker rm',
+      '$0 rm',
     ]],
   });
 
