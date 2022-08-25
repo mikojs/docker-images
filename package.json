@@ -13,8 +13,8 @@
     "ddocker": "./lib/bin/ddocker.js"
   },
   "scripts": {
-    "build": "babel src -d lib --verbose --delete-dir-on-start",
-    "prod": "yarn build && ./lib/bin/pkg.js"
+    "build": "webpack",
+    "prod": "NODE_ENV=production yarn build"
   },
   "dependencies": {
     "clipanion": "^3.2.0-rc.11",
@@ -26,9 +26,12 @@
     "@babel/cli": "^7.18.9",
     "@babel/core": "^7.18.9",
     "@babel/preset-env": "^7.18.9",
-    "pkg": "^5.8.0"
+    "babel-loader": "^8.2.5",
+    "pkg": "^5.8.0",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   },
   "resolutions": {
-    "clipanion@3.2.0-rc.11": "patch:clipanion@npm:3.2.0-rc.11#.yarn/patches/clipanion-npm-3.2.0-rc.11-c6a6690408.patch"
+    "clipanion": "patch:clipanion@npm:3.2.0-rc.11#.yarn/patches/clipanion-npm-3.2.0-rc.11-c6a6690408.patch"
   }
 }
