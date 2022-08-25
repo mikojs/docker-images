@@ -29,6 +29,6 @@
     "pkg": "^5.8.0"
   },
   "resolutions": {
-    "clipanion@3.2.0-rc.11": "patch:clipanion@npm:3.2.0-rc.11#.yarn/patches/clipanion-npm-3.2.0-rc.11-c6a6690408.patch"
+    "clipanion": "patch:clipanion@npm:3.2.0-rc.11#.yarn/patches/clipanion-npm-3.2.0-rc.11-c6a6690408.patch"
   }
 }
