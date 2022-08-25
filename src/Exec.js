@@ -12,7 +12,7 @@ export default class Exec extends Base {
     `,
     examples: [[
       'Execuate a container',
-      'ddocker exec -it <id> sh',
+      '$0 exec -it <id> sh',
     ]],
   });
 

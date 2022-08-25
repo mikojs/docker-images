@@ -17,10 +17,10 @@ export default class Code extends Base {
     `,
     examples: [[
       'Open files',
-      'code a.file b.file',
+      '$0 a.file b.file',
     ], [
       'Use pattern to open files',
-      'code "*.file"',
+      '$0 "*.file"',
     ]],
   });
 

@@ -12,7 +12,7 @@ export default class Rmi extends Base {
     `,
     examples: [[
       'Remove the none images',
-      'ddocker rmi',
+      '$0 rmi',
     ]],
   });
 

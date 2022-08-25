@@ -18,10 +18,10 @@ export default class Run extends Base {
     `,
     examples: [[
       'Run a alpine container',
-      'ddocker run -it alpine /bin/sh',
+      '$0 run -it alpine /bin/sh',
     ], [
       'Execute a command in a new container',
-      'ddocker run alpine echo test',
+      '$0 run alpine echo test',
     ]],
   });
 
