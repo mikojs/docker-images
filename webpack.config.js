@@ -5,6 +5,7 @@ const webpack = require('webpack');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const binFolder = path.resolve(__dirname, './src/bin');
+const outputFolder = path.resolve(__dirname, './docker-images/bin');
 const entry = fs.readdirSync(binFolder)
   .reduce(
     (result, filePath) => {
@@ -25,7 +26,7 @@ module.exports = {
   target: 'node',
   entry,
   output: {
-    path: path.resolve(__dirname, './docker-images/bin'),
+    path: outputFolder,
     filename: '[name]',
   },
   module: {
@@ -43,5 +44,13 @@ module.exports = {
   },
   plugins: [
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
+    function makeExecutable() {
+      this.hooks.done.tapPromise('Make executable', async () => {
+        fs.readdirSync(outputFolder)
+          .forEach(filePath => {
+            fs.chmodSync(path.resolve(outputFolder, filePath), '755');
+          })
+      });
+    }
   ],
 };
