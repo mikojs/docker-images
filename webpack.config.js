@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const webpack = require('webpack');
+
 const isProduction = process.env.NODE_ENV === 'production';
 const binFolder = path.resolve(__dirname, './src/bin');
 const entry = fs.readdirSync(binFolder)
@@ -39,4 +41,7 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
+  ],
 };
