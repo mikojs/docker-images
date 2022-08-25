@@ -24,7 +24,7 @@ module.exports = {
   entry,
   output: {
     path: path.resolve(__dirname, './docker-images/bin'),
-    filename: '[name].js',
+    filename: '[name]',
   },
   module: {
     rules: [
