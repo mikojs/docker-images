@@ -11,8 +11,6 @@ const entry = fs.readdirSync(binFolder)
     (result, filePath) => {
       const name = filePath.replace(/\.js$/, '');
 
-      if (name === 'pkg') return result;
-
       return {
         ...result,
         [name]: path.resolve(binFolder, filePath),
