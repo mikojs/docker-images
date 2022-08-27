@@ -1,7 +1,7 @@
 name: build
 on: [push]
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: ghcr.io/mikojs
 jobs:
   build-bin:
     runs-on: ubuntu-latest
@@ -26,12 +26,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - image: mikojs/base
-            file: ./docker-images/base/Dockerfile
-          - image: mikojs/code-server
-            file: ./docker-images/code-server/Dockerfile
-          - image: mikojs/act
-            file: ./docker-images/act/Dockerfile
+          - name: base
+          - name: code-server
+          - name: act
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
@@ -46,11 +43,11 @@ jobs:
       - uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         id: meta
         with:
-          images: ${{ env.REGISTRY }}/${{ matrix.image }}
+          images: ${{ env.REGISTRY }}/${{ matrix.name }}
       - uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: ./docker-images
-          file: ${{ matrix.file }}
+          file: ./docker-images/${{ matrix.name }}/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
