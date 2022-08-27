@@ -2,16 +2,11 @@
   "name": "@mikojs/docker-images",
   "version": "1.0.0",
   "description": "There are commands for docker images.",
-  "main": "./lib/index.js",
   "repository": "https://github.com/mikojs/docker-images",
   "author": "mikojs",
   "license": "MIT",
   "private": true,
   "packageManager": "yarn@3.2.2",
-  "bin": {
-    "code": "./lib/bin/code.js",
-    "ddocker": "./lib/bin/ddocker.js"
-  },
   "scripts": {
     "build": "webpack",
     "prod": "NODE_ENV=production yarn build"
