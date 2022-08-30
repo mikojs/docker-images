@@ -1,0 +1,18 @@
+[package]
+name = "docker-images"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+strip = true
+
+[[bin]]
+name = "ddocker"
+path = "src/bin/ddocker.rs"
+
+[[bin]]
+name = "code"
+path = "src/bin/code.rs"
+
+[dependencies]
+clap = { version = "3.2.18", features = ["cargo"] }
