@@ -1,0 +1,14 @@
+[package]
+name = "docker-images"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "ddocker"
+path = "src/bin/ddocker.rs"
+
+[[bin]]
+name = "code"
+path = "src/bin/code.rs"
+
+[dependencies]
