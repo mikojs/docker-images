@@ -15,4 +15,4 @@ name = "code"
 path = "src/bin/code.rs"
 
 [dependencies]
-clap = { version = "3.2.18", features = ["derive"] }
+clap = { version = "3.2.18", features = ["cargo"] }
