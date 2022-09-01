@@ -12,7 +12,14 @@ pub fn command() -> Command<'static> {
 pub fn execute() {
     let args = ["ps", "-aqf", "status=exited"];
     let stdout = sub_process::exec_result("docker", &args);
-    let ids = stdout.split("\n");
+    let ids: Vec<&str> = stdout.split("\n")
+        .skip_while(|x| x.is_empty())
+        .collect();
+
+    if ids.len() == 0 {
+        println!("No containers need to be removed.");
+        return;
+    }
 
     for id in ids {
         println!("{}", id);
