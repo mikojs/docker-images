@@ -1,5 +1,6 @@
-use std::process;
 use clap::Command;
+
+#[path = "./utils/sub_process.rs"] mod sub_process;
 
 pub const NAME: &str = "rm";
 
@@ -9,14 +10,8 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute() {
-    let output = process::Command::new("docker")
-        .arg("ps")
-        .arg("-aqf")
-        .arg("status=exited")
-        .output()
-        .expect("command failed to start");
-    let stdout = String::from_utf8(output.stdout)
-        .unwrap();
+    let args = ["ps", "-aqf", "status=exited"];
+    let stdout = sub_process::exec_result("docker", &args);
     let ids = stdout.split("\n");
 
     for id in ids {
