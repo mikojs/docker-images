@@ -8,8 +8,10 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute() {
-    let args = ["ps", "-aqf", "status=exited"];
-    let stdout = sub_process::exec_result("docker", &args);
+    let stdout = sub_process::exec_result(
+        "docker",
+        &["ps", "-aqf", "status=exited"],
+    );
     let ids: Vec<&str> = stdout.split("\n")
         .filter(|x| !x.is_empty())
         .collect();

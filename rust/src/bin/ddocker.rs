@@ -11,9 +11,7 @@ fn cli() -> Command<'static> {
 }
 
 fn main() {
-    let matches = cli().get_matches();
-
-    match matches.subcommand() {
+    match cli().get_matches().subcommand() {
         Some(("rm", _)) => rm::execute(),
         _ => unreachable!(),
     }
