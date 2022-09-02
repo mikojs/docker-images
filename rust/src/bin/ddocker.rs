@@ -16,7 +16,7 @@ fn cli() -> Command<'static> {
 
 fn main() {
     match cli().get_matches().subcommand() {
-        Some(("run", _)) => run::execute(),
+        Some(("run", sub_matches)) => run::execute(sub_matches),
         Some(("rm", _)) => rm::execute(),
         Some(("rmi", _)) => rmi::execute(),
         _ => unreachable!(),
