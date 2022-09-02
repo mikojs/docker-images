@@ -13,7 +13,7 @@ pub fn execute() {
     let args = ["ps", "-aqf", "status=exited"];
     let stdout = sub_process::exec_result("docker", &args);
     let ids: Vec<&str> = stdout.split("\n")
-        .skip_while(|x| x.is_empty())
+        .filter(|x| !x.is_empty())
         .collect();
 
     if ids.len() == 0 {
@@ -21,7 +21,10 @@ pub fn execute() {
         return;
     }
 
-    for id in ids {
-        println!("{}", id);
-    }
+    let status = sub_process::exec(
+        "docker",
+        [vec!["rm"], ids].concat().as_slice(),
+    );
+
+    assert!(status.success());
 }

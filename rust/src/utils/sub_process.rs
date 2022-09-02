@@ -1,11 +1,10 @@
-use std::process::Command;
+use std::process::{ExitStatus, Command};
 
-pub fn exec(command: &str, args: &[&str]) {
-    Command::new(command)
+pub fn exec(command: &str, args: &[&str]) -> ExitStatus {
+    return Command::new(command)
         .args(args)
-        .spawn()
+        .status()
         .expect("command failed to start");
-
 }
 
 pub fn exec_result(command: &str, args: &[&str]) -> String {
