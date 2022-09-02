@@ -17,8 +17,7 @@ pub fn execute() {
         .collect();
 
     if ids.len() == 0 {
-        println!("No containers need to be removed.");
-        return;
+        return println!("No containers need to be removed.");
     }
 
     let status = sub_process::exec(
