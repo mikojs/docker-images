@@ -14,7 +14,7 @@ fn main() {
     let matches = cli().get_matches();
 
     match matches.subcommand() {
-        Some((rm::NAME, _)) => rm::execute(),
+        Some(("rm", _)) => rm::execute(),
         _ => unreachable!(),
     }
 }

@@ -2,8 +2,6 @@ use clap::Command;
 
 #[path = "./utils/sub_process.rs"] mod sub_process;
 
-pub const NAME: &str = "rm";
-
 pub fn command() -> Command<'static> {
     return Command::new("rm")
         .about("Find the all ids of the stopped containers and remove them")
