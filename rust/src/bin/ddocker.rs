@@ -5,7 +5,7 @@ use clap::{crate_version, Command};
 #[path = "../rmi.rs"] mod rmi;
 
 fn cli() -> Command<'static> {
-    return Command::new("ddocker")
+    Command::new("ddocker")
         .version(crate_version!())
         .about("Some docker commands are used in a docker container")
         .subcommand_required(true)
@@ -16,7 +16,7 @@ fn cli() -> Command<'static> {
 
 fn main() {
     match cli().get_matches().subcommand() {
-        Some(("run", _)) => rm::execute(),
+        Some(("run", _)) => run::execute(),
         Some(("rm", _)) => rm::execute(),
         Some(("rmi", _)) => rmi::execute(),
         _ => unreachable!(),

@@ -3,7 +3,7 @@ use clap::Command;
 #[path = "./utils/sub_process.rs"] mod sub_process;
 
 pub fn command() -> Command<'static> {
-    return Command::new("rmi")
+    Command::new("rmi")
         .about("Find the all ids of the none-images and remove them")
 }
 

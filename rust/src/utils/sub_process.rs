@@ -3,10 +3,10 @@ use std::process::{ExitStatus, Command};
 const FAIL_TO_START: &str = "command failed to start";
 
 pub fn exec(command: &str, args: &[&str]) -> ExitStatus {
-    return Command::new(command)
+    Command::new(command)
         .args(args)
         .status()
-        .expect(FAIL_TO_START);
+        .expect(FAIL_TO_START)
 }
 
 pub fn exec_result(command: &str, args: &[&str]) -> String {
@@ -15,6 +15,6 @@ pub fn exec_result(command: &str, args: &[&str]) -> String {
         .output()
         .expect(FAIL_TO_START);
 
-    return String::from_utf8(output.stdout)
-        .unwrap();
+    String::from_utf8(output.stdout)
+        .unwrap()
 }
