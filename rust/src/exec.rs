@@ -25,6 +25,8 @@ pub fn execute(sub_matches: &ArgMatches) {
                 .values_of("args")
                 .unwrap()
                 .collect(),
-        ].concat().as_slice(),
+        ]
+            .concat()
+            .as_slice(),
     );
 }
