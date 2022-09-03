@@ -17,15 +17,22 @@ fn cli() -> Command<'static> {
         .arg(args::set_proxy_arg())
 }
 
-fn find_files(pattern: &str) {
+fn find_files(pattern: &str) -> Vec<String> {
+    let mut files: Vec<String> = []
+        .to_vec();
+
     for entry in glob::glob_with(pattern, OPTIONS).unwrap() {
         if let Ok(path) = entry {
-            println!("{:?}", path.display())
+            files.push(path.display().to_string());
         }
     }
+
+    files
 }
 
 fn main() {
+    let mut files: Vec<String> = []
+        .to_vec();
     let patterns: Vec<String> = cli()
         .get_matches()
         .remove_many("args")
@@ -33,6 +40,8 @@ fn main() {
         .collect();
 
     for pattern in patterns {
-        find_files(&pattern);
+        files.append(&mut find_files(&pattern));
     }
+
+    println!("{:?}", files);
 }
