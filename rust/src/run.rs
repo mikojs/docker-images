@@ -7,18 +7,14 @@ use regex::Regex;
 
 #[allow(dead_code)]
 #[path = "./utils/sub_process.rs"] mod sub_process;
+#[path = "./utils/docker_args.rs"] mod docker_args;
 
 pub fn command() -> Command<'static> {
     Command::new("run")
         .about(r#"This command would mount the same volumes to the current container
 When the current path is under `/project`, a new container would use the same path as the working directory
 Otherwise, this would change to be `/project`"#)
-        .arg(
-            Arg::new("args")
-                .required(true)
-                .multiple_values(true)
-                .allow_hyphen_values(true)
-        )
+        .arg(docker_args::set_proxy_arg())
 }
 
 fn get_volumes_from_args(file_path: &str) -> Vec<String> {
@@ -37,21 +33,6 @@ fn get_volumes_from_args(file_path: &str) -> Vec<String> {
     args
 }
 
-fn get_working_directory() -> String {
-    let cwd = env::current_dir()
-        .expect("Couldn't get the currenct directory")
-        .display()
-        .to_string();
-    let re = Regex::new(r"^/project")
-        .unwrap();
-
-    if re.is_match(&cwd) {
-        return cwd;
-    }
-
-    "/project".to_string()
-}
-
 pub fn execute(sub_matches: &ArgMatches) {
     let status = sub_process::exec(
         "docker",
@@ -59,7 +40,7 @@ pub fn execute(sub_matches: &ArgMatches) {
             vec![
                 "run",
                 "-w",
-                &get_working_directory(),
+                &docker_args::get_working_directory(),
             ],
             get_volumes_from_args("/etc/hostname")
                 .iter()
