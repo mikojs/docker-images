@@ -1,3 +1,5 @@
+use std::fs;
+
 use clap::{crate_version, Command};
 use glob;
 
@@ -23,7 +25,12 @@ fn find_files(pattern: &str) -> Vec<String> {
 
     for entry in glob::glob_with(pattern, OPTIONS).unwrap() {
         if let Ok(path) = entry {
-            files.push(path.display().to_string());
+            files.push(
+                fs::canonicalize(path)
+                    .expect("Canonicalize path fail")
+                    .display()
+                    .to_string()
+            );
         }
     }
 
