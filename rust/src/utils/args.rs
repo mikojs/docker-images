@@ -15,10 +15,11 @@ pub fn get_working_directory() -> String {
         .expect("Couldn't get the currenct directory")
         .display()
         .to_string();
-    let re = Regex::new(r"^/project")
-        .unwrap();
+    let is_project = Regex::new(r"^/project")
+        .unwrap()
+        .is_match(&cwd);
 
-    if re.is_match(&cwd) {
+    if is_project {
         return cwd;
     }
 
