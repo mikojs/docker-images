@@ -1,6 +1,9 @@
 use std::fs;
 use std::path::Path;
+use std::env;
+
 use clap::{Command, Arg, ArgMatches};
+use regex::Regex;
 
 pub fn command() -> Command<'static> {
     Command::new("run")
@@ -15,7 +18,8 @@ Otherwise, this would change to be `/project`"#)
 }
 
 fn get_volumes_from_args(file_path: &str) -> Vec<String> {
-    let mut args: Vec<String> = [].to_vec();
+    let mut args: Vec<String> = []
+        .to_vec();
 
     if Path::new(file_path).exists() {
         let content = fs::read_to_string(file_path)
@@ -29,6 +33,21 @@ fn get_volumes_from_args(file_path: &str) -> Vec<String> {
     args
 }
 
+fn get_working_directory() -> String {
+    let cwd = env::current_dir()
+        .expect("Couldn't get the currenct directory")
+        .display()
+        .to_string();
+    let re = Regex::new(r"^/project")
+        .unwrap();
+
+    if re.is_match(&cwd) {
+        return cwd;
+    }
+
+    "/project".to_string()
+}
+
 pub fn execute(sub_matches: &ArgMatches) {
     let args: Vec<&str> = sub_matches
         .values_of("args")
@@ -39,6 +58,7 @@ pub fn execute(sub_matches: &ArgMatches) {
         vec![
             "run",
             "-w",
+            &get_working_directory(),
         ],
         get_volumes_from_args("/etc/hostname")
             .iter()
@@ -50,21 +70,7 @@ pub fn execute(sub_matches: &ArgMatches) {
     let status = sub_process::exec(
         "docker",
         [
-            vec![
-                "run",
-                "-w",
-                /*
-                /^\/project/.test(process.cwd())
-                    ? process.cwd()
-                    : "/project",
-                    */
-                "--volumes-from",
-                /*
-                fs.readFileSync("/etc/hostname", "utf-8")
-                    .replace(/\n/g, ""),
-                    */
-            ],
-            args,
+            add args
         ].concat().as_slice(),
     );
 
