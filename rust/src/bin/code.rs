@@ -29,7 +29,7 @@ fn confirm_to_create_file(file_name: &str) -> String {
     let result = Confirm::new(&message)
         .prompt();
 
-    if result.ok() != Some(true) {
+    if let Ok(false) = result {
         return "".to_string();
     }
 
