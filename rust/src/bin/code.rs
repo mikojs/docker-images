@@ -20,16 +20,18 @@ fn cli() -> Command<'static> {
         .arg(args::set_proxy_arg())
 }
 
-fn confirm_to_create_file(file_name: &str) {
+fn confirm_to_create_file(file_name: &str) -> String {
     let message = format!("Couldn't find `{}`. Do you want to create this?", file_name);
     let result = Confirm::new(&message)
         .prompt();
 
     if result.ok() != Some(true) {
-        return;
+        return "".to_string();
     }
 
-    println!("create a file");
+    let file_path = format!("{}/{}", args::get_current_dir(), file_name);
+
+    file_path
 }
 
 fn find_files(pattern: &str) -> Vec<String> {
@@ -48,7 +50,11 @@ fn find_files(pattern: &str) -> Vec<String> {
     }
 
     if files.len() == 0 {
-        confirm_to_create_file(pattern);
+        let file_path = confirm_to_create_file(pattern);
+
+        if file_path != "" {
+            files.push(file_path);
+        }
     }
 
     files
