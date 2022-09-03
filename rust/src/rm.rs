@@ -3,7 +3,7 @@ use clap::Command;
 #[path = "./utils/sub_process.rs"] mod sub_process;
 
 pub fn command() -> Command<'static> {
-    return Command::new("rm")
+    Command::new("rm")
         .about("Find the all ids of the stopped containers and remove them")
 }
 
@@ -17,8 +17,7 @@ pub fn execute() {
         .collect();
 
     if ids.len() == 0 {
-        println!("No containers need to be removed.");
-        return;
+        return println!("No containers need to be removed.");
     }
 
     let status = sub_process::exec(
