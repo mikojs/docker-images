@@ -3,6 +3,7 @@ use std::fs;
 use clap::{crate_version, Command};
 use glob;
 use inquire::Confirm;
+use regex::Regex;
 
 #[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
@@ -50,10 +51,16 @@ fn find_files(pattern: &str) -> Vec<String> {
     }
 
     if files.len() == 0 {
-        let file_path = confirm_to_create_file(pattern);
+        let skip_confirm = Regex::new(r"\*")
+            .unwrap()
+            .is_match(pattern);
 
-        if file_path != "" {
-            files.push(file_path);
+        if !skip_confirm {
+            let file_path = confirm_to_create_file(pattern);
+
+            if file_path != "" {
+                files.push(file_path);
+            }
         }
     }
 
