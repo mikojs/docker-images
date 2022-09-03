@@ -1,9 +1,7 @@
 use std::fs;
 use std::path::Path;
-use std::env;
 
-use clap::{Command, Arg, ArgMatches};
-use regex::Regex;
+use clap::{Command, ArgMatches};
 
 #[allow(dead_code)]
 #[path = "./utils/sub_process.rs"] mod sub_process;
@@ -34,7 +32,7 @@ fn get_volumes_from_args(file_path: &str) -> Vec<String> {
 }
 
 pub fn execute(sub_matches: &ArgMatches) {
-    let status = sub_process::exec(
+    sub_process::exec(
         "docker",
         [
             vec![
@@ -50,8 +48,8 @@ pub fn execute(sub_matches: &ArgMatches) {
                 .values_of("args")
                 .unwrap()
                 .collect(),
-        ].concat().as_slice(),
+        ]
+            .concat()
+            .as_slice(),
     );
-
-    assert!(status.success());
 }

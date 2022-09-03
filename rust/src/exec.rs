@@ -13,7 +13,7 @@ Otherwise, this would change to be `/project`"#)
 }
 
 pub fn execute(sub_matches: &ArgMatches) {
-    let status = sub_process::exec(
+    sub_process::exec(
         "docker",
         [
             vec![
@@ -27,6 +27,4 @@ pub fn execute(sub_matches: &ArgMatches) {
                 .collect(),
         ].concat().as_slice(),
     );
-
-    assert!(status.success());
 }
