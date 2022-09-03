@@ -1,3 +1,5 @@
+use std::fs;
+use std::path::Path;
 use clap::{Command, Arg, ArgMatches};
 
 pub fn command() -> Command<'static> {
@@ -12,13 +14,38 @@ Otherwise, this would change to be `/project`"#)
         )
 }
 
+fn get_volumes_from_args(file_path: &str) -> Vec<String> {
+    let mut args: Vec<String> = [].to_vec();
+
+    if Path::new(file_path).exists() {
+        let content = fs::read_to_string(file_path)
+            .expect("Couldn't read the fale")
+            .replace("\n", "");
+
+        args.push("--volumes-from".to_string());
+        args.push(content);
+    }
+
+    args
+}
+
 pub fn execute(sub_matches: &ArgMatches) {
     let args: Vec<&str> = sub_matches
         .values_of("args")
         .unwrap()
         .collect();
 
-    println!("{:?}", args);
+    println!("{:?}", [
+        vec![
+            "run",
+            "-w",
+        ],
+        get_volumes_from_args("/etc/hostname")
+            .iter()
+            .map(AsRef::as_ref)
+            .collect(),
+        args,
+    ].concat().as_slice());
     /*
     let status = sub_process::exec(
         "docker",
