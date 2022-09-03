@@ -15,7 +15,7 @@ jobs:
           command: build
           args: --release
       - run: mkdir ./bin
-      - run: find ./target/release -type f -maxdepth 1 -executable -exec cp {} ./bin/ \;
+      - run: find ./target/release -type f -maxdepth 1 -executable -exec cp {} ./bin \;
       - uses: actions/upload-artifact@v3
         with:
           name: bin
