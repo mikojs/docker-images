@@ -10,15 +10,11 @@ pub fn set_proxy_arg() -> Arg<'static> {
         .allow_hyphen_values(true)
 }
 
-pub fn get_current_dir() -> String {
-    env::current_dir()
+pub fn get_working_directory() -> String {
+    let cwd = env::current_dir()
         .expect("Couldn't get the currenct directory")
         .display()
-        .to_string()
-}
-
-pub fn get_working_directory() -> String {
-    let cwd = get_current_dir();
+        .to_string();
     let re = Regex::new(r"^/project")
         .unwrap();
 
