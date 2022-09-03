@@ -7,6 +7,8 @@ use inquire::Confirm;
 use regex::Regex;
 
 #[allow(dead_code)]
+#[path = "../utils/sub_process.rs"] mod sub_process;
+#[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
 
 const OPTIONS: glob::MatchOptions = glob::MatchOptions {
@@ -101,5 +103,11 @@ fn main() {
         return println!("Couldn't find any files to open.");
     }
 
-    println!("{:?}", files);
+    sub_process::exec(
+        "code-server",
+        &files
+            .iter()
+            .map(AsRef::as_ref)
+            .collect::<Vec<&str>>(),
+    );
 }
