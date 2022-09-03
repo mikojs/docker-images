@@ -50,5 +50,9 @@ fn main() {
         files.append(&mut find_files(&pattern));
     }
 
+    if files.len() == 0 {
+        return println!("Couldn't find any files to open.");
+    }
+
     println!("{:?}", files);
 }
