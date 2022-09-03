@@ -1,4 +1,5 @@
 use std::fs;
+use std::env;
 
 use clap::{crate_version, Command};
 use glob;
@@ -30,9 +31,25 @@ fn confirm_to_create_file(file_name: &str) -> String {
         return "".to_string();
     }
 
-    let file_path = format!("{}/{}", args::get_current_dir(), file_name);
+    let mut file_path = env::current_dir()
+        .expect("Couldn't get the currenct directory");
 
+    file_path.push(file_name);
+
+    let file_dir = file_path
+        .parent()
+        .expect("Couldn't get the file directory");
+
+    if !file_dir.exists() {
+        fs::create_dir_all(file_dir)
+          .expect("Couldn't create the file directory");
+    }
+
+    fs::File::create(&file_path)
+        .expect("Error encountered while creating file");
     file_path
+        .display()
+        .to_string()
 }
 
 fn find_files(pattern: &str) -> Vec<String> {
