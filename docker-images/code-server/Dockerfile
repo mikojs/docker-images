@@ -14,9 +14,9 @@ RUN apk add \
   docker \
   docker-compose
 RUN npm config set python python3
+# FIXME: https://github.com/coder/code-server/issues/5530
 RUN yarn global add \
-  node-pty \
-  code-server
+  code-server@4.6.0
 
 # code-server
 RUN mkdir -p /root/.local/share/code-server/logs

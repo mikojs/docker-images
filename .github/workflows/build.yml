@@ -7,15 +7,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions-rs/toolchain@v1
         with:
-          cache: yarn
-      - run: yarn
-      - run: yarn prod
+          toolchain: stable
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      - run: mkdir ./bin
+      - run: find ./target/release -type f -maxdepth 1 -executable -exec cp {} ./bin \;
       - uses: actions/upload-artifact@v3
         with:
           name: bin
-          path: ./docker-images/bin
+          path: ./bin
 
   build-and-push-images:
     runs-on: ubuntu-latest
