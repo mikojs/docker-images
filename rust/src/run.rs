@@ -5,6 +5,9 @@ use std::env;
 use clap::{Command, Arg, ArgMatches};
 use regex::Regex;
 
+#[allow(dead_code)]
+#[path = "./utils/sub_process.rs"] mod sub_process;
+
 pub fn command() -> Command<'static> {
     Command::new("run")
         .about(r#"This command would mount the same volumes to the current container
@@ -14,6 +17,7 @@ Otherwise, this would change to be `/project`"#)
             Arg::new("args")
                 .required(true)
                 .multiple_values(true)
+                .allow_hyphen_values(true)
         )
 }
 
@@ -49,31 +53,24 @@ fn get_working_directory() -> String {
 }
 
 pub fn execute(sub_matches: &ArgMatches) {
-    let args: Vec<&str> = sub_matches
-        .values_of("args")
-        .unwrap()
-        .collect();
-
-    println!("{:?}", [
-        vec![
-            "run",
-            "-w",
-            &get_working_directory(),
-        ],
-        get_volumes_from_args("/etc/hostname")
-            .iter()
-            .map(AsRef::as_ref)
-            .collect(),
-        args,
-    ].concat().as_slice());
-    /*
     let status = sub_process::exec(
         "docker",
         [
-            add args
+            vec![
+                "run",
+                "-w",
+                &get_working_directory(),
+            ],
+            get_volumes_from_args("/etc/hostname")
+                .iter()
+                .map(AsRef::as_ref)
+                .collect(),
+            sub_matches
+                .values_of("args")
+                .unwrap()
+                .collect(),
         ].concat().as_slice(),
     );
 
     assert!(status.success());
-    */
 }
