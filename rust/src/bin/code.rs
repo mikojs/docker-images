@@ -2,6 +2,7 @@ use std::fs;
 
 use clap::{crate_version, Command};
 use glob;
+use inquire::Confirm;
 
 #[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
@@ -19,6 +20,18 @@ fn cli() -> Command<'static> {
         .arg(args::set_proxy_arg())
 }
 
+fn confirm_to_create_file(file_name: &str) {
+    let message = format!("Couldn't find `{}`. Do you want to create this?", file_name);
+    let result = Confirm::new(&message)
+        .prompt();
+
+    if result.ok() != Some(true) {
+        return;
+    }
+
+    println!("create a file");
+}
+
 fn find_files(pattern: &str) -> Vec<String> {
     let mut files: Vec<String> = []
         .to_vec();
@@ -32,6 +45,10 @@ fn find_files(pattern: &str) -> Vec<String> {
                     .to_string()
             );
         }
+    }
+
+    if files.len() == 0 {
+        confirm_to_create_file(pattern);
     }
 
     files
