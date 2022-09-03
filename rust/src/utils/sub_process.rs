@@ -1,12 +1,14 @@
-use std::process::{ExitStatus, Command};
+use std::process::Command;
 
 const FAIL_TO_START: &str = "command failed to start";
 
-pub fn exec(command: &str, args: &[&str]) -> ExitStatus {
-    Command::new(command)
+pub fn exec(command: &str, args: &[&str]) {
+    let status = Command::new(command)
         .args(args)
         .status()
-        .expect(FAIL_TO_START)
+        .expect(FAIL_TO_START);
+
+    assert!(status.success());
 }
 
 pub fn exec_result(command: &str, args: &[&str]) -> String {

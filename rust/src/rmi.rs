@@ -20,10 +20,10 @@ pub fn execute() {
         return println!("No none-images need to be removed.");
     }
 
-    let status = sub_process::exec(
+    sub_process::exec(
         "docker",
-        [vec!["rmi"], ids].concat().as_slice(),
+        [vec!["rmi"], ids]
+            .concat()
+            .as_slice(),
     );
-
-    assert!(status.success());
 }

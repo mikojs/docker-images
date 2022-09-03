@@ -20,10 +20,10 @@ pub fn execute() {
         return println!("No containers need to be removed.");
     }
 
-    let status = sub_process::exec(
+    sub_process::exec(
         "docker",
-        [vec!["rm"], ids].concat().as_slice(),
+        [vec!["rm"], ids]
+            .concat()
+            .as_slice(),
     );
-
-    assert!(status.success());
 }
