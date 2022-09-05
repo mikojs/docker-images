@@ -1,6 +1,3 @@
-use std::fs;
-use std::path::Path;
-
 use clap::{Command, ArgMatches};
 
 #[path = "./utils/sub_process.rs"] mod sub_process;
@@ -14,17 +11,14 @@ Otherwise, this would change to be `/project`"#)
         .arg(args::set_proxy_arg())
 }
 
-fn get_volumes_from_args(file_path: &str) -> Vec<String> {
+fn get_volumes_from_args() -> Vec<String> {
     let mut args: Vec<String> = []
         .to_vec();
+    let container_name = args::get_container_name();
 
-    if Path::new(file_path).exists() {
-        let content = fs::read_to_string(file_path)
-            .expect("Couldn't read the fale")
-            .replace("\n", "");
-
+    if !container_name.is_empty() {
         args.push("--volumes-from".to_string());
-        args.push(content);
+        args.push(container_name);
     }
 
     args
@@ -62,7 +56,7 @@ pub fn execute(sub_matches: &ArgMatches) {
                 "-w",
                 &args::get_working_directory(),
             ],
-            get_volumes_from_args("/etc/hostname")
+            get_volumes_from_args()
                 .iter()
                 .map(AsRef::as_ref)
                 .collect(),
