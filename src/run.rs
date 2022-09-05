@@ -11,6 +11,19 @@ Otherwise, this would change to be `/project`"#)
         .arg(args::set_proxy_arg())
 }
 
+fn get_network_name() -> String {
+    sub_process::exec_result(
+        "docker",
+        &[
+            "inspect",
+            args::get_container_name(),
+            "--format",
+            "{{.HostConfig.NetworkMode}}",
+        ],
+    )
+        .replace("\n", "")
+}
+
 fn get_volumes_from_args() -> Vec<String> {
     let mut args: Vec<String> = []
         .to_vec();
