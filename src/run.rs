@@ -3,7 +3,6 @@ use std::path::Path;
 
 use clap::{Command, ArgMatches};
 
-#[allow(dead_code)]
 #[path = "./utils/sub_process.rs"] mod sub_process;
 #[path = "./utils/args.rs"] mod args;
 
@@ -31,7 +30,30 @@ fn get_volumes_from_args(file_path: &str) -> Vec<String> {
     args
 }
 
+fn get_container_network_args() -> Vec<String> {
+    let mut args: Vec<String> = []
+        .to_vec();
+    let network = sub_process::exec_result(
+        "docker",
+        &[
+            "inspect",
+            // container name
+            "--format",
+            "{{.HostConfig.NetworkMode}}",
+        ],
+    );
+
+    if !network.is_empty() {
+        args.push("--network".to_string());
+        args.push(network.replace("\n", ""));
+    }
+
+    args
+}
+
 pub fn execute(sub_matches: &ArgMatches) {
+    println!(">>>> {:?}", get_container_network_args());
+
     sub_process::exec(
         "docker",
         [
