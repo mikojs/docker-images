@@ -16,7 +16,7 @@ fn get_network_name() -> String {
         "docker",
         &[
             "inspect",
-            args::get_container_name(),
+            &args::get_container_name(),
             "--format",
             "{{.HostConfig.NetworkMode}}",
         ],
@@ -24,43 +24,15 @@ fn get_network_name() -> String {
         .replace("\n", "")
 }
 
-fn get_volumes_from_args() -> Vec<String> {
-    let mut args: Vec<String> = []
-        .to_vec();
-    let container_name = args::get_container_name();
-
-    if !container_name.is_empty() {
-        args.push("--volumes-from".to_string());
-        args.push(container_name);
-    }
-
-    args
-}
-
-fn get_container_network_args() -> Vec<String> {
-    let mut args: Vec<String> = []
-        .to_vec();
-    let network = sub_process::exec_result(
-        "docker",
-        &[
-            "inspect",
-            // container name
-            "--format",
-            "{{.HostConfig.NetworkMode}}",
-        ],
-    );
-
-    if !network.is_empty() {
-        args.push("--network".to_string());
-        args.push(network.replace("\n", ""));
+fn filter_args(args: Vec<String>) -> Vec<String> {
+    if args[1].is_empty() {
+        return [].to_vec();
     }
 
     args
 }
 
 pub fn execute(sub_matches: &ArgMatches) {
-    println!(">>>> {:?}", get_container_network_args());
-
     sub_process::exec(
         "docker",
         [
@@ -69,7 +41,21 @@ pub fn execute(sub_matches: &ArgMatches) {
                 "-w",
                 &args::get_working_directory(),
             ],
-            get_volumes_from_args()
+            filter_args(
+                vec![
+                    "--volumes-from".to_string(),
+                    args::get_container_name(),
+                ],
+            )
+                .iter()
+                .map(AsRef::as_ref)
+                .collect(),
+            filter_args(
+                vec![
+                    "--network".to_string(),
+                    get_network_name(),
+                ],
+            )
                 .iter()
                 .map(AsRef::as_ref)
                 .collect(),
