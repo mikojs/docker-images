@@ -1,9 +1,5 @@
-use std::fs;
-use std::path::Path;
-
 use clap::{Command, ArgMatches};
 
-#[allow(dead_code)]
 #[path = "./utils/sub_process.rs"] mod sub_process;
 #[path = "./utils/args.rs"] mod args;
 
@@ -15,17 +11,22 @@ Otherwise, this would change to be `/project`"#)
         .arg(args::set_proxy_arg())
 }
 
-fn get_volumes_from_args(file_path: &str) -> Vec<String> {
-    let mut args: Vec<String> = []
-        .to_vec();
+fn get_network_name() -> String {
+    sub_process::exec_result(
+        "docker",
+        &[
+            "inspect",
+            &args::get_container_name(),
+            "--format",
+            "{{.HostConfig.NetworkMode}}",
+        ],
+    )
+        .replace("\n", "")
+}
 
-    if Path::new(file_path).exists() {
-        let content = fs::read_to_string(file_path)
-            .expect("Couldn't read the fale")
-            .replace("\n", "");
-
-        args.push("--volumes-from".to_string());
-        args.push(content);
+fn filter_args(args: Vec<String>) -> Vec<String> {
+    if args[1].is_empty() {
+        return [].to_vec();
     }
 
     args
@@ -40,7 +41,21 @@ pub fn execute(sub_matches: &ArgMatches) {
                 "-w",
                 &args::get_working_directory(),
             ],
-            get_volumes_from_args("/etc/hostname")
+            filter_args(
+                vec![
+                    "--volumes-from".to_string(),
+                    args::get_container_name(),
+                ],
+            )
+                .iter()
+                .map(AsRef::as_ref)
+                .collect(),
+            filter_args(
+                vec![
+                    "--network".to_string(),
+                    get_network_name(),
+                ],
+            )
                 .iter()
                 .map(AsRef::as_ref)
                 .collect(),
