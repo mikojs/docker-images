@@ -20,7 +20,7 @@ pub fn get_container_name() -> String {
     }
 
     fs::read_to_string(HOSTNAME_PATH)
-        .expect("Couldn't read the fale")
+        .expect("Couldn't read the file")
         .replace("\n", "")
 }
 
