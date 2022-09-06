@@ -12,10 +12,13 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute(sub_matches: &ArgMatches) {
-    parser::print_env_value(
-        &sub_matches
-            .value_of("name")
-            .expect("Couldn't parse the name from the arguments")
-            .to_string(),
+    println!(
+        "{}",
+        parser::get_env_value(
+            &sub_matches
+                .value_of("name")
+                .expect("Couldn't parse the name from the arguments")
+                .to_string(),
+        ),
     );
 }
