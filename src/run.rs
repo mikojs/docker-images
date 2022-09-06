@@ -1,5 +1,6 @@
 use clap::{Command, ArgMatches};
 
+#[allow(dead_code)]
 #[path = "./utils/sub_process.rs"] mod sub_process;
 #[path = "./utils/args.rs"] mod args;
 
