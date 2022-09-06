@@ -11,7 +11,7 @@ use regex::Regex;
 pub fn command() -> Command<'static> {
     Command::new("version")
         .about(r#"Use this command to parse the docker version from the env variables
-The arguments could be the env variable names or the parser names"#)
+The arguments could be the env variable names or the parser names, like `rust rust-parser`"#)
         .arg(args::set_proxy_arg())
 }
 
