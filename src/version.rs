@@ -1,9 +1,12 @@
 use std::env;
 
 use clap::{Command, ArgMatches};
+use regex::Regex;
 
 #[allow(dead_code)]
 #[path = "./utils/args.rs"] mod args;
+#[allow(dead_code)]
+#[path = "./utils/sub_process.rs"] mod sub_process;
 
 pub fn command() -> Command<'static> {
     Command::new("version")
@@ -19,8 +22,21 @@ pub fn execute(sub_matches: &ArgMatches) {
         .collect();
 
     for name in names {
-        if let Ok(value) = env::var(format!("DOCKER_{}_VERSION", name.to_uppercase())) {
-            println!("{}", value);
+        let is_parser = Regex::new(r"-parser$")
+            .unwrap()
+            .is_match(&name);
+
+        if is_parser {
+            let version = sub_process::exec_result(&name, &[]);
+
+            if !version.is_empty() {
+                println!("{}", version);
+                return;
+            }
+        }
+
+        if let Ok(version) = env::var(format!("DOCKER_{}_VERSION", name.to_uppercase())) {
+            println!("{}", version);
             return;
         }
     }
