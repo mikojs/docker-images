@@ -1,3 +1,5 @@
+use std::env;
+
 use clap::{crate_version, Command, Arg};
 
 fn cli() -> Command<'static> {
@@ -14,7 +16,12 @@ fn main() {
     let matches = cli()
         .get_matches();
     let name = matches
-        .value_of("name");
+        .value_of("name")
+        .expect("Couldn't parse the name in the args")
+        .to_string()
+        .to_uppercase();
 
-    println!("{:?}", name);
+    if let Ok(value) = env::var(format!("DOCKER_{}_VERSION", name)) {
+        println!("{:?}", value);
+    }
 }
