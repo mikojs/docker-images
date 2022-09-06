@@ -30,7 +30,7 @@ pub fn execute(sub_matches: &ArgMatches) {
             let version = sub_process::exec_result_without_not_found_command(&name);
 
             if !version.is_empty() {
-                println!("{}", version);
+                println!("{}", version.replace("\n", ""));
                 return;
             }
         }
