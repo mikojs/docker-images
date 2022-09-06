@@ -1,8 +1,9 @@
+use std::env;
+
 use clap::{Command, ArgMatches};
 
 #[allow(dead_code)]
 #[path = "./utils/args.rs"] mod args;
-#[path = "./utils/parser.rs"] mod parser;
 
 pub fn command() -> Command<'static> {
     Command::new("version")
@@ -18,10 +19,8 @@ pub fn execute(sub_matches: &ArgMatches) {
         .collect();
 
     for name in names {
-        let version = parser::get_env_value(name);
-
-        if !version.is_empty() {
-            println!("{}", version);
+        if let Ok(value) = env::var(format!("DOCKER_{}_VERSION", name.to_uppercase())) {
+            println!("{}", value);
             return;
         }
     }
