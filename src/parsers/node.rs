@@ -47,12 +47,15 @@ fn main() {
             .to_str()
             .expect("Couldn't use the file name to string")
             .replace("-parser", "");
-        let version = value["engines"].get(engine_name)
-            .expect("couldn't get version")
-            .to_string()
-            .replace("\"", "");
-        let req = VersionReq::parse(&version).unwrap();
 
-        println!("{:?}", req);
+        if let Some(version) = value["engines"].get(engine_name) {
+            let req = VersionReq::parse(
+                &version
+                    .to_string()
+                    .replace("\"", "")
+            ).unwrap();
+
+            println!("{:?}", req);
+        }
     }
 }
