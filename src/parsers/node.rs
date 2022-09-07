@@ -48,14 +48,24 @@ fn main() {
             .expect("Couldn't use the file name to string")
             .replace("-parser", "");
 
-        if let Some(version) = value["engines"].get(engine_name) {
-            let req = VersionReq::parse(
-                &version
+        if let Some(engine_version) = value["engines"].get(engine_name) {
+            let comparators = VersionReq::parse(
+                &engine_version
                     .to_string()
                     .replace("\"", "")
-            ).unwrap();
+            )
+                .unwrap()
+                .comparators;
+            let mut version = 0;
 
-            println!("{:?}", req);
+            for comparator in comparators {
+                if version < comparator.major {
+                    // FIXME: should check comparator.op
+                    version = comparator.major;
+                }
+            }
+
+            println!("{}-alpine", version);
         }
     }
 }
