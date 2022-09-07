@@ -1,5 +1,8 @@
 use std::env;
+use std::fs;
 use std::path::{Path, PathBuf};
+
+use serde_json::Value;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
@@ -31,5 +34,10 @@ fn main() {
         return;
     }
 
-    println!("{}", package_json_path);
+    let content = fs::read_to_string(package_json_path)
+        .expect("Couldn't read the file");
+
+    if let Ok(value) = serde_json::from_str::<Value>(&content) {
+        println!("{}", value["engines"]["node"]);
+    }
 }
