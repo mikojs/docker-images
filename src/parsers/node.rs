@@ -68,4 +68,7 @@ fn main() {
             println!("{}-alpine", version);
         }
     }
+    else {
+        unreachable!();
+    }
 }
