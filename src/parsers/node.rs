@@ -3,6 +3,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde_json::Value;
+use semver::VersionReq;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
@@ -38,6 +39,12 @@ fn main() {
         .expect("Couldn't read the file");
 
     if let Ok(value) = serde_json::from_str::<Value>(&content) {
-        println!("{}", value["engines"]["node"]);
+        // could change node to yarn and npm
+        let version = value["engines"]["node"]
+            .to_string()
+            .replace("\"", "");
+        let req = VersionReq::parse(&version).unwrap();
+
+        println!("{:?}", req);
     }
 }
