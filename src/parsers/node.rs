@@ -39,8 +39,16 @@ fn main() {
         .expect("Couldn't read the file");
 
     if let Ok(value) = serde_json::from_str::<Value>(&content) {
-        // could change node to yarn and npm
-        let version = value["engines"]["node"]
+        let file_path = env::current_exe()
+            .expect("Couldn't get the current file path");
+        let engine_name = file_path
+            .file_name()
+            .expect("Couldn't get the current file name")
+            .to_str()
+            .expect("Couldn't use the file name to string")
+            .replace("-parser", "");
+        let version = value["engines"].get(engine_name)
+            .expect("couldn't get version")
             .to_string()
             .replace("\"", "");
         let req = VersionReq::parse(&version).unwrap();
