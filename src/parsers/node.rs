@@ -3,7 +3,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde_json::Value;
-use semver::VersionReq;
+use semver::{VersionReq, Op};
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
@@ -60,8 +60,11 @@ fn main() {
 
             for comparator in comparators {
                 if version < comparator.major {
-                    // FIXME: should check comparator.op
-                    version = comparator.major;
+                    version =  match comparator.op {
+                        Op::Less => comparator.major - 1,
+                        Op::Greater => comparator.major + 1,
+                        _ => comparator.major,
+                    }
                 }
             }
 
