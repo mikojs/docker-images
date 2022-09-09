@@ -29,7 +29,7 @@ pub fn execute(sub_matches: &ArgMatches) {
             .is_match(&name);
 
         if is_parser {
-            let version = sub_process::exec_result_without_not_found_command(&name);
+            let version = sub_process::exec_result_skip_command_error(&name);
 
             if !version.is_empty() {
                 println!("{}", version.replace("\n", ""));

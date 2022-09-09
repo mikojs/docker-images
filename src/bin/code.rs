@@ -33,11 +33,9 @@ fn confirm_to_create_file(file_name: &str) -> String {
         return "".to_string();
     }
 
-    let mut file_path = env::current_dir()
-        .expect("Couldn't get the currenct directory");
-
-    file_path.push(file_name);
-
+    let file_path = env::current_dir()
+        .expect("Couldn't get the currenct directory")
+        .join(file_name);
     let file_dir = file_path
         .parent()
         .expect("Couldn't get the file directory");

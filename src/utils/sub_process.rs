@@ -21,7 +21,7 @@ pub fn exec_result(command: &str, args: &[&str]) -> String {
         .unwrap()
 }
 
-pub fn exec_result_without_not_found_command(command: &str) -> String {
+pub fn exec_result_skip_command_error(command: &str) -> String {
     let result: String;
 
     match Command::new(command).output() {
