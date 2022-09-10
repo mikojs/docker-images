@@ -1,4 +1,5 @@
 use std::env;
+use std::fs;
 
 #[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
@@ -41,5 +42,6 @@ Here are some helpful commands used in the docker container."#.to_string();
         content.push_str(&new_content);
     }
 
-    println!("{}", content);
+    fs::write("README.md", content)
+        .expect("Couldn't write the README.md");
 }
