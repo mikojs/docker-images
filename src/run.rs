@@ -14,7 +14,7 @@ Otherwise, this would change to be `/project`"#)
 fn get_network_name() -> String {
     sub_process::exec_result(
         "docker",
-        &[
+        vec![
             "inspect",
             &args::get_container_name(),
             "--format",
@@ -24,9 +24,9 @@ fn get_network_name() -> String {
         .replace("\n", "")
 }
 
-fn filter_args(args: Vec<String>) -> Vec<String> {
+fn filter_args(args: Vec<&str>) -> Vec<&str> {
     if args[1].is_empty() {
-        return [].to_vec();
+        return vec![];
     }
 
     args
@@ -43,28 +43,18 @@ pub fn execute(sub_matches: &ArgMatches) {
             ],
             filter_args(
                 vec![
-                    "--volumes-from".to_string(),
-                    args::get_container_name(),
+                    "--volumes-from",
+                    &args::get_container_name(),
                 ],
-            )
-                .iter()
-                .map(AsRef::as_ref)
-                .collect(),
+            ),
             filter_args(
                 vec![
-                    "--network".to_string(),
-                    get_network_name(),
+                    "--network",
+                    &get_network_name(),
                 ],
-            )
-                .iter()
-                .map(AsRef::as_ref)
-                .collect(),
-            sub_matches
-                .values_of("args")
-                .unwrap()
-                .collect(),
+            ),
+            args::get_values_from_args(sub_matches),
         ]
-            .concat()
-            .as_slice(),
+            .concat(),
     );
 }

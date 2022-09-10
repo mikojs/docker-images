@@ -1,17 +1,25 @@
-use std::env;
 use std::fs;
 use std::path::Path;
 
-use clap::Arg;
+use clap::{Arg, ArgMatches};
 use regex::Regex;
 
 const HOSTNAME_PATH: &str = "/etc/hostname";
+
+#[path = "../utils/main.rs"] mod utils;
 
 pub fn set_proxy_arg() -> Arg<'static> {
     Arg::new("args")
         .required(true)
         .multiple_values(true)
         .allow_hyphen_values(true)
+}
+
+pub fn get_values_from_args(sub_matches: &ArgMatches) -> Vec<&str> {
+    sub_matches
+        .values_of("args")
+        .unwrap()
+        .collect()
 }
 
 pub fn get_container_name() -> String {
@@ -25,8 +33,7 @@ pub fn get_container_name() -> String {
 }
 
 pub fn get_working_directory() -> String {
-    let cwd = env::current_dir()
-        .expect("Couldn't get the currenct directory")
+    let cwd = utils::get_current_dir()
         .display()
         .to_string();
     let is_project = Regex::new(r"^/project")

@@ -2,7 +2,7 @@ use std::process::Command;
 
 const FAIL_TO_START: &str = "command failed to start";
 
-pub fn exec(command: &str, args: &[&str]) {
+pub fn exec(command: &str, args: Vec<&str>) {
     let status = Command::new(command)
         .args(args)
         .status()
@@ -11,7 +11,7 @@ pub fn exec(command: &str, args: &[&str]) {
     assert!(status.success());
 }
 
-pub fn exec_result(command: &str, args: &[&str]) -> String {
+pub fn exec_result(command: &str, args: Vec<&str>) -> String {
     let output = Command::new(command)
         .args(args)
         .output()

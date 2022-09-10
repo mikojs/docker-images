@@ -6,6 +6,7 @@ use glob;
 use inquire::Confirm;
 use regex::Regex;
 
+#[path = "../utils/main.rs"] mod utils;
 #[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
 #[allow(dead_code)]
@@ -17,13 +18,6 @@ const OPTIONS: glob::MatchOptions = glob::MatchOptions {
     require_literal_leading_dot: false,
 };
 
-fn cli() -> Command<'static> {
-    Command::new("code")
-        .version(crate_version!())
-        .about("Use this command to open files in a code-server")
-        .arg(args::set_proxy_arg())
-}
-
 fn confirm_to_create_file(file_name: &str) -> String {
     let message = format!("Couldn't find `{}`. Do you want to create this?", file_name);
     let result = Confirm::new(&message)
@@ -33,8 +27,7 @@ fn confirm_to_create_file(file_name: &str) -> String {
         return "".to_string();
     }
 
-    let file_path = env::current_dir()
-        .expect("Couldn't get the currenct directory")
+    let file_path = utils::get_current_dir()
         .join(file_name);
     let file_dir = file_path
         .parent()
@@ -53,8 +46,7 @@ fn confirm_to_create_file(file_name: &str) -> String {
 }
 
 fn find_files(pattern: &str) -> Vec<String> {
-    let mut files: Vec<String> = []
-        .to_vec();
+    let mut files = vec![];
 
     for entry in glob::glob_with(pattern, OPTIONS).unwrap() {
         if let Ok(path) = entry {
@@ -75,7 +67,7 @@ fn find_files(pattern: &str) -> Vec<String> {
         if !skip_confirm {
             let file_path = confirm_to_create_file(pattern);
 
-            if file_path != "" {
+            if !file_path.is_empty() {
                 files.push(file_path);
             }
         }
@@ -85,13 +77,13 @@ fn find_files(pattern: &str) -> Vec<String> {
 }
 
 fn main() {
-    let mut files: Vec<String> = []
-        .to_vec();
-    let patterns: Vec<String> = cli()
-        .get_matches()
-        .remove_many("args")
-        .expect("`args` is required")
-        .collect();
+    let matches = Command::new("code")
+        .version(crate_version!())
+        .about("Use this command to open files in a code-server")
+        .arg(args::set_proxy_arg())
+        .get_matches();
+    let patterns = args::get_values_from_args(&matches);
+    let mut files = vec![];
 
     for pattern in patterns {
         files.append(&mut find_files(&pattern));
@@ -103,9 +95,9 @@ fn main() {
 
     sub_process::exec(
         "code-server",
-        &files
+        files
             .iter()
             .map(AsRef::as_ref)
-            .collect::<Vec<&str>>(),
+            .collect(),
     );
 }

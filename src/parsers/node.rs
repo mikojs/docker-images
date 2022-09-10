@@ -2,8 +2,11 @@ use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use clap::{crate_version, Command, Arg};
 use serde_json::Value;
 use semver::{VersionReq, Op};
+
+#[path = "../utils/main.rs"] mod utils;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
@@ -25,9 +28,21 @@ fn find_package_json(cwd: PathBuf) -> PathBuf {
 }
 
 fn main() {
-    let cwd = env::current_dir()
-        .expect("Couldn't get the currenct directory");
-    let package_json_path = find_package_json(cwd)
+    let engine_name = Command::new("node-parser")
+        .version(crate_version!())
+        .about("Use to parse the node version from the package.json")
+        .arg(
+            Arg::new("name")
+                .default_value("node")
+                .value_parser(["node", "yarn", "npm"])
+        )
+        .get_matches()
+        .value_of("name")
+        .expect("Couldn't get the name from the arguments")
+        .to_string();
+    let package_json_path = find_package_json(
+        utils::get_current_dir()
+    )
         .display()
         .to_string();
 
@@ -39,15 +54,6 @@ fn main() {
         .expect("Couldn't read the file");
 
     if let Ok(value) = serde_json::from_str::<Value>(&content) {
-        let file_path = env::current_exe()
-            .expect("Couldn't get the current file path");
-        let engine_name = file_path
-            .file_name()
-            .expect("Couldn't get the current file name")
-            .to_str()
-            .expect("Couldn't use the file name to string")
-            .replace("-parser", "");
-
         if let Some(engine_version) = value["engines"].get(engine_name) {
             let comparators = VersionReq::parse(
                 &engine_version
