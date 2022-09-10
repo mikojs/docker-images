@@ -22,10 +22,7 @@ pub fn execute(sub_matches: &ArgMatches) {
                 "-w",
                 &args::get_working_directory(),
             ],
-            sub_matches
-                .values_of("args")
-                .unwrap()
-                .collect(),
+            args::get_values_from_args(sub_matches),
         ]
             .concat()
             .as_slice(),

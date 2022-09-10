@@ -59,10 +59,7 @@ pub fn execute(sub_matches: &ArgMatches) {
                 .iter()
                 .map(AsRef::as_ref)
                 .collect(),
-            sub_matches
-                .values_of("args")
-                .unwrap()
-                .collect(),
+            args::get_values_from_args(sub_matches),
         ]
             .concat()
             .as_slice(),
