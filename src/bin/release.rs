@@ -16,12 +16,30 @@ fn get_command_help(command_name: &str) -> String {
             .to_string(),
         vec!["--help"],
     )
+        .replace("`", "\\`")
 }
 
 fn main() {
     let command_names = vec!["ddocker", "code", "node-parser"];
+    let mut content = r#"# Docker images
+
+Here are some helpful commands used in the docker container."#.to_string();
 
     for command_name in command_names {
-        println!("{}", get_command_help(command_name));
+        let new_content = format!(
+            r#"
+
+## {}
+
+```
+{}
+```"#,
+            command_name,
+            get_command_help(command_name),
+        );
+
+        content.push_str(&new_content);
     }
+
+    println!("{}", content);
 }
