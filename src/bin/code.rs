@@ -83,9 +83,6 @@ fn main() {
         .arg(args::set_proxy_arg())
         .get_matches();
     let patterns = args::get_values_from_args(&matches);
-
-    println!("{:?}", patterns);
-    /*
     let mut files = vec![];
 
     for pattern in patterns {
@@ -98,7 +95,9 @@ fn main() {
 
     sub_process::exec(
         "code-server",
-        files,
+        files
+            .iter()
+            .map(AsRef::as_ref)
+            .collect(),
     );
-    */
 }
