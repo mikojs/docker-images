@@ -24,7 +24,6 @@ pub fn execute(sub_matches: &ArgMatches) {
             ],
             args::get_values_from_args(sub_matches),
         ]
-            .concat()
-            .as_slice(),
+            .concat(),
     );
 }

@@ -10,7 +10,7 @@ pub fn command() -> Command<'static> {
 pub fn execute() {
     let stdout = sub_process::exec_result(
         "docker",
-        &["images", "-qf", "dangling=true"],
+        vec!["images", "-qf", "dangling=true"],
     );
     let ids: Vec<&str> = stdout.split("\n")
         .filter(|x| !x.is_empty())
@@ -23,7 +23,6 @@ pub fn execute() {
     sub_process::exec(
         "docker",
         [vec!["rmi"], ids]
-            .concat()
-            .as_slice(),
+            .concat(),
     );
 }

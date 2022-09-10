@@ -14,7 +14,7 @@ Otherwise, this would change to be `/project`"#)
 fn get_network_name() -> String {
     sub_process::exec_result(
         "docker",
-        &[
+        vec![
             "inspect",
             &args::get_container_name(),
             "--format",
@@ -61,7 +61,6 @@ pub fn execute(sub_matches: &ArgMatches) {
                 .collect(),
             args::get_values_from_args(sub_matches),
         ]
-            .concat()
-            .as_slice(),
+            .concat(),
     );
 }
