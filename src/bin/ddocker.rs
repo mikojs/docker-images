@@ -5,7 +5,6 @@ use clap::{crate_version, Command};
 #[path = "../exec.rs"] mod exec;
 #[path = "../rm.rs"] mod rm;
 #[path = "../rmi.rs"] mod rmi;
-#[path = "../version.rs"] mod version;
 
 fn cli() -> Command<'static> {
     Command::new("ddocker")
@@ -17,7 +16,6 @@ fn cli() -> Command<'static> {
         .subcommand(exec::command())
         .subcommand(rm::command())
         .subcommand(rmi::command())
-        .subcommand(version::command())
 }
 
 fn main() {
@@ -27,7 +25,6 @@ fn main() {
         Some(("exec", sub_matches)) => exec::execute(sub_matches),
         Some(("rm", _)) => rm::execute(),
         Some(("rmi", _)) => rmi::execute(),
-        Some(("version", sub_matches)) => version::execute(sub_matches),
         _ => unreachable!(),
     }
 }
