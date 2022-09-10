@@ -7,6 +7,10 @@ edition = "2021"
 strip = true
 
 [[bin]]
+name = "release"
+path = "src/bin/release.rs"
+
+[[bin]]
 name = "ddocker"
 path = "src/bin/ddocker.rs"
 
