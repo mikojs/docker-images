@@ -6,6 +6,8 @@ use clap::{crate_version, Command, Arg};
 use serde_json::Value;
 use semver::{VersionReq, Op};
 
+#[path = "../utils/main.rs"] mod utils;
+
 fn cli() -> Command<'static> {
     Command::new("node-parser")
         .version(crate_version!())
@@ -43,8 +45,7 @@ fn main() {
         .expect("Couldn't get name from the arguments")
         .to_string();
     let package_json_path = find_package_json(
-        env::current_dir()
-            .expect("Couldn't get the currenct directory"),
+        utils::get_current_dir()
     )
         .display()
         .to_string();

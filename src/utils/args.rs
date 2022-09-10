@@ -1,4 +1,3 @@
-use std::env;
 use std::fs;
 use std::path::Path;
 
@@ -6,6 +5,8 @@ use clap::Arg;
 use regex::Regex;
 
 const HOSTNAME_PATH: &str = "/etc/hostname";
+
+#[path = "../utils/main.rs"] mod utils;
 
 pub fn set_proxy_arg() -> Arg<'static> {
     Arg::new("args")
@@ -25,8 +26,7 @@ pub fn get_container_name() -> String {
 }
 
 pub fn get_working_directory() -> String {
-    let cwd = env::current_dir()
-        .expect("Couldn't get the currenct directory")
+    let cwd = utils::get_current_dir()
         .display()
         .to_string();
     let is_project = Regex::new(r"^/project")
