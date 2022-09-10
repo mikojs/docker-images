@@ -18,13 +18,6 @@ const OPTIONS: glob::MatchOptions = glob::MatchOptions {
     require_literal_leading_dot: false,
 };
 
-fn cli() -> Command<'static> {
-    Command::new("code")
-        .version(crate_version!())
-        .about("Use this command to open files in a code-server")
-        .arg(args::set_proxy_arg())
-}
-
 fn confirm_to_create_file(file_name: &str) -> String {
     let message = format!("Couldn't find `{}`. Do you want to create this?", file_name);
     let result = Confirm::new(&message)
@@ -84,12 +77,16 @@ fn find_files(pattern: &str) -> Vec<String> {
 }
 
 fn main() {
-    let mut files = vec![];
-    let patterns: Vec<String> = cli()
-        .get_matches()
+    let matches = Command::new("code")
+        .version(crate_version!())
+        .about("Use this command to open files in a code-server")
+        .arg(args::set_proxy_arg())
+        .get_matches();
+    let patterns: Vec<String> = matches
         .remove_many("args")
         .expect("`args` is required")
         .collect();
+    let mut files = vec![];
 
     for pattern in patterns {
         files.append(&mut find_files(&pattern));

@@ -8,17 +8,6 @@ use semver::{VersionReq, Op};
 
 #[path = "../utils/main.rs"] mod utils;
 
-fn cli() -> Command<'static> {
-    Command::new("node-parser")
-        .version(crate_version!())
-        .about("Use to parse the node version from the package.json")
-        .arg(
-            Arg::new("name")
-                .default_value("node")
-                .value_parser(["node", "yarn", "npm"])
-        )
-}
-
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
 
@@ -39,10 +28,17 @@ fn find_package_json(cwd: PathBuf) -> PathBuf {
 }
 
 fn main() {
-    let engine_name = cli()
+    let engine_name = Command::new("node-parser")
+        .version(crate_version!())
+        .about("Use to parse the node version from the package.json")
+        .arg(
+            Arg::new("name")
+                .default_value("node")
+                .value_parser(["node", "yarn", "npm"])
+        )
         .get_matches()
         .value_of("name")
-        .expect("Couldn't get name from the arguments")
+        .expect("Couldn't get the name from the arguments")
         .to_string();
     let package_json_path = find_package_json(
         utils::get_current_dir()
