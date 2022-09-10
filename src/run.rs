@@ -24,7 +24,7 @@ fn get_network_name() -> String {
         .replace("\n", "")
 }
 
-fn filter_args(args: Vec<String>) -> Vec<String> {
+fn filter_args(args: Vec<&str>) -> Vec<&str> {
     if args[1].is_empty() {
         return vec![];
     }
@@ -43,22 +43,16 @@ pub fn execute(sub_matches: &ArgMatches) {
             ],
             filter_args(
                 vec![
-                    "--volumes-from".to_string(),
-                    args::get_container_name(),
+                    "--volumes-from",
+                    &args::get_container_name(),
                 ],
-            )
-                .iter()
-                .map(AsRef::as_ref)
-                .collect(),
+            ),
             filter_args(
                 vec![
-                    "--network".to_string(),
-                    get_network_name(),
+                    "--network",
+                    &get_network_name(),
                 ],
-            )
-                .iter()
-                .map(AsRef::as_ref)
-                .collect(),
+            ),
             args::get_values_from_args(sub_matches),
         ]
             .concat(),
