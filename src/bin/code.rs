@@ -67,7 +67,7 @@ fn find_files(pattern: &str) -> Vec<String> {
         if !skip_confirm {
             let file_path = confirm_to_create_file(pattern);
 
-            if file_path != "" {
+            if !file_path.is_empty() {
                 files.push(file_path);
             }
         }
@@ -82,10 +82,10 @@ fn main() {
         .about("Use this command to open files in a code-server")
         .arg(args::set_proxy_arg())
         .get_matches();
-    let patterns: Vec<String> = matches
-        .remove_many("args")
-        .expect("`args` is required")
-        .collect();
+    let patterns = args::get_values_from_args(&matches);
+
+    println!("{:?}", patterns);
+    /*
     let mut files = vec![];
 
     for pattern in patterns {
@@ -98,9 +98,7 @@ fn main() {
 
     sub_process::exec(
         "code-server",
-        &files
-            .iter()
-            .map(AsRef::as_ref)
-            .collect::<Vec<&str>>(),
+        files,
     );
+    */
 }
