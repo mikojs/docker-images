@@ -26,7 +26,7 @@ fn get_network_name() -> String {
 
 fn filter_args(args: Vec<String>) -> Vec<String> {
     if args[1].is_empty() {
-        return [].to_vec();
+        return vec![];
     }
 
     args

@@ -53,8 +53,7 @@ fn confirm_to_create_file(file_name: &str) -> String {
 }
 
 fn find_files(pattern: &str) -> Vec<String> {
-    let mut files: Vec<String> = []
-        .to_vec();
+    let mut files = vec![];
 
     for entry in glob::glob_with(pattern, OPTIONS).unwrap() {
         if let Ok(path) = entry {
@@ -85,8 +84,7 @@ fn find_files(pattern: &str) -> Vec<String> {
 }
 
 fn main() {
-    let mut files: Vec<String> = []
-        .to_vec();
+    let mut files = vec![];
     let patterns: Vec<String> = cli()
         .get_matches()
         .remove_many("args")
