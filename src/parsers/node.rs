@@ -42,9 +42,10 @@ fn main() {
         .value_of("name")
         .expect("Couldn't get name from the arguments")
         .to_string();
-    let cwd = env::current_dir()
-        .expect("Couldn't get the currenct directory");
-    let package_json_path = find_package_json(cwd)
+    let package_json_path = find_package_json(
+        env::current_dir()
+            .expect("Couldn't get the currenct directory"),
+    )
         .display()
         .to_string();
 
