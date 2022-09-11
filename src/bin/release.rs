@@ -21,6 +21,7 @@ fn get_command_help(command_name: &str) -> String {
 }
 
 fn main() {
+    // TODO: check folder is release
     let command_names = vec!["ddocker", "code", "node-parser"];
     let mut content = r#"# Docker images
 
@@ -39,9 +40,12 @@ Here are some helpful commands used in the docker container."#.to_string();
             get_command_help(command_name),
         );
 
+        // TODO: check version is right
         content.push_str(&new_content);
     }
 
     fs::write("README.md", content)
         .expect("Couldn't write the README.md");
+
+    // TODO: add git commit
 }
