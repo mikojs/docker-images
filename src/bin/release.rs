@@ -76,6 +76,4 @@ Here are some helpful commands used in the docker container."#.to_string();
 
     fs::write("README.md", content)
         .expect("Couldn't write the README.md");
-    sub_process::exec("git", vec!["add", "README.md"]);
-    sub_process::exec("git", vec!["commit", "-m", "docs(readme.md): Update version"]);
 }
