@@ -1,6 +1,7 @@
 use std::env;
 use std::fs;
 use std::process;
+use std::path::Path;
 
 use regex::Regex;
 
@@ -36,8 +37,23 @@ fn get_command_help(command_name: &str) -> String {
     content.replace(&prev_version, &new_version)
 }
 
+fn validate_folder() {
+    let exe_file_path = env::current_exe()
+        .expect("Couldn't get the current executable file path");
+    let exe_dir_path = exe_file_path
+        .parent()
+        .expect("Couldn't get the folder of the current executable file")
+        .file_name();
+
+    if exe_dir_path != Path::new("release").file_name() {
+        eprintln!("Should use the production release command");
+        process::exit(1);
+    }
+}
+
 fn main() {
-    // TODO: check folder is release
+    validate_folder();
+
     let command_names = vec!["ddocker", "code", "node-parser"];
     let mut content = r#"# Docker images
 
