@@ -1,5 +1,8 @@
 use std::env;
 use std::fs;
+use std::process;
+
+use regex::Regex;
 
 #[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
@@ -10,14 +13,27 @@ fn get_command_help(command_name: &str) -> String {
         .parent()
         .expect("Couldn't get the parent folder")
         .join(command_name);
-
-    sub_process::exec_result(
+    let content = sub_process::exec_result(
         &command_file_path
             .display()
             .to_string(),
         vec!["--help"],
     )
-        .replace("`", "\\`")
+        .replace("`", "\\`");
+    let prev_version = env::var("PREV_VERSION")
+        .expect("Couldn't get the pervious version");
+    let new_version = env::var("NEW_VERSION")
+        .expect("Couldn't get the new version");
+    let could_find_previous_version = Regex::new(&prev_version)
+        .unwrap()
+        .is_match(&content);
+
+    if !could_find_previous_version {
+        eprintln!("Couldn't find the previous version in `{}`", command_name);
+        process::exit(1)
+    }
+
+    content.replace(&prev_version, &new_version)
 }
 
 fn main() {
@@ -28,20 +44,19 @@ fn main() {
 Here are some helpful commands used in the docker container."#.to_string();
 
     for command_name in command_names {
-        let new_content = format!(
-            r#"
+        content.push_str(
+            &format!(
+                r#"
 
 ## {}
 
 ```
 {}
 ```"#,
-            command_name,
-            get_command_help(command_name),
+                command_name,
+                get_command_help(command_name),
+            ),
         );
-
-        // TODO: check version is right
-        content.push_str(&new_content);
     }
 
     fs::write("README.md", content)
