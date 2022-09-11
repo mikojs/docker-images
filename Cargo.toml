@@ -23,6 +23,20 @@ path = "src/bin/code.rs"
 name = "node-parser"
 path = "src/parsers/node.rs"
 
+[package.metadata.release]
+pre-release-hook = [
+  "./target/release/release"
+]
+pre-release-replacements = [
+  {file="CHANGELOG.md", search="Unreleased", replace="{{version}}"},
+  {file="CHANGELOG.md", search="\\.\\.\\.HEAD", replace="...{{tag_name}}", exactly=1},
+  {file="CHANGELOG.md", search="ReleaseDate", replace="{{date}}"},
+  {file="CHANGELOG.md", search="<!-- next-header -->", replace="<!-- next-header -->\n\n## [Unreleased] - ReleaseDate", exactly=1},
+  {file="CHANGELOG.md", search="<!-- next-url -->", replace="<!-- next-url -->\n[Unreleased]: https://github.com/mikojs/docker-images/compare/{{tag_name}}...HEAD", exactly=1},
+]
+push = false
+allow-branch = ["main"]
+
 [dependencies]
 clap = { version = "3.2.18", features = ["cargo"] }
 regex = "1.6.0"
