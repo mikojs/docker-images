@@ -5,7 +5,7 @@ Here are some helpful commands used in the docker container.
 ## ddocker
 
 ```
-ddocker 1.0.0
+ddocker 1.1.0
 Some docker commands are used in a docker container
 
 USAGE:
@@ -34,7 +34,7 @@ SUBCOMMANDS:
 ## code
 
 ```
-code 1.0.0
+code 1.1.0
 Use this command to open files in a code-server
 
 USAGE:
@@ -52,7 +52,7 @@ OPTIONS:
 ## node-parser
 
 ```
-node-parser 1.0.0
+node-parser 1.1.0
 Use to parse the node version from the package.json
 
 USAGE:
