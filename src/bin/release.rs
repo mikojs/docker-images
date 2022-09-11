@@ -5,7 +5,6 @@ use std::path::Path;
 
 use regex::Regex;
 
-#[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
 
 fn get_command_help(command_name: &str) -> String {
@@ -77,6 +76,6 @@ Here are some helpful commands used in the docker container."#.to_string();
 
     fs::write("README.md", content)
         .expect("Couldn't write the README.md");
-
-    // TODO: add git commit
+    sub_process::exec("git", vec!["add", "README.md"]);
+    sub_process::exec("git", vec!["commit", "-m", "docs(readme.md): Update version"]);
 }
