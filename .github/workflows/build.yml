@@ -26,15 +26,16 @@ jobs:
     needs: build-bin
     strategy:
       matrix:
-        - name: base
-          context: ./docker-images
-          file: ./docker-images/base/Dockerfile
-        - name: code-server
-          context: ./docker-images
-          file: ./docker-images/code-server/Dockerfile
-        - name: act
-          context: ./docker-images
-          file: ./docker-images/act/Dockerfile
+        include:
+          - name: base
+            context: ./docker-images
+            file: ./docker-images/base/Dockerfile
+          - name: code-server
+            context: ./docker-images
+            file: ./docker-images/code-server/Dockerfile
+          - name: act
+            context: ./docker-images
+            file: ./docker-images/act/Dockerfile
     with:
       name: ${{ matrix.name }}
       cache_name: bin
