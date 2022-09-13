@@ -1,7 +1,7 @@
 name: build
+
 on: [push]
-env:
-  REGISTRY: ghcr.io/mikojs
+
 jobs:
   build-bin:
     runs-on: ubuntu-latest
@@ -22,41 +22,20 @@ jobs:
           path: ./bin
 
   build-and-push-images:
-    runs-on: ubuntu-latest
+    uses: mikojs/actions/.github/workflows/build-docker.yml@main
     needs: build-bin
-    permissions:
-      contents: read
-      packages: write
     strategy:
       matrix:
-        include:
-          - name: base
-          - name: code-server
-          - name: act
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-        with:
-          name: bin
-          path: ./docker-images/bin
-      - uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        id: meta
-        with:
-          images: ${{ env.REGISTRY }}/${{ matrix.name }}
-      - uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: ./docker-images
-          file: ./docker-images/${{ matrix.name }}/Dockerfile
-          push: ${{ github.ref == 'refs/heads/main' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+        name: [base, code-server, act]
+    with:
+      name: ${{ matrix.name }}
+      cache_name: bin
+      cache_path: ./docker-images/bin
+      context: ./docker-images
+      file: ./docker-images/${{ matrix.name }}/Dockerfile
+      push: ${{ github.ref == 'refs/heads/main' }}
 
-  finial-check:
+  final-check:
     runs-on: ubuntu-latest
     needs: build-and-push-images
     steps:
