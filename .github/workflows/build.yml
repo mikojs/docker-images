@@ -22,32 +22,26 @@ jobs:
           path: ./bin
 
   build-and-push-images:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/build-docker.yml
     needs: build-bin
     strategy:
       matrix:
-        include:
-          - name: base
-            context: ./docker-images
-            file: ./docker-images/base/Dockerfile
-          - name: code-server
-            context: ./docker-images
-            file: ./docker-images/code-server/Dockerfile
-          - name: act
-            context: ./docker-images
-            file: ./docker-images/act/Dockerfile
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-        with:
-          name: bin
-          path: ./docker-images/bin
-      - uses: ./.github/workflows/build-docker.yml
-        with:
-          name: ${{ matrix.name }}
-          context: ${{ matrix.context }}
-          file: ${{ matrix.file }}
-          push: ${{ github.ref == 'refs/heads/main' }}
+        - name: base
+          context: ./docker-images
+          file: ./docker-images/base/Dockerfile
+        - name: code-server
+          context: ./docker-images
+          file: ./docker-images/code-server/Dockerfile
+        - name: act
+          context: ./docker-images
+          file: ./docker-images/act/Dockerfile
+    with:
+      name: ${{ matrix.name }}
+      cache_name: bin
+      cache_path: ./docker-images/bin
+      context: ${{ matrix.context }}
+      file: ${{ matrix.file }}
+      push: ${{ github.ref == 'refs/heads/main' }}
 
   finial-check:
     runs-on: ubuntu-latest

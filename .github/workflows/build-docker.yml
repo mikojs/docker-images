@@ -1,4 +1,4 @@
-name: Build docker images
+name: Build docker image
 
 env:
   REGISTRY: ghcr.io/mikojs
@@ -8,6 +8,10 @@ on:
     inputs:
       name:
         required: true
+        type: string
+      cache_name:
+        type: string
+      cache_path:
         type: string
       context:
         required: true
@@ -28,6 +32,12 @@ jobs:
       contents: read
       packages: write
     steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        if: ${{ cache_path != '' }}
+        with:
+          name: ${{ inputs.cache_name }}
+          path: ${{ inputs.cache_path }}
       - uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
           registry: ${{ env.REGISTRY }}
