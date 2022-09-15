@@ -1,10 +1,14 @@
 use std::env;
+use std::process::Command;
+
+#[allow(dead_code)]
+#[path = "../utils/sub_process.rs"] mod sub_process;
 
 fn shift_args(args: &mut Vec<String>) -> String {
-  let command = args[0].clone();
+    let command = args[0].clone();
 
-  args.remove(0);
-  command
+    args.remove(0);
+    command
 }
 
 fn main() {
@@ -17,7 +21,18 @@ fn main() {
       &shift_args(&mut args),
     )
       .expect("Couldn't get the commands");
-    let custom_commands = shift_args(&mut args);
-    
-    println!("{:?}, {:?}, {:?}", main_commands, custom_commands, args);
+    let custom_command = shift_args(&mut args);
+
+    match Command::new(&custom_command).output() {
+        Ok(_) => sub_process::exec(
+            &custom_command,
+            args
+                .iter()
+                .map(AsRef::as_ref)
+                .collect(),
+        ),
+        Err(_) => {
+            println!("Run main command");
+        }
+    }
 }
