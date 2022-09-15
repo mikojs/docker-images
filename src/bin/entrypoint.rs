@@ -17,7 +17,7 @@ fn main() {
 
     shift_args(&mut args);
 
-    let main_commands = shellwords::split(
+    let mut main_args = shellwords::split(
       &shift_args(&mut args),
     )
       .expect("Couldn't get the commands");
@@ -31,8 +31,12 @@ fn main() {
                 .map(AsRef::as_ref)
                 .collect(),
         ),
-        Err(_) => {
-            println!("Run main command");
-        }
+        Err(_) => sub_process::exec(
+            &shift_args(&mut main_args),
+            main_args
+                .iter()
+                .map(AsRef::as_ref)
+                .collect(),
+        ),
     }
 }

@@ -1,3 +1,4 @@
+use std::process;
 use std::process::Command;
 
 const FAIL_TO_START: &str = "command failed to start";
@@ -8,7 +9,9 @@ pub fn exec(command: &str, args: Vec<&str>) {
         .status()
         .expect(FAIL_TO_START);
 
-    assert!(status.success());
+    if !status.success() {
+        process::exit(1);
+    }
 }
 
 pub fn exec_result(command: &str, args: Vec<&str>) -> String {
