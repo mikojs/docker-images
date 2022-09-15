@@ -12,6 +12,10 @@ name = "release"
 path = "src/bin/release.rs"
 
 [[bin]]
+name = "entrypoint"
+path = "src/bin/entrypoint.rs"
+
+[[bin]]
 name = "ddocker"
 path = "src/bin/ddocker.rs"
 
