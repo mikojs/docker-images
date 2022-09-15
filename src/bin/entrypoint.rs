@@ -11,6 +11,16 @@ fn shift_args(args: &mut Vec<String>) -> String {
     command
 }
 
+fn run_main_command(args: &mut Vec<String>) {
+    sub_process::exec(
+        &shift_args(args),
+        args
+            .iter()
+            .map(AsRef::as_ref)
+            .collect(),
+    );
+}
+
 fn main() {
     let mut args: Vec<String> = env::args()
         .collect();
@@ -21,6 +31,12 @@ fn main() {
       &shift_args(&mut args),
     )
       .expect("Couldn't get the commands");
+
+    if args.len() == 0 {
+        run_main_command(&mut main_args);
+        return;
+    }
+
     let custom_command = shift_args(&mut args);
 
     match Command::new(&custom_command).output() {
@@ -31,12 +47,6 @@ fn main() {
                 .map(AsRef::as_ref)
                 .collect(),
         ),
-        Err(_) => sub_process::exec(
-            &shift_args(&mut main_args),
-            main_args
-                .iter()
-                .map(AsRef::as_ref)
-                .collect(),
-        ),
+        Err(_) => run_main_command(&mut main_args),
     }
 }
