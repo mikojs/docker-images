@@ -18,5 +18,8 @@ COPY --from=build /go/bin/act /bin/act
 RUN apk add \
   docker
 
+# bin
+COPY ./bin/entrypoint /bin/entrypoint
+
 # run
-ENTRYPOINT ["act"]
+ENTRYPOINT ["entrypoint", "act"]

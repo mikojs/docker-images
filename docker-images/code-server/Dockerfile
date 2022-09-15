@@ -22,8 +22,9 @@ RUN yarn global add \
 RUN mkdir -p /root/.local/share/code-server/logs
 
 # bin
+COPY ./bin/entrypoint /bin/entrypoint
 COPY ./bin/code /bin/code
 COPY ./bin/ddocker /bin/ddocker
 
 # run
-ENTRYPOINT ["code-server"]
+ENTRYPOINT ["entrypoint", "code-server"]

@@ -12,6 +12,10 @@ name = "release"
 path = "src/bin/release.rs"
 
 [[bin]]
+name = "entrypoint"
+path = "src/bin/entrypoint.rs"
+
+[[bin]]
 name = "ddocker"
 path = "src/bin/ddocker.rs"
 
@@ -44,3 +48,4 @@ glob = "0.3.0"
 inquire = "0.3.0"
 serde_json = "1.0.85"
 semver = "1.0.13"
+shellwords = "1.1.0"

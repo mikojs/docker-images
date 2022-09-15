@@ -5,6 +5,11 @@
 ### Added
 - Add `CHANGELOG.md`.
 - Use resuable `build-docker` workflow from [@mikojs/actions](https://github.com/mikojs/actions).
+- Add `entrypoint` command.
+- Use `entrypoint` command in the all Docker images.
+
+## Changed
+- Should exit process with `sub_process::exec`.
 
 ## Changed
 - Use the release command with `cargo-release`.
