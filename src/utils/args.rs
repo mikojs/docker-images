@@ -36,13 +36,13 @@ pub fn get_working_directory() -> String {
     let cwd = utils::get_current_dir()
         .display()
         .to_string();
-    let is_project = Regex::new(r"^/project")
+    let is_root = Regex::new(r"^/root")
         .unwrap()
         .is_match(&cwd);
 
-    if is_project {
+    if is_root {
         return cwd;
     }
 
-    "/project".to_string()
+    "/root".to_string()
 }

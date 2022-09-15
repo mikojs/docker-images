@@ -3,9 +3,12 @@
 ## [Unreleased] - ReleaseDate
 
 ### Added
-- Use the release command with `cargo-release`.
 - Add `CHANGELOG.md`.
 - Use resuable `build-docker` workflow from [@mikojs/actions](https://github.com/mikojs/actions).
+
+## Changed
+- Use the release command with `cargo-release`.
+- Use `/root` as default folder, not `/project`.
 
 ### Fixed
 - Should ignore `release` command in `.dockerignore`.
