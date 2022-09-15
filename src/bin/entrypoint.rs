@@ -1,16 +1,23 @@
 use std::env;
 
+fn shift_args(args: &mut Vec<String>) -> String {
+  let command = args[0].clone();
+
+  args.remove(0);
+  command
+}
+
 fn main() {
     let mut args: Vec<String> = env::args()
         .collect();
-    let commands_str = args[1].clone();
 
-    args.remove(0);
-    args.remove(0);
+    shift_args(&mut args);
 
-    let commands = shellwords::split(&commands_str)
+    let main_commands = shellwords::split(
+      &shift_args(&mut args),
+    )
       .expect("Couldn't get the commands");
-
-    println!("{:?}", commands);
-    println!("{:?}, {}", args, args.len());
+    let custom_commands = shift_args(&mut args);
+    
+    println!("{:?}, {:?}, {:?}", main_commands, custom_commands, args);
 }
