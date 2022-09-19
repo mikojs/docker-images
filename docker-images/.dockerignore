@@ -5,5 +5,5 @@
 .dockerignore
 Dockerfile
 
-# ignore release command
-bin/release
+# ignore build-readme command
+bin/build-readme
