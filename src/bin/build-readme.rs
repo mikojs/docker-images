@@ -46,7 +46,7 @@ fn validate_folder() {
         .file_name();
 
     if exe_dir_path != Path::new("release").file_name() {
-        eprintln!("Should use the production release command");
+        eprintln!("Should use the production build-readme command");
         process::exit(1);
     }
 }
