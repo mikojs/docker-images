@@ -15,9 +15,8 @@ jobs:
         with:
           command: build
           args: --release --target x86_64-unknown-linux-musl
-      - run: ls -al ./target/release
       - run: mkdir ./bin
-      - run: find ./target/release -type f -maxdepth 1 -executable -exec cp {} ./bin \;
+      - run: find ./target/x86_64-unknown-linux-musl/release -type f -maxdepth 1 -executable -exec cp {} ./bin \;
       - run: ls -al ./bin
       - uses: actions/upload-artifact@v3
         with:
