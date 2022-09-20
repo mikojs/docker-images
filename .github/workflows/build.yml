@@ -10,16 +10,18 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          target: x86_64-unknown-linux-musl
       - uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release
+          args: --release --target x86_64-unknown-linux-musl
       - run: mkdir ./bin
-      - run: find ./target/release -type f -maxdepth 1 -executable -exec cp {} ./bin \;
+      - run: find ./target/x86_64-unknown-linux-musl/release -type f -maxdepth 1 -executable -exec cp {} ./bin \;
+      - run: tar -cvf bin.tar bin
       - uses: actions/upload-artifact@v3
         with:
           name: bin
-          path: ./bin
+          path: ./bin.tar
 
   build-and-push-images:
     uses: mikojs/actions/.github/workflows/build-docker.yml@main
@@ -28,9 +30,9 @@ jobs:
       matrix:
         name: [base, code-server, act]
     with:
-      name: ${{ matrix.name }}
-      cache_name: bin
-      cache_path: ./docker-images/bin
+      name: mikojs/${{ matrix.name }}
+      use-cache: true
+      pre-build: tar -xvf ./bin/bin.tar -C ./docker-images
       context: ./docker-images
       file: ./docker-images/${{ matrix.name }}/Dockerfile
       push: ${{ github.ref == 'refs/heads/main' }}
