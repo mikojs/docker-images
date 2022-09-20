@@ -30,7 +30,7 @@ jobs:
       matrix:
         name: [base, code-server, act]
     with:
-      name: ${{ matrix.name }}
+      name: mikojs/${{ matrix.name }}
       use-cache: true
       pre-build: tar -xvf ./bin/bin.tar -C ./docker-images
       context: ./docker-images
