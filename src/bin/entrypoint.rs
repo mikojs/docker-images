@@ -51,8 +51,6 @@ fn main() {
     let mut args: Vec<String> = matches
         .values_of("args")
         .unwrap()
-        .collect::<Vec<&str>>()
-        .iter()
         .map(|s| s.to_string())
         .collect();
     let custom_command = shift_args(&mut args);
