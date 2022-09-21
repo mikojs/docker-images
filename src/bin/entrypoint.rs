@@ -1,5 +1,5 @@
 use std::env;
-use std::process::Command;
+use clap::{crate_version, Command, Arg};
 
 #[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
@@ -22,6 +22,20 @@ fn run_main_command(args: &mut Vec<String>) {
 }
 
 fn main() {
+    let matches = Command::new("entrypoint")
+        .version(crate_version!())
+        .about("Use this command in the dockerfile entrypoint command")
+        .arg(
+            Arg::new("main-command")
+                .required(true)
+        )
+        .arg(
+            Arg::new("args")
+                .multiple_values(true)
+                .allow_hyphen_values(true)
+        )
+        .get_matches();
+    /*
     let mut args: Vec<String> = env::args()
         .collect();
 
@@ -49,4 +63,5 @@ fn main() {
         ),
         Err(_) => run_main_command(&mut main_args),
     }
+    */
 }
