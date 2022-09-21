@@ -1,4 +1,5 @@
 use std::env;
+use std::process;
 use clap::{crate_version, Command, Arg};
 
 #[allow(dead_code)]
@@ -47,10 +48,16 @@ fn main() {
         return;
     }
 
-    /*
+    let mut args: Vec<String> = matches
+        .values_of("args")
+        .unwrap()
+        .collect::<Vec<&str>>()
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
     let custom_command = shift_args(&mut args);
 
-    match Command::new(&custom_command).output() {
+    match process::Command::new(&custom_command).output() {
         Ok(_) => sub_process::exec(
             &custom_command,
             args
@@ -60,5 +67,4 @@ fn main() {
         ),
         Err(_) => run_main_command(&mut main_args),
     }
-    */
 }
