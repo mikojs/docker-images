@@ -1,5 +1,6 @@
 use std::env;
-use std::process::Command;
+use std::process;
+use clap::{crate_version, Command, Arg};
 
 #[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
@@ -22,24 +23,39 @@ fn run_main_command(args: &mut Vec<String>) {
 }
 
 fn main() {
-    let mut args: Vec<String> = env::args()
-        .collect();
-
-    shift_args(&mut args);
-
+    let matches = Command::new("entrypoint")
+        .version(crate_version!())
+        .about("Use this command in the dockerfile entrypoint command")
+        .arg(
+            Arg::new("main-command")
+                .required(true)
+        )
+        .arg(
+            Arg::new("args")
+                .multiple_values(true)
+                .allow_hyphen_values(true)
+        )
+        .get_matches();
     let mut main_args = shellwords::split(
-      &shift_args(&mut args),
+        matches
+            .value_of("main-command")
+            .unwrap(),
     )
       .expect("Couldn't get the commands");
 
-    if args.len() == 0 {
+    if matches.value_of("args").is_none() {
         run_main_command(&mut main_args);
         return;
     }
 
+    let mut args: Vec<String> = matches
+        .values_of("args")
+        .unwrap()
+        .map(|s| s.to_string())
+        .collect();
     let custom_command = shift_args(&mut args);
 
-    match Command::new(&custom_command).output() {
+    match process::Command::new(&custom_command).output() {
         Ok(_) => sub_process::exec(
             &custom_command,
             args
