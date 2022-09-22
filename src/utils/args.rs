@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use clap::{Arg, ArgMatches};
+use clap::{Command, Arg, ArgMatches};
 use regex::Regex;
 
 const HOSTNAME_PATH: &str = "/etc/hostname";
@@ -26,6 +26,18 @@ pub fn get_values_from_args(sub_matches: &ArgMatches) -> Vec<&str> {
     args
         .unwrap()
         .collect()
+}
+
+pub fn generate_arg_matches(args: Vec<&str>) -> ArgMatches {
+    Command::new("generate-arg-matches")
+        .arg(set_proxy_arg(true))
+        .get_matches_from(
+            [
+                vec!["generate-arg-matches"],
+                args,
+            ]
+                .concat(),
+        )
 }
 
 pub fn get_container_name() -> String {
