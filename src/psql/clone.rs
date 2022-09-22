@@ -1,4 +1,4 @@
-use clap::{Command};
+use clap::{Command, Arg, ArgMatches};
 
 #[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
@@ -8,9 +8,13 @@ use clap::{Command};
 pub fn command() -> Command<'static> {
     Command::new("clone")
         .about("Clone the database from the database url")
+        .arg(
+            Arg::new("file-name")
+                .required(true)
+        )
 }
 
-pub fn execute(db_url: &str) {
+pub fn execute(matches: &ArgMatches, db_url: &str) {
     run::execute(
         &args::generate_arg_matches(
             vec![
@@ -18,8 +22,12 @@ pub fn execute(db_url: &str) {
                 "--rm",
                 "postgres:alpine",
                 "pg_dump",
-                db_url,
                 "-Fc",
+                "-f",
+                matches
+                    .value_of("file-name")
+                    .unwrap(),
+                db_url,
             ],
         ),
     );
