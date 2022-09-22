@@ -18,7 +18,7 @@ pub fn execute(db_url: &str) {
                 "--rm",
                 "postgres:alpine",
                 "pg_dump",
-                &db_url,
+                db_url,
                 "-Fc",
             ],
         ),
