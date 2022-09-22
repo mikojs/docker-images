@@ -32,7 +32,7 @@ fn filter_args(args: Vec<&str>) -> Vec<&str> {
     args
 }
 
-pub fn execute(sub_matches: &ArgMatches, external_args: Vec<&str>) {
+pub fn execute(sub_matches: &ArgMatches) {
     sub_process::exec(
         "docker",
         [
@@ -53,7 +53,6 @@ pub fn execute(sub_matches: &ArgMatches, external_args: Vec<&str>) {
                     &get_network_name(),
                 ],
             ),
-            external_args,
             args::get_values_from_args(sub_matches),
         ]
             .concat(),

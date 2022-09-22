@@ -34,8 +34,22 @@ pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
             }
 
             run::execute(
-                sub_matches,
-                vec!["-it", "--rm", "postgres:alpine", "psql", &db_url],
+                &Command::new("psql")
+                    .arg(args::set_proxy_arg(true))
+                    .get_matches_from(
+                        [
+                            vec![
+                                "psql",
+                                "-it",
+                                "--rm",
+                                "postgres:alpine",
+                                "psql",
+                                &db_url,
+                            ],
+                            args::get_values_from_args(sub_matches),
+                        ]
+                            .concat(),
+                    ),
             );
         },
     }
