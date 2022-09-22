@@ -1,4 +1,4 @@
-use clap::{Command, Arg, ArgMatches};
+use clap::{Command};
 
 #[allow(dead_code)]
 #[path = "./utils/args.rs"] mod args;
@@ -13,18 +13,17 @@ pub fn command() -> Command<'static> {
         .about("Clone the database from the database url")
 }
 
-pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
+pub fn execute(db_name: &str) {
     run::execute(
-        &Command::new("clone")
-            .arg(args::set_proxy_arg(true))
-            .get_matches_from(vec![
-                "clone",
+        &args::generate_arg_matches(
+            vec![
                 "-it",
                 "--rm",
                 "postgres:alpine",
                 "pg_dump",
                 &psql_show::execute(db_name),
                 "-Fc",
-            ]),
+            ],
+        ),
     );
 }

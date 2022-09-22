@@ -23,7 +23,7 @@ pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
 
     match sub_matches.subcommand() {
         Some(("show", _)) => println!("{}", db_url),
-        Some(("clone", sub_sub_matches)) => psql_clone::execute(sub_sub_matches, db_name),
+        Some(("clone", _)) => psql_clone::execute(db_name),
         _ => {
             if db_url.is_empty() {
                 eprint!(
@@ -34,22 +34,19 @@ pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
             }
 
             run::execute(
-                &Command::new("psql")
-                    .arg(args::set_proxy_arg(true))
-                    .get_matches_from(
-                        [
-                            vec![
-                                "psql",
-                                "-it",
-                                "--rm",
-                                "postgres:alpine",
-                                "psql",
-                                &db_url,
-                            ],
-                            args::get_values_from_args(sub_matches),
-                        ]
-                            .concat(),
-                    ),
+                &args::generate_arg_matches(
+                    [
+                        vec![
+                            "-it",
+                            "--rm",
+                            "postgres:alpine",
+                            "psql",
+                            &db_url,
+                        ],
+                        args::get_values_from_args(sub_matches),
+                    ]
+                        .concat(),
+                ),
             );
         },
     }
