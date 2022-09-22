@@ -5,7 +5,7 @@ use clap::{Command, ArgMatches};
 
 pub fn command(db_name: &str) -> Command<'static> {
     Command::new(db_name)
-        // TODO: .about(&format!("Connect to `{}`", db_name))
+        .about("Specific db")
         .arg(args::set_proxy_arg(false))
 }
 
