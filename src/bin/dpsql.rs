@@ -7,10 +7,6 @@ use regex::Regex;
 #[path = "../utils/args.rs"] mod args;
 
 #[path = "../psql.rs"] mod psql;
-#[allow(dead_code)]
-#[path = "../psql_show.rs"] mod psql_show;
-#[allow(dead_code)]
-#[path = "../psql_clone.rs"] mod psql_clone;
 
 fn get_db_names() -> Vec<String> {
     let db_regex = Regex::new(r"DB_URL$")
@@ -31,15 +27,19 @@ fn get_db_names() -> Vec<String> {
 }
 
 fn main() {
-    let mut app = Command::new("dpsql")
-        .version(crate_version!())
-        .about("Use psql command in the docker container")
-        .subcommand(psql_show::command())
-        .subcommand(psql_clone::command())
-        .arg(args::set_proxy_arg(false));
+    let mut app = psql::command(
+        Command::new("dpsql")
+            .version(crate_version!())
+            .about("Use psql command in the docker container")
+    );
 
     for db_name in get_db_names() {
-        app = app.subcommand(psql::command(&db_name));
+        app = app.subcommand(
+            psql::command(
+                Command::new(&db_name)
+                    .about("Database")
+            ),
+        );
     }
 
     let matches = app.get_matches();

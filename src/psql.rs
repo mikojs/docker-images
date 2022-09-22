@@ -1,6 +1,6 @@
 use std::process;
 
-use clap::{Command, ArgMatches};
+use clap::{App, Command, ArgMatches};
 
 #[allow(dead_code)]
 #[path = "./utils/args.rs"] mod args;
@@ -10,9 +10,8 @@ use clap::{Command, ArgMatches};
 #[path = "./psql_show.rs"] mod psql_show;
 #[path = "./psql_clone.rs"] mod psql_clone;
 
-pub fn command(db_name: &str) -> Command<'static> {
-    Command::new(db_name)
-        .about("Database")
+pub fn command(app: App<'static>) -> Command<'static> {
+    app
         .subcommand(psql_show::command())
         .subcommand(psql_clone::command())
         .arg(args::set_proxy_arg(false))
