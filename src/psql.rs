@@ -1,4 +1,5 @@
 use std::env;
+use std::process;
 
 use clap::{Command, ArgMatches};
 
@@ -14,13 +15,18 @@ pub fn command(db_name: &str) -> Command<'static> {
 }
 
 pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
-    let db_url = env::var(
-        format!("{}_DB_URL", db_name.to_uppercase())
-    )
-        .expect("Couldn't get the db url");
+    let db_env_name = format!("{}_DB_URL", db_name.to_uppercase());
 
-    run::execute(
-        sub_matches,
-        vec!["-it", "--rm", "postgres:alpine", "psql", &db_url],
-    );
+    match env::var(&db_env_name) {
+        Ok(db_url) => {
+            run::execute(
+                sub_matches,
+                vec!["-it", "--rm", "postgres:alpine", "psql", &db_url],
+            );
+        },
+        _ => {
+            eprint!("`{}` isn't in the environment variables.", db_env_name);
+            process::exit(1);
+        },
+    }
 }

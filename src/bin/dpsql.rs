@@ -3,6 +3,9 @@ use std::env;
 use clap::{crate_version, Command};
 use regex::Regex;
 
+#[allow(dead_code)]
+#[path = "../utils/args.rs"] mod args;
+
 #[path = "../psql.rs"] mod psql;
 
 fn get_db_names() -> Vec<String> {
@@ -27,7 +30,8 @@ fn get_db_names() -> Vec<String> {
 fn main() {
     let mut app = Command::new("dpsql")
         .version(crate_version!())
-        .about("Use psql command in the docker container");
+        .about("Use psql command in the docker container")
+        .arg(args::set_proxy_arg(false));
 
     for db_name in get_db_names() {
         app = app.subcommand(psql::command(&db_name));
@@ -44,5 +48,5 @@ fn main() {
         }
     }
 
-    println!("TODO: use docker run");
+    psql::execute(&matches, "default");
 }
