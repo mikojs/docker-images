@@ -1,15 +1,15 @@
 use clap::{Command, Arg, ArgMatches};
 
 #[allow(dead_code)]
-#[path = "../utils/args.rs"] mod args;
+#[path = "../../utils/args.rs"] mod args;
 #[allow(dead_code)]
-#[path = "../run.rs"] mod run;
+#[path = "../../run.rs"] mod run;
 
-#[path = "./utils.rs"] mod utils;
+#[path = "../utils.rs"] mod utils;
 
 pub fn command() -> Command<'static> {
-    Command::new("truncate")
-        .about("Run truncate command to a table of the database")
+    Command::new("table")
+        .about("Reset a table in the database")
         .arg(
             Arg::new("table-name")
                 .required(true)
