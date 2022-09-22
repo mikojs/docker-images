@@ -8,16 +8,22 @@ const HOSTNAME_PATH: &str = "/etc/hostname";
 
 #[path = "../utils/main.rs"] mod utils;
 
-pub fn set_proxy_arg() -> Arg<'static> {
+pub fn set_proxy_arg(required: bool) -> Arg<'static> {
     Arg::new("args")
-        .required(true)
+        .required(required)
         .multiple_values(true)
         .allow_hyphen_values(true)
 }
 
 pub fn get_values_from_args(sub_matches: &ArgMatches) -> Vec<&str> {
-    sub_matches
-        .values_of("args")
+    let args = sub_matches
+        .values_of("args");
+
+    if args.is_none() {
+        return vec![];
+    }
+
+    args
         .unwrap()
         .collect()
 }
