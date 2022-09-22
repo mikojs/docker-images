@@ -7,6 +7,8 @@ use regex::Regex;
 #[path = "../utils/args.rs"] mod args;
 
 #[path = "../psql.rs"] mod psql;
+#[allow(dead_code)]
+#[path = "../psql_show.rs"] mod psql_show;
 
 fn get_db_names() -> Vec<String> {
     let db_regex = Regex::new(r"DB_URL$")
@@ -18,7 +20,6 @@ fn get_db_names() -> Vec<String> {
             db_names.push(
                 key
                     .replace("_DB_URL", "")
-                    .replace("_", " ")
                     .to_lowercase(),
             );
         }
@@ -31,6 +32,7 @@ fn main() {
     let mut app = Command::new("dpsql")
         .version(crate_version!())
         .about("Use psql command in the docker container")
+        .subcommand(psql_show::command())
         .arg(args::set_proxy_arg(false));
 
     for db_name in get_db_names() {
@@ -39,7 +41,7 @@ fn main() {
 
     let matches = app.get_matches();
 
-    for (sub_command, sub_matches) in matches.subcommand() {
+    if let Some((sub_command, sub_matches)) = matches.subcommand() {
         for db_name in get_db_names() {
             if sub_command == db_name {
                 psql::execute(sub_matches, sub_command);

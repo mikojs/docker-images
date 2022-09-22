@@ -1,4 +1,3 @@
-use std::env;
 use std::process;
 
 use clap::{Command, ArgMatches};
@@ -7,26 +6,33 @@ use clap::{Command, ArgMatches};
 #[path = "./utils/args.rs"] mod args;
 #[allow(dead_code)]
 #[path = "./run.rs"] mod run;
+#[path = "./psql_show.rs"] mod psql_show;
 
 pub fn command(db_name: &str) -> Command<'static> {
     Command::new(db_name)
-        .about("Specific db")
+        .about("Database")
+        .subcommand(psql_show::command())
         .arg(args::set_proxy_arg(false))
 }
 
 pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
-    let db_env_name = format!("{}_DB_URL", db_name.to_uppercase());
+    let db_url = psql_show::execute(db_name);
 
-    match env::var(&db_env_name) {
-        Ok(db_url) => {
+    match sub_matches.subcommand() {
+        Some(("show", _)) => println!("{}", db_url),
+        _ => {
+            if db_url.is_empty() {
+                eprint!(
+                    "`{}` isn't in the environment variables.",
+                    db_name.to_uppercase(),
+                );
+                process::exit(1);
+            }
+
             run::execute(
                 sub_matches,
                 vec!["-it", "--rm", "postgres:alpine", "psql", &db_url],
             );
-        },
-        _ => {
-            eprint!("`{}` isn't in the environment variables.", db_env_name);
-            process::exit(1);
         },
     }
 }
