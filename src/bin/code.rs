@@ -80,7 +80,7 @@ fn main() {
     let matches = Command::new("code")
         .version(crate_version!())
         .about("Use this command to open files in a code-server")
-        .arg(args::set_proxy_arg())
+        .arg(args::set_proxy_arg(true))
         .get_matches();
     let patterns = args::get_values_from_args(&matches);
     let mut files = vec![];
