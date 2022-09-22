@@ -16,7 +16,8 @@ pub fn set_proxy_arg(required: bool) -> Arg<'static> {
 }
 
 pub fn get_values_from_args(sub_matches: &ArgMatches) -> Vec<&str> {
-    let args = sub_matches.values_of("args");
+    let args = sub_matches
+        .values_of("args");
 
     if args.is_none() {
         return vec![];
