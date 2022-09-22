@@ -3,8 +3,6 @@ use std::env;
 use clap::{crate_version, Command};
 use regex::Regex;
 
-#[allow(dead_code)]
-#[path = "../utils/args.rs"] mod args;
 #[path = "../psql/main.rs"] mod psql;
 
 fn get_db_names() -> Vec<String> {
