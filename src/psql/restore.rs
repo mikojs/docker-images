@@ -1,4 +1,4 @@
-use clap::{Command, Arg};
+use clap::{Command, Arg, ArgMatches};
 
 #[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
@@ -14,8 +14,8 @@ pub fn command() -> Command<'static> {
         )
 }
 
-pub fn execute(db_url: &str) {
-    /*
+pub fn execute(sub_matches: &ArgMatches, db_url: &str) {
+    // TODO: should check db_url if it's included in the danger db urls
     run::execute(
         &args::generate_arg_matches(
             vec![
@@ -23,10 +23,14 @@ pub fn execute(db_url: &str) {
                 "--rm",
                 "postgres:alpine",
                 "pg_restore",
-                &db_url,
-                "-f",
+                "--no-owner",
+                "-x",
+                "-d",
+                db_url,
+                sub_matches
+                    .value_of("file-name")
+                    .unwrap(),
             ],
         ),
     );
-    */
 }
