@@ -20,6 +20,7 @@ RUN yarn global add \
 
 # code-server
 RUN mkdir -p /root/.local/share/code-server/logs
+RUN mkdir /root/work
 
 # bin
 COPY ./bin/entrypoint /bin/entrypoint
