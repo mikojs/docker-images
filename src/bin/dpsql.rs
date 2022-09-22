@@ -12,12 +12,14 @@ fn main() {
     );
 
     for db_name in psql::get_db_names() {
-        app = app.subcommand(
-            psql::command(
-                Command::new(&db_name)
-                    .about("Database")
-            ),
-        );
+        if db_name != "default" {
+            app = app.subcommand(
+                psql::command(
+                    Command::new(&db_name)
+                        .about("Database name")
+                ),
+            );
+        }
     }
 
     let matches = app.get_matches();

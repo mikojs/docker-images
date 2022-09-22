@@ -8,8 +8,8 @@ use clap::{Command, Arg, ArgMatches};
 #[path = "./utils.rs"] mod utils;
 
 pub fn command() -> Command<'static> {
-    Command::new("clone")
-        .about("Clone the database from the database url")
+    Command::new("restore")
+        .about("Restore the database from the cloned database file")
         .arg(
             Arg::new("file-name")
                 .required(true)
@@ -24,13 +24,14 @@ pub fn execute(matches: &ArgMatches, db_url: &str) {
                 "-it",
                 "--rm",
                 "postgres:alpine",
-                "pg_dump",
-                "-Fc",
-                "-f",
+                "pg_restore",
+                "--no-owner",
+                "-x",
+                "-d",
+                db_url,
                 matches
                     .value_of("file-name")
                     .unwrap(),
-                db_url,
             ],
         ),
     );

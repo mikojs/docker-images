@@ -10,6 +10,7 @@ use regex::Regex;
 #[path = "../run.rs"] mod run;
 
 #[path = "./clone.rs"] mod clone;
+#[path = "./restore.rs"] mod restore;
 
 fn get_db_url(db_name: &str) -> String {
     let db_env_name = format!(
@@ -56,15 +57,17 @@ pub fn command(app: App<'static>) -> Command<'static> {
                 .about("Show the database url")
         )
         .subcommand(clone::command())
+        .subcommand(restore::command())
         .arg(args::set_proxy_arg(false))
 }
 
-pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
+pub fn execute(matches: &ArgMatches, db_name: &str) {
     let db_url = get_db_url(db_name);
 
-    match sub_matches.subcommand() {
+    match matches.subcommand() {
         Some(("show", _)) => println!("{}", db_url),
-        Some(("clone", _)) => clone::execute(&db_url),
+        Some(("clone", sub_matches)) => clone::execute(sub_matches, &db_url),
+        Some(("restore", sub_matches)) => restore::execute(sub_matches, &db_url),
         _ => run::execute(
             &args::generate_arg_matches(
                 [
@@ -75,7 +78,7 @@ pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
                         "psql",
                         &db_url,
                     ],
-                    args::get_values_from_args(sub_matches),
+                    args::get_values_from_args(matches),
                 ]
                     .concat(),
             ),
