@@ -1,6 +1,7 @@
 use clap::{Command, ArgMatches};
 
 #[path = "./utils/sub_process.rs"] mod sub_process;
+#[allow(dead_code)]
 #[path = "./utils/args.rs"] mod args;
 
 pub fn command() -> Command<'static> {
