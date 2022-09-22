@@ -14,7 +14,7 @@ pub fn command() -> Command<'static> {
         )
 }
 
-pub fn execute(sub_matches: &ArgMatches, db_url: &str) {
+pub fn execute(matches: &ArgMatches, db_url: &str) {
     // TODO: should check db_url if it's included in the danger db urls
     run::execute(
         &args::generate_arg_matches(
@@ -27,7 +27,7 @@ pub fn execute(sub_matches: &ArgMatches, db_url: &str) {
                 "-x",
                 "-d",
                 db_url,
-                sub_matches
+                matches
                     .value_of("file-name")
                     .unwrap(),
             ],

@@ -13,7 +13,7 @@ Otherwise, this would change to be `/root`"#)
         .arg(args::set_proxy_arg(true))
 }
 
-pub fn execute(sub_matches: &ArgMatches) {
+pub fn execute(matches: &ArgMatches) {
     sub_process::exec(
         "docker",
         [
@@ -22,7 +22,7 @@ pub fn execute(sub_matches: &ArgMatches) {
                 "-w",
                 &args::get_working_directory(),
             ],
-            args::get_values_from_args(sub_matches),
+            args::get_values_from_args(matches),
         ]
             .concat(),
     );
