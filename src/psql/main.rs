@@ -2,6 +2,7 @@ use std::env;
 use std::process;
 
 use clap::{App, Command, ArgMatches};
+use regex::Regex;
 
 #[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
@@ -9,6 +10,25 @@ use clap::{App, Command, ArgMatches};
 #[path = "../run.rs"] mod run;
 
 #[path = "./clone.rs"] mod clone;
+
+pub fn get_db_names() -> Vec<String> {
+    let db_regex = Regex::new(r"DB_URL$")
+        .unwrap();
+    let mut db_names = vec![];
+
+    for (key, _) in env::vars() {
+        if db_regex.is_match(&key) {
+            db_names.push(
+                key
+                    .replace("_DB_URL", "")
+                    .to_lowercase(),
+            );
+        }
+    }
+
+    db_names
+}
+
 
 fn get_db_url(db_name: &str) -> String {
     let db_env_name = format!("{}_DB_URL", db_name.to_uppercase());
