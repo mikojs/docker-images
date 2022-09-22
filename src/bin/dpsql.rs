@@ -38,7 +38,7 @@ fn main() {
     for (sub_command, sub_matches) in matches.subcommand() {
         for db_name in get_db_names() {
             if sub_command == db_name {
-                psql::execute(sub_matches);
+                psql::execute(sub_matches, sub_command);
                 return;
             }
         }
