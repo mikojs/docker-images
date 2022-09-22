@@ -9,6 +9,8 @@ use regex::Regex;
 #[path = "../psql.rs"] mod psql;
 #[allow(dead_code)]
 #[path = "../psql_show.rs"] mod psql_show;
+#[allow(dead_code)]
+#[path = "../psql_clone.rs"] mod psql_clone;
 
 fn get_db_names() -> Vec<String> {
     let db_regex = Regex::new(r"DB_URL$")
@@ -33,6 +35,7 @@ fn main() {
         .version(crate_version!())
         .about("Use psql command in the docker container")
         .subcommand(psql_show::command())
+        .subcommand(psql_clone::command())
         .arg(args::set_proxy_arg(false));
 
     for db_name in get_db_names() {
