@@ -5,8 +5,7 @@ use regex::Regex;
 
 #[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
-
-#[path = "../psql.rs"] mod psql;
+#[path = "../psql/main.rs"] mod psql;
 
 fn get_db_names() -> Vec<String> {
     let db_regex = Regex::new(r"DB_URL$")

@@ -1,10 +1,9 @@
 use clap::{Command};
 
 #[allow(dead_code)]
-#[path = "./utils/args.rs"] mod args;
-
+#[path = "../utils/args.rs"] mod args;
 #[allow(dead_code)]
-#[path = "./run.rs"] mod run;
+#[path = "../run.rs"] mod run;
 
 pub fn command() -> Command<'static> {
     Command::new("clone")

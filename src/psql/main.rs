@@ -4,11 +4,11 @@ use std::process;
 use clap::{App, Command, ArgMatches};
 
 #[allow(dead_code)]
-#[path = "./utils/args.rs"] mod args;
-
+#[path = "../utils/args.rs"] mod args;
 #[allow(dead_code)]
-#[path = "./run.rs"] mod run;
-#[path = "./psql_clone.rs"] mod psql_clone;
+#[path = "../run.rs"] mod run;
+
+#[path = "./clone.rs"] mod clone;
 
 fn get_db_url(db_name: &str) -> String {
     let db_env_name = format!("{}_DB_URL", db_name.to_uppercase());
@@ -30,7 +30,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
             Command::new("show")
                 .about("Show the database url")
         )
-        .subcommand(psql_clone::command())
+        .subcommand(clone::command())
         .arg(args::set_proxy_arg(false))
 }
 
@@ -39,7 +39,7 @@ pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
 
     match sub_matches.subcommand() {
         Some(("show", _)) => println!("{}", db_url),
-        Some(("clone", _)) => psql_clone::execute(&db_url),
+        Some(("clone", _)) => clone::execute(&db_url),
         _ => run::execute(
             &args::generate_arg_matches(
                 [
