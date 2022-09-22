@@ -27,4 +27,4 @@ COPY ./bin/code /bin/code
 COPY ./bin/ddocker /bin/ddocker
 
 # run
-ENTRYPOINT ["entrypoint", "code-server"]
+ENTRYPOINT ["entrypoint", "code-server /root/work"]
