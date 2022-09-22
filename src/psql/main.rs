@@ -11,6 +11,7 @@ use regex::Regex;
 
 #[path = "./clone.rs"] mod clone;
 #[path = "./restore.rs"] mod restore;
+#[path = "./truncate.rs"] mod truncate;
 
 fn get_db_url(db_name: &str) -> String {
     let db_env_name = format!(
@@ -58,6 +59,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
         )
         .subcommand(clone::command())
         .subcommand(restore::command())
+        .subcommand(truncate::command())
         .arg(args::set_proxy_arg(false))
 }
 
@@ -68,6 +70,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         Some(("show", _)) => println!("{}", db_url),
         Some(("clone", sub_matches)) => clone::execute(sub_matches, &db_url),
         Some(("restore", sub_matches)) => restore::execute(sub_matches, &db_url),
+        Some(("truncate", sub_matches)) => truncate::execute(sub_matches, &db_url),
         _ => run::execute(
             &args::generate_arg_matches(
                 [
