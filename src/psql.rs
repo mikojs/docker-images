@@ -22,7 +22,7 @@ pub fn execute(sub_matches: &ArgMatches, db_name: &str) {
 
     match sub_matches.subcommand() {
         Some(("show", _)) => println!("{}", db_url),
-        Some(("clone", _)) => psql_clone::execute(db_name),
+        Some(("clone", _)) => psql_clone::execute(db_url),
         _ => {
             if db_url.is_empty() {
                 eprint!(

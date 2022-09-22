@@ -5,15 +5,13 @@ use clap::{Command};
 
 #[allow(dead_code)]
 #[path = "./run.rs"] mod run;
-#[allow(dead_code)]
-#[path = "./psql_show.rs"] mod psql_show;
 
 pub fn command() -> Command<'static> {
     Command::new("clone")
         .about("Clone the database from the database url")
 }
 
-pub fn execute(db_name: &str) {
+pub fn execute(db_url: &str) {
     run::execute(
         &args::generate_arg_matches(
             vec![
@@ -21,7 +19,7 @@ pub fn execute(db_name: &str) {
                 "--rm",
                 "postgres:alpine",
                 "pg_dump",
-                &psql_show::execute(db_name),
+                &db_url,
                 "-Fc",
             ],
         ),
