@@ -4,6 +4,8 @@ use clap::{crate_version, Command, Arg};
 
 #[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
+#[allow(dead_code)]
+#[path = "../utils/args.rs"] mod args;
 
 fn shift_args(args: &mut Vec<String>) -> String {
     let command = args[0].clone();
@@ -30,11 +32,7 @@ fn main() {
             Arg::new("main-command")
                 .required(true)
         )
-        .arg(
-            Arg::new("args")
-                .multiple_values(true)
-                .allow_hyphen_values(true)
-        )
+        .arg(args::set_proxy_arg(false))
         .get_matches();
     let mut main_args = shellwords::split(
         matches
@@ -42,17 +40,16 @@ fn main() {
             .unwrap(),
     )
       .expect("Couldn't get the commands");
+    let mut args: Vec<String> = args::get_values_from_args(&matches)
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
 
-    if matches.value_of("args").is_none() {
+    if args.len() == 0 {
         run_main_command(&mut main_args);
         return;
     }
 
-    let mut args: Vec<String> = matches
-        .values_of("args")
-        .unwrap()
-        .map(|s| s.to_string())
-        .collect();
     let custom_command = shift_args(&mut args);
 
     match process::Command::new(&custom_command).output() {
