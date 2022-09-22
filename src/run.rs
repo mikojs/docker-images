@@ -8,7 +8,7 @@ pub fn command() -> Command<'static> {
         .about(r#"This command would mount the same volumes to the current container
 When the current path is under `/root`, a new container would use the same path as the working directory
 Otherwise, this would change to be `/root`"#)
-        .arg(args::set_proxy_arg())
+        .arg(args::set_proxy_arg(true))
 }
 
 fn get_network_name() -> String {
