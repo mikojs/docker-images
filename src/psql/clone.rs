@@ -5,6 +5,8 @@ use clap::{Command, Arg, ArgMatches};
 #[allow(dead_code)]
 #[path = "../run.rs"] mod run;
 
+#[path = "./utils.rs"] mod utils;
+
 pub fn command() -> Command<'static> {
     Command::new("clone")
         .about("Clone the database from the database url")
@@ -15,6 +17,7 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db_url: &str) {
+    utils::check_db_url(db_url);
     run::execute(
         &args::generate_arg_matches(
             vec![
