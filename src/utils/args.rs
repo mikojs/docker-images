@@ -40,6 +40,14 @@ pub fn generate_arg_matches(args: Vec<&str>) -> ArgMatches {
         )
 }
 
+pub fn filter_args(args: Vec<&str>) -> Vec<&str> {
+    if args[1].is_empty() {
+        return vec![];
+    }
+
+    args
+}
+
 pub fn get_container_name() -> String {
     if !Path::new(HOSTNAME_PATH).exists() {
         return "".to_string();

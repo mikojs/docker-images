@@ -25,14 +25,6 @@ fn get_network_name() -> String {
         .replace("\n", "")
 }
 
-fn filter_args(args: Vec<&str>) -> Vec<&str> {
-    if args[1].is_empty() {
-        return vec![];
-    }
-
-    args
-}
-
 pub fn execute(matches: &ArgMatches) {
     sub_process::exec(
         "docker",
@@ -42,13 +34,13 @@ pub fn execute(matches: &ArgMatches) {
                 "-w",
                 &args::get_working_directory(),
             ],
-            filter_args(
+            args::filter_args(
                 vec![
                     "--volumes-from",
                     &args::get_container_name(),
                 ],
             ),
-            filter_args(
+            args::filter_args(
                 vec![
                     "--network",
                     &get_network_name(),
