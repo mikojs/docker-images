@@ -14,6 +14,12 @@ pub fn command() -> Command<'static> {
             Arg::new("file-name")
                 .required(true)
         )
+        .arg(
+            Arg::new("table-name")
+                .short('t')
+                .long("table")
+                .help("Choose a table")
+        )
 }
 
 pub fn execute(matches: &ArgMatches, db_url: &str) {
