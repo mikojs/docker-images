@@ -3,6 +3,7 @@ use clap::{Command, Arg, ArgMatches};
 #[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
 #[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
+#[path = "../utils/get_version.rs"] mod get_version;
 #[allow(dead_code)]
 #[path = "../run.rs"] mod run;
 
@@ -26,7 +27,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
                 vec![
                     "-it",
                     "--rm",
-                    "postgres:alpine",
+                    &get_version::main("postgres", "POSTGRES", vec!["alpine"]),
                     "pg_dump",
                     "-Fc",
                     "-f",
