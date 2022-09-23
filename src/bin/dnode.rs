@@ -1,10 +1,12 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use clap::{crate_version, Command, Arg};
+use clap::{crate_version, Command};
 use serde_json::Value;
 use semver::{VersionReq, Op};
 
+#[allow(dead_code)]
+#[path = "../utils/args.rs"] mod args;
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
@@ -26,7 +28,7 @@ fn find_package_json(cwd: PathBuf) -> PathBuf {
     file_path
 }
 
-pub fn main(engine_name: &str) -> String {
+fn get_version(engine_name: &str) -> String {
     let package_json_path = find_package_json(
         get_current_dir::main()
     )
@@ -66,4 +68,26 @@ pub fn main(engine_name: &str) -> String {
     }
 
     "".to_string()
+}
+
+fn main() {
+    let matches = Command::new("dnode")
+        .version(crate_version!())
+        .about("Run node command in a docker container")
+        .arg(args::set_proxy_arg(false))
+        .get_matches();
+    let args = args::get_values_from_args(&matches);
+    let mut engine_name = "node";
+
+    if args.len() != 0 {
+        engine_name = match args[0] {
+            "yarn" => "yarn",
+            "npm" => "npm",
+            "npx" => "npm",
+            _ => "node",
+        }
+    }
+
+    println!("{:?}", args);
+    println!("{:?}", engine_name);
 }
