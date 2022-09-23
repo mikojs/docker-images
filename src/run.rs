@@ -3,6 +3,7 @@ use clap::{Command, ArgMatches};
 #[path = "./utils/sub_process.rs"] mod sub_process;
 #[path = "./utils/args.rs"] mod args;
 #[path = "./utils/get_container_name.rs"] mod get_container_name;
+#[path = "./utils/get_working_dir.rs"] mod get_working_dir;
 
 pub fn command() -> Command<'static> {
     Command::new("run")
@@ -32,7 +33,7 @@ pub fn execute(matches: &ArgMatches) {
             vec![
                 "run",
                 "-w",
-                &args::get_working_directory(),
+                &get_working_dir::main(),
             ],
             args::filter_args(
                 vec![
