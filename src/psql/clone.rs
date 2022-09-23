@@ -1,8 +1,6 @@
 use clap::{Command, Arg, ArgMatches};
 
-#[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
-#[allow(dead_code)]
 #[path = "../run.rs"] mod run;
 
 #[path = "./utils.rs"] mod utils;

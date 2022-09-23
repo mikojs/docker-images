@@ -4,9 +4,7 @@ use std::process;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-#[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
-#[allow(dead_code)]
 #[path = "../run.rs"] mod run;
 
 #[path = "./clone.rs"] mod clone;

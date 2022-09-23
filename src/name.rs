@@ -1,6 +1,5 @@
 use clap::Command;
 
-#[allow(dead_code)]
 #[path = "./utils/args.rs"] mod args;
 
 pub fn command() -> Command<'static> {

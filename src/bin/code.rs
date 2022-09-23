@@ -7,9 +7,7 @@ use inquire::Confirm;
 use regex::Regex;
 
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;
-#[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
-#[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
 
 const OPTIONS: glob::MatchOptions = glob::MatchOptions {
