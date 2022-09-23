@@ -7,6 +7,7 @@ use semver::{VersionReq, Op};
 
 #[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
+#[path = "../utils/get_version.rs"] mod get_version;
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
@@ -28,7 +29,7 @@ fn find_package_json(cwd: PathBuf) -> PathBuf {
     file_path
 }
 
-fn get_version(engine_name: &str) -> String {
+fn get_node_version(engine_name: &str) -> String {
     let package_json_path = find_package_json(
         get_current_dir::main()
     )
@@ -88,6 +89,12 @@ fn main() {
         }
     }
 
-    println!("{:?}", args);
-    println!("{:?}", engine_name);
+    let version = get_version::main(
+        engine_name,
+        vec![&get_node_version(engine_name), "lts-alpine"],
+    );
+
+    if version != "lts-alpine" {
+        println!("custom node version: {}", version);
+    }
 }
