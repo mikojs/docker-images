@@ -13,12 +13,12 @@ Otherwise, this would change to be `/root`"#)
         .arg(args::set_proxy_arg(true))
 }
 
-fn get_network_name() -> String {
+fn get_network_name(container_name: &str) -> String {
     sub_process::exec_result(
         "docker",
         vec![
             "inspect",
-            &get_container_name::main(),
+            container_name,
             "--format",
             "{{.HostConfig.NetworkMode}}",
         ],
@@ -27,6 +27,8 @@ fn get_network_name() -> String {
 }
 
 pub fn execute(matches: &ArgMatches) {
+    let container_name = get_container_name::main();
+
     sub_process::exec(
         "docker",
         [
@@ -36,15 +38,12 @@ pub fn execute(matches: &ArgMatches) {
                 &get_working_dir::main(),
             ],
             args::filter_args(
-                vec![
-                    "--volumes-from",
-                    &get_container_name::main(),
-                ],
+                vec!["--volumes-from", &container_name],
             ),
             args::filter_args(
                 vec![
                     "--network",
-                    &get_network_name(),
+                    &get_network_name(&container_name),
                 ],
             ),
             args::get_values_from_args(matches),
