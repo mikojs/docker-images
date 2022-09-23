@@ -2,6 +2,7 @@ use clap::{Command, ArgMatches};
 
 #[path = "./utils/sub_process.rs"] mod sub_process;
 #[path = "./utils/args.rs"] mod args;
+#[path = "./utils/get_container_name.rs"] mod get_container_name;
 
 pub fn command() -> Command<'static> {
     Command::new("run")
@@ -16,7 +17,7 @@ fn get_network_name() -> String {
         "docker",
         vec![
             "inspect",
-            &args::get_container_name(),
+            &get_container_name::main(),
             "--format",
             "{{.HostConfig.NetworkMode}}",
         ],
@@ -36,7 +37,7 @@ pub fn execute(matches: &ArgMatches) {
             args::filter_args(
                 vec![
                     "--volumes-from",
-                    &args::get_container_name(),
+                    &get_container_name::main(),
                 ],
             ),
             args::filter_args(

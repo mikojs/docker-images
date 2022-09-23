@@ -6,7 +6,7 @@ use regex::Regex;
 
 const HOSTNAME_PATH: &str = "/etc/hostname";
 
-#[path = "../utils/get_current_dir.rs"] mod get_current_dir;
+#[path = "./get_current_dir.rs"] mod get_current_dir;
 
 pub fn set_proxy_arg(required: bool) -> Arg<'static> {
     Arg::new("args")
@@ -34,16 +34,6 @@ pub fn filter_args(args: Vec<&str>) -> Vec<&str> {
     }
 
     args
-}
-
-pub fn get_container_name() -> String {
-    if !Path::new(HOSTNAME_PATH).exists() {
-        return "".to_string();
-    }
-
-    fs::read_to_string(HOSTNAME_PATH)
-        .expect("Couldn't read the file")
-        .replace("\n", "")
 }
 
 pub fn get_working_directory() -> String {
