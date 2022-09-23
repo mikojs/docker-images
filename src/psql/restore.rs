@@ -15,7 +15,7 @@ pub fn command() -> Command<'static> {
             Arg::new("file-name")
                 .required(true)
         )
-        .arg(args::set_proxy_arg(true))
+        .arg(args::set_proxy_arg(false))
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
