@@ -6,7 +6,7 @@ use regex::Regex;
 
 const HOSTNAME_PATH: &str = "/etc/hostname";
 
-#[path = "../utils/main.rs"] mod utils;
+#[path = "../utils/get_current_dir.rs"] mod get_current_dir;
 
 pub fn set_proxy_arg(required: bool) -> Arg<'static> {
     Arg::new("args")
@@ -59,7 +59,7 @@ pub fn get_container_name() -> String {
 }
 
 pub fn get_working_directory() -> String {
-    let cwd = utils::get_current_dir()
+    let cwd = get_current_dir::main()
         .display()
         .to_string();
     let is_root = Regex::new(r"^/root")
