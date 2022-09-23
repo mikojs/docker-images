@@ -2,7 +2,9 @@ use std::env;
 use std::process;
 use clap::{crate_version, Command, Arg};
 
+#[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
+#[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
 
 fn shift_args(args: &mut Vec<String>) -> String {

@@ -1,7 +1,7 @@
 use clap::{Command, Arg, ArgMatches};
 
-#[path = "../utils/args.rs"] mod args;
 #[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
+#[allow(dead_code)]
 #[path = "../run.rs"] mod run;
 
 #[path = "./utils/check_db_url.rs"] mod check_db_url;

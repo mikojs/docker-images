@@ -1,5 +1,6 @@
 use clap::{Command, ArgMatches};
 
+#[allow(dead_code)]
 #[path = "./args.rs"] mod args;
 
 pub fn main(args: Vec<&str>) -> ArgMatches {

@@ -5,6 +5,7 @@ use std::path::Path;
 
 use regex::Regex;
 
+#[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
 
 fn get_command_help(command_name: &str) -> String {
