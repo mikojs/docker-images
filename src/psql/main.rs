@@ -5,6 +5,7 @@ use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
 #[path = "../utils/args.rs"] mod args;
+#[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
 #[path = "../run.rs"] mod run;
 
 #[path = "./clone.rs"] mod clone;
@@ -70,7 +71,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         Some(("restore", sub_matches)) => restore::execute(sub_matches, &db_url),
         Some(("reset", sub_matches)) => reset::execute(sub_matches, &db_url),
         _ => run::execute(
-            &args::generate_arg_matches(
+            &generate_arg_matches::main(
                 [
                     vec![
                         "-it",
