@@ -8,14 +8,6 @@ use clap::{Command, Arg, ArgMatches};
 
 #[path = "./utils/check_db_url.rs"] mod check_db_url;
 
-fn get_table_name(matches: &ArgMatches) -> String {
-    if let Some(table_name) = matches.value_of("table-name") {
-        return table_name.to_string();
-    }
-
-    "".to_string()
-}
-
 pub fn command() -> Command<'static> {
     Command::new("dump")
         .about("Dump the database to a file")
