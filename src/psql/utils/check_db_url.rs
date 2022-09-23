@@ -6,17 +6,19 @@ use inquire::Confirm;
 fn is_protected_db(db_name: &str) -> bool {
     if let Ok(not_protected_db_names_str) = env::var("NOT_PROTECTED_DBS") {
         let not_protected_db_names: Vec<&str> = not_protected_db_names_str
-            .split(",");
+            .split(",")
+            .filter(|x| !x.is_empty())
+            .collect();
 
-        println!("{}", not_protected_db_names);
+        println!("{:?}", not_protected_db_names);
     }
 
     true
 }
 
-pub fn check_db_url(db_name: &str, db_url: &str, skip_protected_db_checking: bool) -> bool {
-    if skip_protected_db_checking && is_protected_db(db_name) {
-        eprint!(format!("`{}` is protected", db_name));
+pub fn main(db_name: &str, db_url: &str, skip_protected_db_checking: bool) -> bool {
+    if !skip_protected_db_checking && is_protected_db(db_name) {
+        eprint!("The `{}` database is protected", db_name);
         process::exit(0);
     }
 
