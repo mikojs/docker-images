@@ -1,12 +1,4 @@
-use std::fs;
-use std::path::Path;
-
-use clap::{Command, Arg, ArgMatches};
-use regex::Regex;
-
-const HOSTNAME_PATH: &str = "/etc/hostname";
-
-#[path = "../utils/main.rs"] mod utils;
+use clap::{Arg, ArgMatches};
 
 pub fn set_proxy_arg(required: bool) -> Arg<'static> {
     Arg::new("args")
@@ -28,47 +20,10 @@ pub fn get_values_from_args(matches: &ArgMatches) -> Vec<&str> {
         .collect()
 }
 
-pub fn generate_arg_matches(args: Vec<&str>) -> ArgMatches {
-    Command::new("generate-arg-matches")
-        .arg(set_proxy_arg(true))
-        .get_matches_from(
-            [
-                vec!["generate-arg-matches"],
-                args,
-            ]
-                .concat(),
-        )
-}
-
 pub fn filter_args(args: Vec<&str>) -> Vec<&str> {
     if args[1].is_empty() {
         return vec![];
     }
 
     args
-}
-
-pub fn get_container_name() -> String {
-    if !Path::new(HOSTNAME_PATH).exists() {
-        return "".to_string();
-    }
-
-    fs::read_to_string(HOSTNAME_PATH)
-        .expect("Couldn't read the file")
-        .replace("\n", "")
-}
-
-pub fn get_working_directory() -> String {
-    let cwd = utils::get_current_dir()
-        .display()
-        .to_string();
-    let is_root = Regex::new(r"^/root")
-        .unwrap()
-        .is_match(&cwd);
-
-    if is_root {
-        return cwd;
-    }
-
-    "/root".to_string()
 }
