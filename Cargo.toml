@@ -24,8 +24,8 @@ name = "code"
 path = "src/bin/code.rs"
 
 [[bin]]
-name = "node-parser"
-path = "src/parsers/node.rs"
+name = "dnode"
+path = "src/bin/dnode.rs"
 
 [[bin]]
 name = "dpsql"
