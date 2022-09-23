@@ -93,22 +93,19 @@ fn main() {
     }
 
     let version = get_version::main(
+        "node",
         engine_name,
         vec![&get_node_version(engine_name), "lts-alpine"],
     );
 
-    if version != "lts-alpine" {
+    if version != "node:lts-alpine" {
         println!("custom node version: {}", version);
     }
 
     run::execute(
         &generate_arg_matches::main(
             [
-                vec![
-                    "-it",
-                    "--rm",
-                    &format!("node:{}", version),
-                ],
+                vec!["-it", "--rm", &version],
                 args,
             ]
                 .concat(),
