@@ -1,11 +1,17 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use clap::{crate_version, Command, Arg};
+use clap::{crate_version, Command};
 use serde_json::Value;
 use semver::{VersionReq, Op};
 
+#[allow(dead_code)]
+#[path = "../utils/args.rs"] mod args;
+#[path = "../utils/get_version.rs"] mod get_version;
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;
+#[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
+#[allow(dead_code)]
+#[path = "../run.rs"] mod run;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
@@ -26,19 +32,7 @@ fn find_package_json(cwd: PathBuf) -> PathBuf {
     file_path
 }
 
-fn main() {
-    let engine_name = Command::new("node-parser")
-        .version(crate_version!())
-        .about("Use to parse the node version from the package.json")
-        .arg(
-            Arg::new("name")
-                .default_value("node")
-                .value_parser(["node", "yarn", "npm"])
-        )
-        .get_matches()
-        .value_of("name")
-        .expect("Couldn't get the name from the arguments")
-        .to_string();
+fn get_node_version(engine_name: &str) -> String {
     let package_json_path = find_package_json(
         get_current_dir::main()
     )
@@ -46,7 +40,7 @@ fn main() {
         .to_string();
 
     if package_json_path.is_empty() {
-        return;
+        return "".to_string();
     }
 
     let content = fs::read_to_string(package_json_path)
@@ -73,10 +67,48 @@ fn main() {
                 }
             }
 
-            println!("{}-alpine", version);
+            return format!("{}-alpine", version);
         }
     }
-    else {
-        unreachable!();
+
+    "".to_string()
+}
+
+fn main() {
+    let matches = Command::new("dnode")
+        .version(crate_version!())
+        .about("Run node command in a docker container")
+        .arg(args::set_proxy_arg(false))
+        .get_matches();
+    let args = args::get_values_from_args(&matches);
+    let mut engine_name = "node";
+
+    if args.len() != 0 {
+        engine_name = match args[0] {
+            "yarn" => "yarn",
+            "npm" => "npm",
+            "npx" => "npm",
+            _ => "node",
+        }
     }
+
+    let version = get_version::main(
+        "node",
+        engine_name,
+        vec![&get_node_version(engine_name), "lts-alpine"],
+    );
+
+    if version != "node:lts-alpine" {
+        println!("custom node version: {}", version);
+    }
+
+    run::execute(
+        &generate_arg_matches::main(
+            [
+                vec!["-it", "--rm", &version],
+                args,
+            ]
+                .concat(),
+        ),
+    );
 }
