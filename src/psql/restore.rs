@@ -4,7 +4,7 @@ use clap::{Command, Arg, ArgMatches};
 #[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
 #[path = "../run.rs"] mod run;
 
-#[path = "./utils.rs"] mod utils;
+#[path = "./utils/check_db_url.rs"] mod check_db_url;
 
 pub fn command() -> Command<'static> {
     Command::new("restore")
@@ -16,7 +16,7 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db_url: &str) {
-    utils::check_db_url(db_url);
+    check_db_url::main(db_url);
     run::execute(
         &generate_arg_matches::main(
             vec![
