@@ -6,7 +6,7 @@ use glob;
 use inquire::Confirm;
 use regex::Regex;
 
-#[path = "../utils/main.rs"] mod utils;
+#[path = "../utils/get_current_dir.rs"] mod get_current_dir;
 #[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
 #[allow(dead_code)]
@@ -27,7 +27,7 @@ fn confirm_to_create_file(file_name: &str) -> String {
         return "".to_string();
     }
 
-    let file_path = utils::get_current_dir()
+    let file_path = get_current_dir::main()
         .join(file_name);
     let file_dir = file_path
         .parent()

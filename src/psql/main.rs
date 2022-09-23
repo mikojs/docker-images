@@ -6,6 +6,7 @@ use regex::Regex;
 
 #[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
+#[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
 #[allow(dead_code)]
 #[path = "../run.rs"] mod run;
 
@@ -72,7 +73,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         Some(("restore", sub_matches)) => restore::execute(sub_matches, &db_url),
         Some(("reset", sub_matches)) => reset::execute(sub_matches, &db_url),
         _ => run::execute(
-            &args::generate_arg_matches(
+            &generate_arg_matches::main(
                 [
                     vec![
                         "-it",

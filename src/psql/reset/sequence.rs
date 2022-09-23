@@ -1,11 +1,10 @@
 use clap::{Command, Arg, ArgMatches};
 
-#[allow(dead_code)]
-#[path = "../../utils/args.rs"] mod args;
+#[path = "../../utils/generate_arg_matches.rs"] mod generate_arg_matches;
 #[allow(dead_code)]
 #[path = "../../run.rs"] mod run;
 
-#[path = "../utils.rs"] mod utils;
+#[path = "../utils/check_db_url.rs"] mod check_db_url;
 
 pub fn command() -> Command<'static> {
     Command::new("sequence")
@@ -17,9 +16,9 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
-    utils::check_db_url(db_name, db_url);
+    check_db_url::main(db_name, db_url);
     run::execute(
-        &args::generate_arg_matches(
+        &generate_arg_matches::main(
             vec![
                 "-it",
                 "--rm",

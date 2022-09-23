@@ -5,7 +5,7 @@ use clap::{crate_version, Command, Arg};
 use serde_json::Value;
 use semver::{VersionReq, Op};
 
-#[path = "../utils/main.rs"] mod utils;
+#[path = "../utils/get_current_dir.rs"] mod get_current_dir;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
@@ -40,7 +40,7 @@ fn main() {
         .expect("Couldn't get the name from the arguments")
         .to_string();
     let package_json_path = find_package_json(
-        utils::get_current_dir()
+        get_current_dir::main()
     )
         .display()
         .to_string();
