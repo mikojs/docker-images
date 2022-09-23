@@ -79,7 +79,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
                     vec![
                         "-it",
                         "--rm",
-                        &get_version::main("postgres", "POSTGRES", vec!["alpine"]),
+                        &get_version::main("postgres", "postgres", vec!["alpine"]),
                         "psql",
                         &db_url,
                     ],
