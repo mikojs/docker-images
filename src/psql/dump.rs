@@ -23,7 +23,7 @@ pub fn command() -> Command<'static> {
             Arg::new("file-name")
                 .required(true)
         )
-        .arg(args::setset_proxy_arg)
+        .arg(args::set_proxy_arg(true))
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
