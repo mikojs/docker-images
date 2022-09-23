@@ -9,6 +9,9 @@ use semver::{VersionReq, Op};
 #[path = "../utils/args.rs"] mod args;
 #[path = "../utils/get_version.rs"] mod get_version;
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;
+#[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
+#[allow(dead_code)]
+#[path = "../run.rs"] mod run;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
@@ -97,4 +100,18 @@ fn main() {
     if version != "lts-alpine" {
         println!("custom node version: {}", version);
     }
+
+    run::execute(
+        &generate_arg_matches::main(
+            [
+                vec![
+                    "-it",
+                    "--rm",
+                    &format!("node:{}", version),
+                ],
+                args,
+            ]
+                .concat(),
+        ),
+    );
 }
