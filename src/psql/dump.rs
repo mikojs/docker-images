@@ -23,13 +23,7 @@ pub fn command() -> Command<'static> {
             Arg::new("file-name")
                 .required(true)
         )
-        .arg(
-            Arg::new("table-name")
-                .short('t')
-                .long("table")
-                .help("Choose a table")
-                .takes_value(true)
-        )
+        .arg(args::setset_proxy_arg)
 }
 
 pub fn execute(matches: &ArgMatches, db_url: &str) {
@@ -43,17 +37,13 @@ pub fn execute(matches: &ArgMatches, db_url: &str) {
                     "postgres:alpine",
                     "pg_dump",
                     "-Fc",
-                ],
-                args::filter_args(
-                    vec!["-t", &get_table_name(matches)],
-                ),
-                vec![
                     "-f",
                     matches
                         .value_of("file-name")
                         .unwrap(),
                     db_url,
                 ],
+                args::get_values_from_args(matches),
             ]
                 .concat(),
         ),
