@@ -8,7 +8,7 @@ use clap::{Command, Arg, ArgMatches};
 
 pub fn command() -> Command<'static> {
     Command::new("restore")
-        .about("Restore the database from the cloned database file")
+        .about("Restore the database from a file")
         .arg(
             Arg::new("file-name")
                 .required(true)

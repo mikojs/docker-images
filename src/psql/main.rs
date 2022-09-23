@@ -10,7 +10,7 @@ use regex::Regex;
 #[allow(dead_code)]
 #[path = "../run.rs"] mod run;
 
-#[path = "./clone.rs"] mod clone;
+#[path = "./dump.rs"] mod dump;
 #[path = "./restore.rs"] mod restore;
 #[path = "./reset/main.rs"] mod reset;
 
@@ -58,7 +58,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
             Command::new("show")
                 .about("Show the database url")
         )
-        .subcommand(clone::command())
+        .subcommand(dump::command())
         .subcommand(restore::command())
         .subcommand(reset::command())
         .arg(args::set_proxy_arg(false))
@@ -69,7 +69,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
 
     match matches.subcommand() {
         Some(("show", _)) => println!("{}", db_url),
-        Some(("clone", sub_matches)) => clone::execute(sub_matches, db_name, &db_url),
+        Some(("dump", sub_matches)) => dump::execute(sub_matches, db_name, &db_url),
         Some(("restore", sub_matches)) => restore::execute(sub_matches, db_name, &db_url),
         Some(("reset", sub_matches)) => reset::execute(sub_matches, db_name, &db_url),
         _ => run::execute(

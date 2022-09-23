@@ -17,8 +17,8 @@ fn get_table_name(matches: &ArgMatches) -> String {
 }
 
 pub fn command() -> Command<'static> {
-    Command::new("clone")
-        .about("Clone the database from the database url")
+    Command::new("dump")
+        .about("Dump the database to a file")
         .arg(
             Arg::new("file-name")
                 .required(true)
