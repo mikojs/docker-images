@@ -15,8 +15,8 @@ pub fn command() -> Command<'static> {
         )
 }
 
-pub fn execute(matches: &ArgMatches, db_url: &str) {
-    check_db_url::main(db_url);
+pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
+    check_db_url::main(db_name, db_url, false);
     run::execute(
         &generate_arg_matches::main(
             vec![

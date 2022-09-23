@@ -11,10 +11,10 @@ pub fn command() -> Command<'static> {
         .subcommand(sequence::command())
 }
 
-pub fn execute(matches: &ArgMatches, db_url: &str) {
+pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
     match matches.subcommand() {
-        Some(("table", sub_matches)) => table::execute(sub_matches, db_url),
-        Some(("sequence", sub_matches)) => sequence::execute(sub_matches, db_url),
+        Some(("table", sub_matches)) => table::execute(sub_matches, db_name, db_url),
+        Some(("sequence", sub_matches)) => sequence::execute(sub_matches, db_name, db_url),
         _ => unreachable!(),
     }
 }

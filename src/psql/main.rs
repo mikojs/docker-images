@@ -69,9 +69,9 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
 
     match matches.subcommand() {
         Some(("show", _)) => println!("{}", db_url),
-        Some(("clone", sub_matches)) => clone::execute(sub_matches, &db_url),
-        Some(("restore", sub_matches)) => restore::execute(sub_matches, &db_url),
-        Some(("reset", sub_matches)) => reset::execute(sub_matches, &db_url),
+        Some(("clone", sub_matches)) => clone::execute(sub_matches, db_name, &db_url),
+        Some(("restore", sub_matches)) => restore::execute(sub_matches, db_name, &db_url),
+        Some(("reset", sub_matches)) => reset::execute(sub_matches, db_name, &db_url),
         _ => run::execute(
             &generate_arg_matches::main(
                 [
