@@ -21,10 +21,12 @@ pub fn main(db_name: &str, db_url: &str, skip_protected_db_checking: bool) -> bo
     }
 
     let message = format!("Use `{}`. Do you want to continue or not:", db_url);
-    let result = Confirm::new(&message)
-        .prompt();
+    let result = match Confirm::new(&message).prompt() {
+        Ok(true) => true,
+        _ => false,
+    };
 
-    if let Ok(false) = result {
+    if !result {
         process::exit(0);
     }
 

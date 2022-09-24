@@ -20,10 +20,12 @@ const OPTIONS: glob::MatchOptions = glob::MatchOptions {
 
 fn confirm_to_create_file(file_name: &str) -> String {
     let message = format!("Couldn't find `{}`. Do you want to create this or not:", file_name);
-    let result = Confirm::new(&message)
-        .prompt();
+    let result = match Confirm::new(&message).prompt() {
+        Ok(true) => true,
+        _ => false,
+    };
 
-    if let Ok(false) = result {
+    if !result {
         return "".to_string();
     }
 
