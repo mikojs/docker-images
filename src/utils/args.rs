@@ -19,11 +19,3 @@ pub fn get_values_from_args(matches: &ArgMatches) -> Vec<&str> {
         .unwrap()
         .collect()
 }
-
-pub fn filter_args(args: Vec<&str>) -> Vec<&str> {
-    if args[1].is_empty() {
-        return vec![];
-    }
-
-    args
-}

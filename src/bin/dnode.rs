@@ -5,13 +5,10 @@ use clap::{crate_version, Command};
 use serde_json::Value;
 use semver::{VersionReq, Op};
 
-#[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
 #[path = "../utils/get_version.rs"] mod get_version;
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;
-#[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
-#[allow(dead_code)]
-#[path = "../run.rs"] mod run;
+#[path = "../utils/docker_run.rs"] mod docker_run;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
@@ -102,13 +99,11 @@ fn main() {
         println!("custom node version: {}", version);
     }
 
-    run::execute(
-        &generate_arg_matches::main(
-            [
-                vec!["-it", "--rm", &version],
-                args,
-            ]
-                .concat(),
-        ),
+    docker_run::main(
+        [
+            vec!["-it", "--rm", &version],
+            args,
+        ]
+            .concat(),
     );
 }

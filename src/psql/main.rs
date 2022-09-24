@@ -4,12 +4,9 @@ use std::process;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-#[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
-#[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
 #[path = "../utils/get_version.rs"] mod get_version;
-#[allow(dead_code)]
-#[path = "../run.rs"] mod run;
+#[path = "../utils/docker_run.rs"] mod docker_run;
 
 #[path = "./dump.rs"] mod dump;
 #[path = "./restore.rs"] mod restore;
@@ -73,20 +70,18 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         Some(("dump", sub_matches)) => dump::execute(sub_matches, db_name, &db_url),
         Some(("restore", sub_matches)) => restore::execute(sub_matches, db_name, &db_url),
         Some(("reset", sub_matches)) => reset::execute(sub_matches, db_name, &db_url),
-        _ => run::execute(
-            &generate_arg_matches::main(
-                [
-                    vec![
-                        "-it",
-                        "--rm",
-                        &get_version::main("postgres", "postgres", vec!["alpine"]),
-                        "psql",
-                        &db_url,
-                    ],
-                    args::get_values_from_args(matches),
-                ]
-                    .concat(),
-            ),
+        _ => docker_run::main(
+            [
+                vec![
+                    "-it",
+                    "--rm",
+                    &get_version::main("postgres", "postgres", vec!["alpine"]),
+                    "psql",
+                    &db_url,
+                ],
+                args::get_values_from_args(matches),
+            ]
+                .concat(),
         ),
     }
 }
