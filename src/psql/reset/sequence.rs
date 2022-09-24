@@ -1,7 +1,7 @@
 use clap::{Command, Arg, ArgMatches};
 
 #[path = "../utils/check_db_url.rs"] mod check_db_url;
-#[path = "../../utils/docker_run.rs"] mod docker_run;
+#[path = "../utils/docker_run.rs"] mod docker_run;
 
 pub fn command() -> Command<'static> {
     Command::new("sequence")
