@@ -13,14 +13,27 @@ fn main() {
             Arg::new("image-name")
                 .required(true)
         )
+        .arg(
+            Arg::new("versions")
+                .long("--versions")
+                .multiple_values(true)
+                .takes_value(true)
+        )
         .arg(proxy_args::set_proxy_args(false))
         .get_matches();
-    let docker_image = matches.value_of("image-name")
-        .unwrap();
+    let matched_versions = matches.values_of("versions");
+    let mut versions = vec![];
+
+    if !matched_versions.is_none() {
+        versions = matched_versions
+            .unwrap()
+            .collect();
+    }
 
     docker_run_with_image::main(
-        docker_image,
-        vec![],
+        matches.value_of("image-name")
+            .unwrap(),
+        versions,
         proxy_args::get_values_from_proxy_args(&matches)
     );
 }
