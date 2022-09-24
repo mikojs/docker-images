@@ -71,7 +71,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         Some(("reset", sub_matches)) => reset::execute(sub_matches, db_name, &db_url),
         _ => docker_run_with_image::main(
             "postgres",
-            vec!["DOCKER_POSTGRES_VERSION"],
+            vec![],
             [
                 vec!["psql", &db_url],
                 proxy_args::get_values_from_proxy_args(matches),

@@ -19,7 +19,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
     check_db_url::main(db_name, db_url, false);
     docker_run_with_image::main(
         "postgres",
-        vec!["DOCKER_POSTGRES_VERSION"],
+        vec![],
         [
             vec![
                 "pg_restore",

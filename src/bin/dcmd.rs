@@ -20,7 +20,7 @@ fn main() {
 
     docker_run_with_image::main(
         docker_image,
-        vec![&format!("DOCKER_{}_VERSION", docker_image.to_uppercase())],
+        vec![],
         proxy_args::get_values_from_proxy_args(&matches)
     );
 }

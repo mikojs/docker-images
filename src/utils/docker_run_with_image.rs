@@ -28,7 +28,14 @@ pub fn main(image_name: &str, values: Vec<&str>, args: Vec<&str>) {
         default_version = values[values.len() - 1];
     }
 
-    let version = get_version(values);
+    let default_env: &str = &format!("DOCKER_{}_VERSION", image_name.to_uppercase());
+    let version = get_version(
+        [
+            vec![default_env],
+            values,
+        ]
+            .concat(),
+    );
     let docker_image = format!("{}:{}", image_name, &version);
 
     if version != default_version {
