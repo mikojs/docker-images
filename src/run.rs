@@ -1,6 +1,7 @@
 use std::fs;
 
 use clap::{Command, ArgMatches};
+use regex::Regex;
 
 #[path = "./utils/sub_process.rs"] mod sub_process;
 #[path = "./utils/args.rs"] mod args;
@@ -29,7 +30,8 @@ fn get_network_name(container_name: &str) -> String {
 }
 
 fn get_env_file(container_name: &str) -> String {
-    let content = sub_process::exec_result(
+    let file_path = "/root/.ddocker.env";
+    let mut content = sub_process::exec_result(
         "docker",
         vec![
             "inspect",
@@ -39,9 +41,12 @@ fn get_env_file(container_name: &str) -> String {
         ],
     )
         .replace("[", "")
-        .replace("]", "")
+        .replace("]", "");
+
+    content = Regex::new(r"PATH=[^ ]+ ").unwrap()
+        .replace_all(&content, "")
+        .to_string()
         .replace(" ", "\n");
-    let file_path = "/root/.ddocker.env";
 
     match fs::write(file_path, content) {
         Ok(_) => file_path.to_string(),
