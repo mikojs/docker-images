@@ -5,7 +5,7 @@ use clap::{crate_version, Command};
 use serde_json::Value;
 use semver::{VersionReq, Op};
 
-#[path = "../utils/args.rs"] mod args;
+#[path = "../utils/proxy_args.rs"] mod proxy_args;
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;
 #[path = "../utils/docker_run_with_image.rs"] mod docker_run_with_image;
 
@@ -74,9 +74,9 @@ fn main() {
     let matches = Command::new("dnode")
         .version(crate_version!())
         .about("Run node command in a docker container")
-        .arg(args::set_proxy_arg(false))
+        .arg(proxy_args::set_proxy_args(false))
         .get_matches();
-    let args = args::get_values_from_args(&matches);
+    let args = proxy_args::get_values_from_proxy_args(&matches);
     let mut engine_name = "node";
 
     if args.len() != 0 {

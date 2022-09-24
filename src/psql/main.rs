@@ -4,7 +4,7 @@ use std::process;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-#[path = "../utils/args.rs"] mod args;
+#[path = "../utils/proxy_args.rs"] mod proxy_args;
 #[path = "../utils/docker_run_with_image.rs"] mod docker_run_with_image;
 
 #[path = "./dump.rs"] mod dump;
@@ -58,7 +58,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
         .subcommand(dump::command())
         .subcommand(restore::command())
         .subcommand(reset::command())
-        .arg(args::set_proxy_arg(false))
+        .arg(proxy_args::set_proxy_args(false))
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
@@ -74,7 +74,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
             vec!["DOCKER_POSTGRES_VERSION"],
             [
                 vec!["psql", &db_url],
-                args::get_values_from_args(matches),
+                proxy_args::get_values_from_proxy_args(matches),
             ]
                 .concat(),
         ),

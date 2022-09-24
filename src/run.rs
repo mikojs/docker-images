@@ -1,6 +1,6 @@
 use clap::{Command, ArgMatches};
 
-#[path = "./utils/args.rs"] mod args;
+#[path = "./utils/proxy_args.rs"] mod proxy_args;
 #[path = "./utils/docker_run.rs"] mod docker_run;
 
 pub fn command() -> Command<'static> {
@@ -8,9 +8,9 @@ pub fn command() -> Command<'static> {
         .about(r#"This command would mount the same volumes to the current container
 When the current path is under `/root/work`, a new container would use the same path as the working directory
 Otherwise, this would change to be `/root/work`"#)
-        .arg(args::set_proxy_arg(true))
+        .arg(proxy_args::set_proxy_args(true))
 }
 
 pub fn execute(matches: &ArgMatches) {
-    docker_run::main(args::get_values_from_args(matches));
+    docker_run::main(proxy_args::get_values_from_proxy_args(matches));
 }
