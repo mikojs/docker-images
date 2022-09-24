@@ -22,11 +22,16 @@ fn get_version(values: Vec<&str>) -> String {
 }
 
 pub fn main(image_name: &str, values: Vec<&str>, args: Vec<&str>) {
-    let last_version = values[values.len() - 1];
+    let mut default_version = "alpine";
+
+    if values.len() != 0 {
+        default_version = values[values.len() - 1];
+    }
+
     let version = get_version(values);
     let docker_image = format!("{}:{}", image_name, &version);
 
-    if version != last_version && version != "alpine" {
+    if version != default_version {
         println!("Custom Image: `{}`", docker_image);
     }
 
