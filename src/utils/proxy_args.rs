@@ -1,13 +1,13 @@
 use clap::{Arg, ArgMatches};
 
-pub fn set_proxy_arg(required: bool) -> Arg<'static> {
+pub fn set_proxy_args(required: bool) -> Arg<'static> {
     Arg::new("args")
         .required(required)
         .multiple_values(true)
         .allow_hyphen_values(true)
 }
 
-pub fn get_values_from_args(matches: &ArgMatches) -> Vec<&str> {
+pub fn get_values_from_proxy_args(matches: &ArgMatches) -> Vec<&str> {
     let args = matches
         .values_of("args");
 
