@@ -28,7 +28,7 @@ jobs:
     needs: build-bin
     strategy:
       matrix:
-        name: [base, code-server, act]
+        name: [base, code-server, act, rust]
     with:
       name: mikojs/${{ matrix.name }}
       use-cache: true
