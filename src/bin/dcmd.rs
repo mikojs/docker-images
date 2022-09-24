@@ -8,13 +8,14 @@ use clap::{crate_version, Command, Arg};
 fn main() {
     let matches = Command::new("dcmd")
         .version(crate_version!())
-        .about("Run docker with the DOCKER_NAME_VERSION environment variable")
+        .about("Run docker with the DOCKER_<IMAGE NAME>_VERSION environment variable")
         .arg(
             Arg::new("image-name")
                 .required(true)
         )
         .arg(
             Arg::new("versions")
+                .help("It could be an image version or DOCKER_<IMAGE NAME>_VERSION environment variable")
                 .long("--versions")
                 .multiple_values(true)
                 .takes_value(true)
