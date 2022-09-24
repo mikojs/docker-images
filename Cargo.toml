@@ -16,20 +16,16 @@ name = "entrypoint"
 path = "src/bin/entrypoint.rs"
 
 [[bin]]
-name = "ddocker"
-path = "src/bin/ddocker.rs"
+name = "code"
+path = "src/bin/code.rs"
 
 [[bin]]
 name = "dcmd"
 path = "src/bin/dcmd.rs"
 
 [[bin]]
-name = "code"
-path = "src/bin/code.rs"
-
-[[bin]]
-name = "dnode"
-path = "src/bin/dnode.rs"
+name = "ddocker"
+path = "src/bin/ddocker.rs"
 
 [[bin]]
 name = "dpsql"
@@ -40,6 +36,4 @@ clap = { version = "3.2.18", features = ["cargo"] }
 regex = "1.6.0"
 glob = "0.3.0"
 inquire = "0.3.0"
-serde_json = "1.0.85"
-semver = "1.0.13"
 shellwords = "1.1.0"
