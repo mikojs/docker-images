@@ -10,8 +10,8 @@ use clap::{Command, ArgMatches};
 pub fn command() -> Command<'static> {
     Command::new("run")
         .about(r#"This command would mount the same volumes to the current container
-When the current path is under `/root`, a new container would use the same path as the working directory
-Otherwise, this would change to be `/root`"#)
+When the current path is under `/root/work`, a new container would use the same path as the working directory
+Otherwise, this would change to be `/root/work`"#)
         .arg(args::set_proxy_arg(true))
 }
 

@@ -9,8 +9,8 @@ use clap::{Command, ArgMatches};
 pub fn command() -> Command<'static> {
     Command::new("exec")
         .about(r#"This command would set the working directory with `docker exec`
-When the current path is under `/root`, the same path would be the initial working directory
-Otherwise, this would change to be `/root`"#)
+When the current path is under `/root/work`, the same path would be the initial working directory
+Otherwise, this would change to be `/root/work`"#)
         .arg(args::set_proxy_arg(true))
 }
 

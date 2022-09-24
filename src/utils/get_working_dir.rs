@@ -6,13 +6,13 @@ pub fn main() -> String {
     let cwd = get_current_dir::main()
         .display()
         .to_string();
-    let is_root = Regex::new(r"^/root")
+    let is_work = Regex::new(r"^/root/work")
         .unwrap()
         .is_match(&cwd);
 
-    if is_root {
+    if is_work {
         return cwd;
     }
 
-    "/root".to_string()
+    "/root/work".to_string()
 }
