@@ -10,7 +10,7 @@ pub fn command() -> Command<'static> {
 pub fn execute() {
     let stdout = sub_process::exec_result(
         "docker",
-        vec!["ps", "-aqf", "status=exited"],
+        vec!["ps", "-aq", "-f", "status=exited", "-f", "status=created"],
     );
     let ids: Vec<&str> = stdout.split("\n")
         .filter(|x| !x.is_empty())
