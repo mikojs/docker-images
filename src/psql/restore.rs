@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgMatches};
 
-#[path = "../utils/args.rs"] mod args;
+#[path = "../utils/proxy_args.rs"] mod proxy_args;
 #[path = "../utils/get_version.rs"] mod get_version;
 #[path = "../utils/docker_run.rs"] mod docker_run;
 
@@ -13,7 +13,7 @@ pub fn command() -> Command<'static> {
             Arg::new("file-name")
                 .required(true)
         )
-        .arg(args::set_proxy_arg(false))
+        .arg(proxy_args::set_proxy_args(false))
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
@@ -33,7 +33,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
                     .value_of("file-name")
                     .unwrap(),
             ],
-            args::get_values_from_args(matches),
+            proxy_args::get_values_from_proxy_args(matches),
         ]
             .concat(),
     );
