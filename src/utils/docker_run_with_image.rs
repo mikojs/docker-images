@@ -4,35 +4,35 @@ use regex::Regex;
 
 #[path = "./docker_run.rs"] mod docker_run;
 
-fn get_version(values: Vec<&str>) -> String {
+fn get_version(versions: Vec<&str>) -> String {
     let env_name_regex = Regex::new(r"DOCKER_.+_VERSION")
         .unwrap();
 
-    for value in values {
-        if env_name_regex.is_match(value) {
-            if let Ok(env) = env::var(value) {
+    for version in versions {
+        if env_name_regex.is_match(version) {
+            if let Ok(env) = env::var(version) {
                 return env;
             }
-        } else if !value.is_empty() {
-            return value.to_string();
+        } else if !version.is_empty() {
+            return version.to_string();
         }
     } 
 
     "alpine".to_string()
 }
 
-pub fn main(image_name: &str, values: Vec<&str>, args: Vec<&str>) {
+pub fn main(image_name: &str, versions: Vec<&str>, args: Vec<&str>) {
     let mut default_version = "alpine";
 
-    if values.len() != 0 {
-        default_version = values[values.len() - 1];
+    if versions.len() != 0 {
+        default_version = versions[versions.len() - 1];
     }
 
     let default_env: &str = &format!("DOCKER_{}_VERSION", image_name.to_uppercase());
     let version = get_version(
         [
             vec![default_env],
-            values,
+            versions,
         ]
             .concat(),
     );
