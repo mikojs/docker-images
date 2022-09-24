@@ -23,7 +23,7 @@ fn get_network_name(container_name: &str) -> String {
 
 fn get_env_file(container_name: &str) -> String {
     let file_path = "/root/.ddocker.env";
-    let mut content = sub_process::exec_result(
+    let content = sub_process::exec_result(
         "docker",
         vec![
             "inspect",
@@ -34,14 +34,13 @@ fn get_env_file(container_name: &str) -> String {
     )
         .replace("[", "")
         .replace("]", "");
+    let contents: Vec<&str> = content
+        .split(" ")
+        .filter(|x| !Regex::new(r"^PATH=.+").unwrap().is_match(x))
+        .collect();
+    let new_content = contents.join("\n");
 
-    // FIXME
-    content = Regex::new(r"PATH=[^ ]+ ").unwrap()
-        .replace_all(&content, "")
-        .to_string()
-        .replace(" ", "\n");
-
-    match fs::write(file_path, content) {
+    match fs::write(file_path, new_content) {
         Ok(_) => file_path.to_string(),
         _ => unreachable!(),
     }
