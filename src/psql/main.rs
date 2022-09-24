@@ -4,7 +4,7 @@ use std::process;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-#[path = "../utils/args.rs"] mod args;
+#[path = "../utils/proxy_args.rs"] mod proxy_args;
 #[path = "../utils/get_version.rs"] mod get_version;
 #[path = "../utils/docker_run.rs"] mod docker_run;
 
@@ -59,7 +59,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
         .subcommand(dump::command())
         .subcommand(restore::command())
         .subcommand(reset::command())
-        .arg(args::set_proxy_arg(false))
+        .arg(proxy_args::set_proxy_args(false))
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
@@ -79,7 +79,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
                     "psql",
                     &db_url,
                 ],
-                args::get_values_from_args(matches),
+                proxy_args::get_values_from_proxy_args(matches),
             ]
                 .concat(),
         ),
