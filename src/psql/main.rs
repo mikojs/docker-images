@@ -5,11 +5,11 @@ use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
 #[path = "../utils/proxy_args.rs"] mod proxy_args;
-#[path = "../utils/docker_run_with_image.rs"] mod docker_run_with_image;
 
 #[path = "./dump.rs"] mod dump;
 #[path = "./restore.rs"] mod restore;
 #[path = "./reset/main.rs"] mod reset;
+#[path = "./utils/docker_run.rs"] mod docker_run;
 
 fn get_db_url(db_name: &str) -> String {
     let db_env_name = format!(
@@ -69,9 +69,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         Some(("dump", sub_matches)) => dump::execute(sub_matches, db_name, &db_url),
         Some(("restore", sub_matches)) => restore::execute(sub_matches, db_name, &db_url),
         Some(("reset", sub_matches)) => reset::execute(sub_matches, db_name, &db_url),
-        _ => docker_run_with_image::main(
-            "postgres",
-            vec![],
+        _ => docker_run::main(
             [
                 vec!["psql", &db_url],
                 proxy_args::get_values_from_proxy_args(matches),
