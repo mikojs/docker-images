@@ -5,7 +5,6 @@ use clap::{crate_version, Command};
 use serde_json::Value;
 use semver::{VersionReq, Op};
 
-#[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
 #[path = "../utils/get_version.rs"] mod get_version;
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;

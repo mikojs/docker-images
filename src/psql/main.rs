@@ -4,7 +4,6 @@ use std::process;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-#[allow(dead_code)]
 #[path = "../utils/args.rs"] mod args;
 #[path = "../utils/generate_arg_matches.rs"] mod generate_arg_matches;
 #[path = "../utils/get_version.rs"] mod get_version;
