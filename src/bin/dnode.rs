@@ -6,9 +6,8 @@ use serde_json::Value;
 use semver::{VersionReq, Op};
 
 #[path = "../utils/args.rs"] mod args;
-#[path = "../utils/get_version.rs"] mod get_version;
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;
-#[path = "../utils/docker_run.rs"] mod docker_run;
+#[path = "../utils/docker_run_with_image.rs"] mod docker_run_with_image;
 
 fn find_package_json(cwd: PathBuf) -> PathBuf {
     let file_path = cwd.join("package.json");
@@ -89,21 +88,13 @@ fn main() {
         }
     }
 
-    let version = get_version::main(
+    docker_run_with_image::main(
         "node",
-        engine_name,
-        vec![&get_node_version(engine_name), "lts-alpine"],
-    );
-
-    if version != "node:lts-alpine" {
-        println!("custom node version: {}", version);
-    }
-
-    docker_run::main(
-        [
-            vec!["-it", "--rm", &version],
-            args,
-        ]
-            .concat(),
+        vec![
+            &format!("DOCKER_{}_VERSION", engine_name.to_uppercase()),
+            &get_node_version(engine_name),
+            "lts-alpine",
+        ],
+        args,
     );
 }

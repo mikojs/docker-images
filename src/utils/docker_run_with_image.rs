@@ -1,34 +1,38 @@
 use std::env;
 
+use regex::Regex;
+
 #[path = "./docker_run.rs"] mod docker_run;
 
-fn get_image(image_name: &str, env_name: &str, values: Vec<&str>) -> String {
-    let docker_env_name = format!(
-        "DOCKER_{}_VERSION",
-        env_name.to_uppercase(),
-    );
-
-    if let Ok(env) = env::var(&docker_env_name) {
-        return format!("{}:{}", image_name, env);
-    }
+fn get_version(values: Vec<&str>) -> String {
+    let env_name_regex = Regex::new(r"DOCKER_.+_VERSION")
+        .unwrap();
 
     for value in values {
-        if !value.is_empty() {
-            return format!("{}:{}", image_name, value);
+        if env_name_regex.is_match(value) {
+            if let Ok(env) = env::var(value) {
+                return env;
+            }
+        } else if !value.is_empty() {
+            return value.to_string();
         }
     } 
 
-    format!("{}:alpine", image_name)
+    "alpine".to_string()
 }
 
-pub fn main(args: Vec<&str>) {
+pub fn main(image_name: &str, values: Vec<&str>, args: Vec<&str>) {
+    let last_version = values[values.len() - 1];
+    let version = get_version(values);
+    let docker_image = format!("{}:{}", image_name, &version);
+
+    if version != last_version && version != "alpine" {
+        println!("Custom Image: `{}`", docker_image);
+    }
+
     docker_run::main(
         [
-            vec![
-                "-it",
-                "--rm",
-                get_image("postgres", "postgres", vec!["alpine"]),
-            ],
+            vec!["-it", "--rm", &docker_image],
             args,
         ]
             .concat(),
