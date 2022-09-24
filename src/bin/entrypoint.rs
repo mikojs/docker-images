@@ -4,7 +4,7 @@ use clap::{crate_version, Command, Arg};
 
 #[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
-#[path = "../utils/args.rs"] mod args;
+#[path = "../utils/proxy_args.rs"] mod proxy_args;
 
 fn shift_args(args: &mut Vec<String>) -> String {
     let command = args[0].clone();
@@ -31,7 +31,7 @@ fn main() {
             Arg::new("main-command")
                 .required(true)
         )
-        .arg(args::set_proxy_arg(false))
+        .arg(proxy_args::set_proxy_args(false))
         .get_matches();
     let mut main_args = shellwords::split(
         matches
@@ -39,7 +39,7 @@ fn main() {
             .unwrap(),
     )
       .expect("Couldn't get the commands");
-    let mut args: Vec<String> = args::get_values_from_args(&matches)
+    let mut args: Vec<String> = proxy_args::get_values_from_proxy_args(&matches)
         .iter()
         .map(|s| s.to_string())
         .collect();

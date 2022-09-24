@@ -20,6 +20,10 @@ name = "code"
 path = "src/bin/code.rs"
 
 [[bin]]
+name = "dcmd"
+path = "src/bin/dcmd.rs"
+
+[[bin]]
 name = "ddocker"
 path = "src/bin/ddocker.rs"
 

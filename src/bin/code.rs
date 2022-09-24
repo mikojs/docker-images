@@ -9,7 +9,7 @@ use regex::Regex;
 #[path = "../utils/get_current_dir.rs"] mod get_current_dir;
 #[allow(dead_code)]
 #[path = "../utils/sub_process.rs"] mod sub_process;
-#[path = "../utils/args.rs"] mod args;
+#[path = "../utils/proxy_args.rs"] mod proxy_args;
 
 const OPTIONS: glob::MatchOptions = glob::MatchOptions {
     case_sensitive: false,
@@ -81,9 +81,9 @@ fn main() {
     let matches = Command::new("code")
         .version(crate_version!())
         .about("Use this command to open files in a code-server")
-        .arg(args::set_proxy_arg(true))
+        .arg(proxy_args::set_proxy_args(true))
         .get_matches();
-    let patterns = args::get_values_from_args(&matches);
+    let patterns = proxy_args::get_values_from_proxy_args(&matches);
     let mut files = vec![];
 
     for pattern in patterns {
