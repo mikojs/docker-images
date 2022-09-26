@@ -1,7 +1,7 @@
 use clap::{Command, ArgMatches};
 
-#[path = "./utils/proxy_args.rs"] mod proxy_args;
-#[path = "./utils/docker_run.rs"] mod docker_run;
+use crate::utils::proxy_args;
+use crate::utils::docker_run;
 
 pub fn command() -> Command<'static> {
     Command::new("run")

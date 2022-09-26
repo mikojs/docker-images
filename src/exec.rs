@@ -1,9 +1,8 @@
 use clap::{Command, ArgMatches};
 
-#[allow(dead_code)]
-#[path = "./utils/sub_process.rs"] mod sub_process;
-#[path = "./utils/proxy_args.rs"] mod proxy_args;
-#[path = "./utils/get_working_dir.rs"] mod get_working_dir;
+use crate::utils::proxy_args;
+use crate::utils::sub_process;
+use crate::utils::get_working_dir;
 
 pub fn command() -> Command<'static> {
     Command::new("exec")

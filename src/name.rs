@@ -1,6 +1,6 @@
 use clap::Command;
 
-#[path = "./utils/get_container_name.rs"] mod get_container_name;
+use crate::utils::get_container_name;
 
 pub fn command() -> Command<'static> {
     Command::new("name")
