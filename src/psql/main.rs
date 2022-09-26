@@ -1,5 +1,4 @@
 use std::env;
-use std::process;
 
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
@@ -9,27 +8,9 @@ use regex::Regex;
 #[path = "./dump.rs"] mod dump;
 #[path = "./restore.rs"] mod restore;
 #[path = "./reset/main.rs"] mod reset;
+#[path = "./utils/database.rs"] mod database;
 #[path = "./utils/docker_run.rs"] mod docker_run;
 #[path = "./utils/check_db_url.rs"] mod check_db_url;
-
-fn get_db_url(db_name: &str) -> String {
-    let db_env_name = format!(
-        "{}_DB_URL",
-        db_name
-            .replace("-", "_")
-            .to_uppercase(),
-    );
-
-    if let Ok(db_url) = env::var(&db_env_name) {
-        return db_url;
-    }
-
-    eprint!(
-        "`{}` isn't in the environment variables.",
-        db_env_name,
-    );
-    process::exit(1);
-}
 
 pub fn get_db_names() -> Vec<String> {
     let db_regex = Regex::new(r"_DB_URL$")
@@ -63,10 +44,11 @@ pub fn command(app: App<'static>) -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
-    let db_url = get_db_url(db_name);
+    let db = database::Database::new(db_name.to_string());
+    let db_url = db.url();
 
     match matches.subcommand() {
-        Some(("show", _)) => println!("{}", db_url),
+        Some(("show", _)) => println!("{}", db.url()),
         Some(("dump", sub_matches)) => {
             check_db_url::main(db_name, &db_url, true);
             dump::execute(sub_matches, &db_url);
