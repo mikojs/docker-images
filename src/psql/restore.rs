@@ -2,7 +2,6 @@ use clap::{Command, Arg, ArgMatches};
 
 #[path = "../utils/proxy_args.rs"] mod proxy_args;
 
-#[path = "./utils/check_db_url.rs"] mod check_db_url;
 #[path = "./utils/docker_run.rs"] mod docker_run;
 
 pub fn command() -> Command<'static> {
@@ -16,7 +15,6 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
-    check_db_url::main(db_name, db_url, false);
     docker_run::main(
         [
             vec![
