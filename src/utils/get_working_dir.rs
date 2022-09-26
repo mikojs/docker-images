@@ -1,6 +1,6 @@
 use regex::Regex;
 
-#[path = "./get_current_dir.rs"] mod get_current_dir;
+use crate::utils::get_current_dir;
 
 pub fn main() -> String {
     let cwd = get_current_dir::main()

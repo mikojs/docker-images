@@ -4,9 +4,9 @@ use std::process;
 
 use regex::Regex;
 
-#[path = "./sub_process.rs"] mod sub_process;
-#[path = "./get_container_name.rs"] mod get_container_name;
-#[path = "./get_working_dir.rs"] mod get_working_dir;
+use crate::utils::sub_process;
+use crate::utils::get_container_name;
+use crate::utils::get_working_dir;
 
 fn get_network_name(container_name: &str) -> String {
     sub_process::exec_result(
