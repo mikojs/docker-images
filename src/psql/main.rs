@@ -97,15 +97,27 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
 
     match matches.subcommand() {
         Some(("show", _)) => println!("{}", db_url),
-        Some(("dump", sub_matches)) => dump::execute(sub_matches, db_name, &db_url),
-        Some(("restore", sub_matches)) => restore::execute(sub_matches, db_name, &db_url),
-        Some(("reset", sub_matches)) => reset::execute(sub_matches, db_name, &db_url),
-        _ => docker_run::main(
-            [
-                vec!["psql", &db_url],
-                proxy_args::get_values_from_proxy_args(matches),
-            ]
-                .concat(),
-        ),
+        Some(("dump", sub_matches)) => {
+            check_db_url(db_name, &db_url, true);
+            dump::execute(sub_matches, db_name, &db_url);
+        },
+        Some(("restore", sub_matches)) => {
+            check_db_url(db_name, &db_url, false);
+            restore::execute(sub_matches, db_name, &db_url);
+        },
+        Some(("reset", sub_matches)) => {
+            check_db_url(db_name, &db_url, false);
+            reset::execute(sub_matches, db_name, &db_url);
+        },
+        _ => {
+            check_db_url(db_name, &db_url, true);
+            docker_run::main(
+                [
+                    vec!["psql", &db_url],
+                    proxy_args::get_values_from_proxy_args(matches),
+                ]
+                    .concat(),
+            );
+        },
     }
 }
