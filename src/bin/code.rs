@@ -6,10 +6,9 @@ use glob;
 use inquire::Confirm;
 use regex::Regex;
 
-#[path = "../utils/get_current_dir.rs"] mod get_current_dir;
-#[allow(dead_code)]
-#[path = "../utils/sub_process.rs"] mod sub_process;
-#[path = "../utils/proxy_args.rs"] mod proxy_args;
+use docker_images::utils::proxy_args;
+use docker_images::utils::get_current_dir;
+use docker_images::utils::sub_process;
 
 const OPTIONS: glob::MatchOptions = glob::MatchOptions {
     case_sensitive: false,
