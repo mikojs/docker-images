@@ -14,7 +14,7 @@ pub fn command() -> Command<'static> {
         .arg(proxy_args::set_proxy_args(false))
 }
 
-pub fn execute(matches: &ArgMatches, db_name: &str, db_url: &str) {
+pub fn execute(matches: &ArgMatches, db_url: &str) {
     docker_run::main(
         [
             vec![
