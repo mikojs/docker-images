@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgMatches};
 
-#[path = "../utils/docker_run.rs"] mod docker_run;
+use crate::psql::utils::docker_run;
 
 pub fn command() -> Command<'static> {
     Command::new("sequence")

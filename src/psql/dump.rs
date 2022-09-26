@@ -3,9 +3,8 @@ use std::process;
 use clap::{Command, Arg, ArgMatches};
 use regex::Regex;
 
-#[path = "../utils/proxy_args.rs"] mod proxy_args;
-
-#[path = "./utils/docker_run.rs"] mod docker_run;
+use crate::utils::proxy_args;
+use crate::psql::utils::docker_run;
 
 pub fn command() -> Command<'static> {
     Command::new("dump")
