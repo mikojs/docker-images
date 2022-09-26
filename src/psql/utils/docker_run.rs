@@ -1,4 +1,4 @@
-#[path = "../../utils/docker_run.rs"] mod docker_run;
+use crate::utils::docker_run;
 
 pub fn main(args: Vec<&str>) {
     docker_run::main(
