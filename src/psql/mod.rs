@@ -67,19 +67,19 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
     match matches.subcommand() {
         Some(("show", _)) => println!("{}", db_url),
         Some(("dump", sub_matches)) => {
-            utils::check_db_url::main(db_name, &db_url, true);
+            utils::check_db_url(db_name, &db_url, true);
             dump::execute(sub_matches, &db_url);
         },
         Some(("restore", sub_matches)) => {
-            utils::check_db_url::main(db_name, &db_url, false);
+            utils::check_db_url(db_name, &db_url, false);
             restore::execute(sub_matches, &db_url);
         },
         Some(("reset", sub_matches)) => {
-            utils::check_db_url::main(db_name, &db_url, false);
+            utils::check_db_url(db_name, &db_url, false);
             reset::execute(sub_matches, &db_url);
         },
         _ => {
-            utils::check_db_url::main(db_name, &db_url, true);
+            utils::check_db_url(db_name, &db_url, true);
             utils::docker::run(
                 [
                     vec!["psql", &db_url],
