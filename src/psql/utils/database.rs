@@ -1,3 +1,4 @@
+use std::fs;
 use std::fmt;
 use std::env;
 use std::process;
@@ -84,7 +85,16 @@ impl Database {
 
         for arg in args.iter() {
             for keyword_regex in &keyword_regexs {
-                if keyword_regex.as_ref().unwrap().is_match(&arg) && self.is_protected() {
+                let mut content = arg.to_string();
+
+                if Regex::new(r"\.sql$").unwrap().is_match(&arg) {
+                    content = match fs::read_to_string(arg) {
+                        Ok(new_content) => new_content,
+                        _ => content,
+                    }
+                }
+
+                if keyword_regex.as_ref().unwrap().is_match(&content) && self.is_protected() {
                     self.protected_error();
                 }
             }
