@@ -40,7 +40,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
-    let mut db = Database::new(db_name.to_string());
+    let db = Database::new(db_name.to_string());
 
     match matches.subcommand() {
         Some(("show", _)) => show::execute(db),

@@ -6,7 +6,6 @@ use inquire::Confirm;
 pub struct Database {
     name: String,
     url: String,
-    is_checked: bool,
 }
 
 impl Database {
@@ -22,7 +21,6 @@ impl Database {
             return Database {
                 name: name,
                 url: url,
-                is_checked: false,
             };
         }
 
@@ -34,10 +32,6 @@ impl Database {
     }
 
     fn is_protected(&self) -> bool {
-        if self.is_checked {
-            return false;
-        }
-
         if let Ok(not_protected_names) = env::var("NOT_PROTECTED_DBS") {
             return not_protected_names
                 .split(",")
@@ -48,7 +42,7 @@ impl Database {
         true
     }
 
-    pub fn url<'a>(&'a mut self, danger_command: bool) -> &'a str {
+    pub fn url<'a>(&'a self, danger_command: bool) -> &'a str {
         if danger_command && self.is_protected() {
             eprint!("The `{}` database is protected", &self.name);
             process::exit(1);
@@ -64,7 +58,6 @@ impl Database {
             process::exit(0);
         }
 
-        self.is_checked = true;
         &self.url
     }
 }

@@ -11,7 +11,7 @@ pub fn command() -> Command<'static> {
         )
 }
 
-pub fn execute(matches: &ArgMatches, mut db: Database) {
+pub fn execute(matches: &ArgMatches, db: Database) {
     docker::run(
         vec![
             "psql",
