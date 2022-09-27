@@ -5,6 +5,7 @@ use regex::Regex;
 
 use utils::{proxy_args, docker, check_db_url, Database};
 
+mod show;
 mod dump;
 mod restore;
 mod reset;
@@ -31,10 +32,7 @@ pub fn get_db_names() -> Vec<String> {
 
 pub fn command(app: App<'static>) -> Command<'static> {
     app
-        .subcommand(
-            Command::new("show")
-                .about("Show the database url")
-        )
+        .subcommand(show::command())
         .subcommand(dump::command())
         .subcommand(restore::command())
         .subcommand(reset::command())
@@ -46,7 +44,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
     let db_url = db.url();
 
     match matches.subcommand() {
-        Some(("show", _)) => println!("{}", db.url()),
+        Some(("show", _)) => show::execute(db),
         Some(("dump", sub_matches)) => {
             check_db_url(db_name, &db_url, true);
             dump::execute(sub_matches, &db_url);
