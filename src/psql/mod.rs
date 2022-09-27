@@ -1,34 +1,15 @@
 use std::env;
-use std::process;
 
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-use utils::{proxy_args, docker, check_db_url};
+use utils::{proxy_args, docker, Database};
 
+mod show;
 mod dump;
 mod restore;
 mod reset;
 mod utils;
-
-fn get_db_url(db_name: &str) -> String {
-    let db_env_name = format!(
-        "{}_DB_URL",
-        db_name
-            .replace("-", "_")
-            .to_uppercase(),
-    );
-
-    if let Ok(db_url) = env::var(&db_env_name) {
-        return db_url;
-    }
-
-    eprint!(
-        "`{}` isn't in the environment variables.",
-        db_env_name,
-    );
-    process::exit(1);
-}
 
 pub fn get_db_names() -> Vec<String> {
     let db_regex = Regex::new(r"_DB_URL$")
@@ -51,10 +32,7 @@ pub fn get_db_names() -> Vec<String> {
 
 pub fn command(app: App<'static>) -> Command<'static> {
     app
-        .subcommand(
-            Command::new("show")
-                .about("Show the database url")
-        )
+        .subcommand(show::command())
         .subcommand(dump::command())
         .subcommand(restore::command())
         .subcommand(reset::command())
@@ -62,31 +40,19 @@ pub fn command(app: App<'static>) -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
-    let db_url = get_db_url(db_name);
+    let db = Database::new(db_name.to_string());
 
     match matches.subcommand() {
-        Some(("show", _)) => println!("{}", db_url),
-        Some(("dump", sub_matches)) => {
-            check_db_url(db_name, &db_url, true);
-            dump::execute(sub_matches, &db_url);
-        },
-        Some(("restore", sub_matches)) => {
-            check_db_url(db_name, &db_url, false);
-            restore::execute(sub_matches, &db_url);
-        },
-        Some(("reset", sub_matches)) => {
-            check_db_url(db_name, &db_url, false);
-            reset::execute(sub_matches, &db_url);
-        },
-        _ => {
-            check_db_url(db_name, &db_url, true);
-            docker::run(
-                [
-                    vec!["psql", &db_url],
-                    proxy_args::get_values_from_proxy_args(matches),
-                ]
-                    .concat(),
-            );
-        },
+        Some(("show", _)) => show::execute(db),
+        Some(("dump", sub_matches)) => dump::execute(sub_matches, db),
+        Some(("restore", sub_matches)) => restore::execute(sub_matches, db),
+        Some(("reset", sub_matches)) => reset::execute(sub_matches, db),
+        _ => docker::run(
+            [
+                vec!["psql", db.url(false)],
+                proxy_args::get_values_from_proxy_args(matches),
+            ]
+                .concat(),
+        ),
     }
 }

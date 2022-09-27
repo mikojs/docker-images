@@ -3,7 +3,7 @@ use std::process;
 use clap::{Command, Arg, ArgMatches};
 use regex::Regex;
 
-use crate::psql::utils::{proxy_args, docker};
+use crate::psql::utils::{proxy_args, docker, Database};
 
 pub fn command() -> Command<'static> {
     Command::new("dump")
@@ -15,13 +15,14 @@ pub fn command() -> Command<'static> {
         .arg(proxy_args::set_proxy_args(false))
 }
 
-pub fn execute(matches: &ArgMatches, db_url: &str) {
+pub fn execute(matches: &ArgMatches, db: Database) {
     let file_name = matches
         .value_of("file-name")
         .unwrap();
     let is_csv = Regex::new(r"\.csv$")
         .unwrap()
         .is_match(file_name);
+    let db_url = db.url(false);
     let args = proxy_args::get_values_from_proxy_args(matches);
 
     if is_csv {
@@ -33,8 +34,9 @@ pub fn execute(matches: &ArgMatches, db_url: &str) {
         docker::run(
             vec![
                 "psql",
+                db_url,
                 "-c",
-                &format!("\\copy ({}) TO '{}' WITH csv", args[0], file_name),
+                &format!("\\copy {} TO '{}' WITH csv", args[0], file_name),
             ],
         );
         return;
