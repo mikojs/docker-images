@@ -3,6 +3,7 @@ use std::env;
 use std::process;
 
 use inquire::Confirm;
+use regex::Regex;
 
 pub struct Database {
     name: String,
@@ -49,10 +50,14 @@ impl Database {
         true
     }
 
+    fn protected_error(&self) {
+        eprint!("The `{}` database is protected", &self.name);
+        process::exit(1);
+    }
+
     pub fn url<'a>(&'a self, danger_command: bool) -> &'a str {
         if danger_command && self.is_protected() {
-            eprint!("The `{}` database is protected", &self.name);
-            process::exit(1);
+            self.protected_error();
         }
 
         let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
@@ -66,5 +71,23 @@ impl Database {
         }
 
         &self.url
+    }
+
+    pub fn check_sql(&self, args: Vec<&str>) {
+        let keyword_regexs = vec![
+            Regex::new(r"INSERT"),
+            Regex::new(r"UPDATE"),
+            Regex::new(r"DELETE"),
+            Regex::new(r"ALTER"),
+            Regex::new(r"TRUNCATE"),
+        ];
+
+        for arg in args {
+            for keyword_regex in &keyword_regexs {
+                if keyword_regex.as_ref().unwrap().is_match(&arg) && self.is_protected() {
+                    self.protected_error();
+                }
+            }
+        }
     }
 }
