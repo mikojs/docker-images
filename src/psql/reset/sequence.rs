@@ -15,7 +15,7 @@ pub fn execute(matches: &ArgMatches, db: Database) {
     docker::run(
         vec![
             "psql",
-            db.url(),
+            db.url(true),
             "-c",
             &format!(
                 "ALTER SEQUENCE {} RESTART WITH 1;",

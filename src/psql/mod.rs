@@ -41,8 +41,6 @@ pub fn command(app: App<'static>) -> Command<'static> {
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
     let db = Database::new(db_name.to_string());
-    // TODO remove
-    let db_url = db.url();
 
     match matches.subcommand() {
         Some(("show", _)) => show::execute(db),
@@ -51,7 +49,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         Some(("reset", sub_matches)) => reset::execute(sub_matches, db),
         _ => docker::run(
             [
-                vec!["psql", &db_url],
+                vec!["psql", db.url(false)],
                 proxy_args::get_values_from_proxy_args(matches),
             ]
                 .concat(),

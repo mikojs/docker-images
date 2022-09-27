@@ -22,6 +22,7 @@ pub fn execute(matches: &ArgMatches, db: Database) {
     let is_csv = Regex::new(r"\.csv$")
         .unwrap()
         .is_match(file_name);
+    let db_url = db.url(false);
     let args = proxy_args::get_values_from_proxy_args(matches);
 
     if is_csv {
@@ -33,6 +34,7 @@ pub fn execute(matches: &ArgMatches, db: Database) {
         docker::run(
             vec![
                 "psql",
+                db_url,
                 "-c",
                 &format!("\\copy {} TO '{}' WITH csv", args[0], file_name),
             ],
@@ -47,7 +49,7 @@ pub fn execute(matches: &ArgMatches, db: Database) {
                 "-Fc",
                 "-f",
                 file_name,
-                db.url(),
+                db_url,
             ],
             args,
         ]
