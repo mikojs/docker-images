@@ -4,8 +4,6 @@ use std::process;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-use crate::utils::proxy_args;
-
 mod dump;
 mod restore;
 mod reset;
@@ -58,7 +56,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
         .subcommand(dump::command())
         .subcommand(restore::command())
         .subcommand(reset::command())
-        .arg(proxy_args::set_proxy_args(false))
+        .arg(utils::proxy_args::set_proxy_args(false))
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
@@ -83,7 +81,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
             utils::docker::run(
                 [
                     vec!["psql", &db_url],
-                    proxy_args::get_values_from_proxy_args(matches),
+                    utils::proxy_args::get_values_from_proxy_args(matches),
                 ]
                     .concat(),
             );

@@ -3,8 +3,7 @@ use std::process;
 use clap::{Command, Arg, ArgMatches};
 use regex::Regex;
 
-use crate::utils::proxy_args;
-use crate::psql::utils::docker;
+use crate::psql::utils::{proxy_args, docker};
 
 pub fn command() -> Command<'static> {
     Command::new("dump")

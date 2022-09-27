@@ -5,6 +5,8 @@ use inquire::Confirm;
 
 pub mod docker;
 
+pub use crate::utils::proxy_args;
+
 fn is_protected_db(db_name: &str) -> bool {
     if let Ok(not_protected_db_names_str) = env::var("NOT_PROTECTED_DBS") {
         return not_protected_db_names_str
