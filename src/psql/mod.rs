@@ -50,7 +50,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         _ => docker::run(
             [
                 vec!["psql", db.url(false)],
-                proxy_args::get_values_from_proxy_args(matches),
+                db.check_sql(proxy_args::get_values_from_proxy_args(matches)),
             ]
                 .concat(),
         ),

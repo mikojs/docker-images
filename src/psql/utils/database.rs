@@ -73,7 +73,7 @@ impl Database {
         &self.url
     }
 
-    pub fn check_sql(&self, args: Vec<&str>) {
+    pub fn check_sql<'a>(&'a self, args: Vec<&'a str>) -> Vec<&'a str> {
         let keyword_regexs = vec![
             Regex::new(r"INSERT"),
             Regex::new(r"UPDATE"),
@@ -82,12 +82,14 @@ impl Database {
             Regex::new(r"TRUNCATE"),
         ];
 
-        for arg in args {
+        for arg in args.iter() {
             for keyword_regex in &keyword_regexs {
                 if keyword_regex.as_ref().unwrap().is_match(&arg) && self.is_protected() {
                     self.protected_error();
                 }
             }
         }
+
+        args
     }
 }
