@@ -1,9 +1,6 @@
 use clap::{Command, ArgMatches};
 
-#[allow(dead_code)]
-#[path = "./utils/sub_process.rs"] mod sub_process;
-#[path = "./utils/proxy_args.rs"] mod proxy_args;
-#[path = "./utils/get_working_dir.rs"] mod get_working_dir;
+use crate::utils::{proxy_args, sub_process, docker};
 
 pub fn command() -> Command<'static> {
     Command::new("exec")
@@ -20,7 +17,7 @@ pub fn execute(matches: &ArgMatches) {
             vec![
                 "exec",
                 "-w",
-                &get_working_dir::main(),
+                &docker::working_dir(),
             ],
             proxy_args::get_values_from_proxy_args(matches),
         ]

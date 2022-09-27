@@ -1,6 +1,6 @@
 use clap::Command;
 
-#[path = "./utils/sub_process.rs"] mod sub_process;
+use crate::utils::sub_process;
 
 pub fn command() -> Command<'static> {
     Command::new("rm")

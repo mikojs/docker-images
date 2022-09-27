@@ -1,12 +1,39 @@
 use std::fs;
 use std::env;
 use std::process;
+use std::path::Path;
 
 use regex::Regex;
 
-#[path = "./sub_process.rs"] mod sub_process;
-#[path = "./get_container_name.rs"] mod get_container_name;
-#[path = "./get_working_dir.rs"] mod get_working_dir;
+use crate::utils::sub_process;
+
+const HOSTNAME_PATH: &str = "/etc/hostname";
+
+pub fn name() -> String {
+    if !Path::new(HOSTNAME_PATH).exists() {
+        return "".to_string();
+    }
+
+    fs::read_to_string(HOSTNAME_PATH)
+        .expect("Couldn't read the file")
+        .replace("\n", "")
+}
+
+pub fn working_dir() -> String {
+    let cwd = env::current_dir()
+        .expect("Couldn't get the currenct directory")
+        .display()
+        .to_string();
+    let is_work = Regex::new(r"^/root/work")
+        .unwrap()
+        .is_match(&cwd);
+
+    if is_work {
+        return cwd;
+    }
+
+    "/root/work".to_string()
+}
 
 fn get_network_name(container_name: &str) -> String {
     sub_process::exec_result(
@@ -111,8 +138,8 @@ fn transform_image_version(arg: &str) -> String {
     image
 }
 
-pub fn main(args: Vec<&str>) {
-    let container_name = get_container_name::main();
+pub fn run(args: Vec<&str>) {
+    let container_name = name();
 
     sub_process::exec(
         "docker",
@@ -120,7 +147,7 @@ pub fn main(args: Vec<&str>) {
             vec![
                 "run",
                 "-w",
-                &get_working_dir::main(),
+                &working_dir(),
                 "--env-file",
                 &get_env_file(&container_name),
             ],
