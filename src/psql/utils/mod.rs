@@ -5,7 +5,10 @@ use inquire::Confirm;
 
 pub use crate::utils::proxy_args;
 
+pub use database::Database;
+
 pub mod docker;
+pub mod database;
 
 fn is_protected_db(db_name: &str) -> bool {
     if let Ok(not_protected_db_names_str) = env::var("NOT_PROTECTED_DBS") {

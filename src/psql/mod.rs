@@ -3,7 +3,7 @@ use std::env;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-use utils::{proxy_args, docker, check_db_url};
+use utils::{proxy_args, docker, check_db_url, Database};
 
 mod dump;
 mod restore;
@@ -42,7 +42,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
-    let db = database::Database::new(db_name.to_string());
+    let db = Database::new(db_name.to_string());
     let db_url = db.url();
 
     match matches.subcommand() {
