@@ -111,7 +111,7 @@ fn transform_image_version(arg: &str) -> String {
     image
 }
 
-pub fn main(args: Vec<&str>) {
+pub fn run(args: Vec<&str>) {
     let container_name = get_container_name::main();
 
     sub_process::exec(

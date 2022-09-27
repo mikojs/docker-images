@@ -80,7 +80,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         },
         _ => {
             utils::check_db_url::main(db_name, &db_url, true);
-            utils::docker_run::main(
+            utils::docker::run(
                 [
                     vec!["psql", &db_url],
                     proxy_args::get_values_from_proxy_args(matches),

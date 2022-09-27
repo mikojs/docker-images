@@ -4,7 +4,7 @@ use clap::{Command, Arg, ArgMatches};
 use regex::Regex;
 
 use crate::utils::proxy_args;
-use crate::psql::utils::docker_run;
+use crate::psql::utils::docker;
 
 pub fn command() -> Command<'static> {
     Command::new("dump")
@@ -31,7 +31,7 @@ pub fn execute(matches: &ArgMatches, db_url: &str) {
             process::exit(1);
         }
 
-        docker_run::main(
+        docker::run(
             vec![
                 "psql",
                 "-c",
@@ -41,7 +41,7 @@ pub fn execute(matches: &ArgMatches, db_url: &str) {
         return;
     }
 
-    docker_run::main(
+    docker::run(
         [
             vec![
                 "pg_dump",
