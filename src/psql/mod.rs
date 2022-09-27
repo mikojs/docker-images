@@ -41,21 +41,22 @@ pub fn command(app: App<'static>) -> Command<'static> {
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
     let db = Database::new(db_name.to_string());
+    // TODO remove
     let db_url = db.url();
 
     match matches.subcommand() {
         Some(("show", _)) => show::execute(db),
         Some(("dump", sub_matches)) => {
             check_db_url(db_name, &db_url, true);
-            dump::execute(sub_matches, &db_url);
+            dump::execute(sub_matches, db);
         },
         Some(("restore", sub_matches)) => {
             check_db_url(db_name, &db_url, false);
-            restore::execute(sub_matches, &db_url);
+            restore::execute(sub_matches, db);
         },
         Some(("reset", sub_matches)) => {
             check_db_url(db_name, &db_url, false);
-            reset::execute(sub_matches, &db_url);
+            reset::execute(sub_matches, db);
         },
         _ => {
             check_db_url(db_name, &db_url, true);
