@@ -37,7 +37,7 @@ pub fn execute(matches: &ArgMatches, db: Database) {
                     "psql",
                     db_url,
                     "-c",
-                    &format!("\\copy {} TO '{}' WITH csv", args[0], file_name),
+                    &format!("\\copy ({}) TO '{}' WITH csv", args[0], file_name),
                 ],
             ),
         );

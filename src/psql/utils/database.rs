@@ -94,7 +94,7 @@ impl Database {
                     }
                 }
 
-                if keyword_regex.as_ref().unwrap().is_match(&content) && self.is_protected() {
+                if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) && self.is_protected() {
                     self.protected_error();
                 }
             }
