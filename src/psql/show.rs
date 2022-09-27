@@ -7,6 +7,6 @@ pub fn command() -> Command<'static> {
         .about("Show the database url")
 }
 
-pub fn execute(db: Database) {
+pub fn execute(mut db: Database) {
     println!("{}", db.url(false));
 }
