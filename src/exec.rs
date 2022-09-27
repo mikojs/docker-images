@@ -2,7 +2,7 @@ use clap::{Command, ArgMatches};
 
 use crate::utils::proxy_args;
 use crate::utils::sub_process;
-use crate::utils::get_working_dir;
+use crate::utils::docker;
 
 pub fn command() -> Command<'static> {
     Command::new("exec")
@@ -19,7 +19,7 @@ pub fn execute(matches: &ArgMatches) {
             vec![
                 "exec",
                 "-w",
-                &get_working_dir::main(),
+                &docker::working_dir(),
             ],
             proxy_args::get_values_from_proxy_args(matches),
         ]

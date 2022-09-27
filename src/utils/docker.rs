@@ -6,7 +6,7 @@ use std::path::Path;
 use regex::Regex;
 
 use crate::utils::sub_process;
-use crate::utils::get_working_dir;
+use crate::utils::get_current_dir;
 
 const HOSTNAME_PATH: &str = "/etc/hostname";
 
@@ -18,6 +18,21 @@ pub fn name() -> String {
     fs::read_to_string(HOSTNAME_PATH)
         .expect("Couldn't read the file")
         .replace("\n", "")
+}
+
+pub fn working_dir() -> String {
+    let cwd = get_current_dir::main()
+        .display()
+        .to_string();
+    let is_work = Regex::new(r"^/root/work")
+        .unwrap()
+        .is_match(&cwd);
+
+    if is_work {
+        return cwd;
+    }
+
+    "/root/work".to_string()
 }
 
 fn get_network_name(container_name: &str) -> String {
@@ -132,7 +147,7 @@ pub fn run(args: Vec<&str>) {
             vec![
                 "run",
                 "-w",
-                &get_working_dir::main(),
+                &working_dir(),
                 "--env-file",
                 &get_env_file(&container_name),
             ],
