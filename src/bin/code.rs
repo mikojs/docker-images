@@ -7,7 +7,6 @@ use inquire::Confirm;
 use regex::Regex;
 
 use docker_images::utils::proxy_args;
-use docker_images::utils::get_current_dir;
 use docker_images::utils::sub_process;
 
 const OPTIONS: glob::MatchOptions = glob::MatchOptions {
@@ -27,7 +26,8 @@ fn confirm_to_create_file(file_name: &str) -> String {
         return "".to_string();
     }
 
-    let file_path = get_current_dir::main()
+    let file_path = env::current_dir()
+        .expect("Couldn't get the currenct directory")
         .join(file_name);
     let file_dir = file_path
         .parent()

@@ -6,7 +6,6 @@ use std::path::Path;
 use regex::Regex;
 
 use crate::utils::sub_process;
-use crate::utils::get_current_dir;
 
 const HOSTNAME_PATH: &str = "/etc/hostname";
 
@@ -21,7 +20,8 @@ pub fn name() -> String {
 }
 
 pub fn working_dir() -> String {
-    let cwd = get_current_dir::main()
+    let cwd = env::current_dir()
+        .expect("Couldn't get the currenct directory")
         .display()
         .to_string();
     let is_work = Regex::new(r"^/root/work")
