@@ -1,10 +1,6 @@
 use clap::{crate_version, Command};
 
-use docker_images::name;
-use docker_images::run;
-use docker_images::exec;
-use docker_images::rm;
-use docker_images::rmi;
+use docker_images::{name, run, exec, rm, rmi};
 
 fn main() {
     let matches = Command::new("ddocker")

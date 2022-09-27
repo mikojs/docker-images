@@ -1,8 +1,6 @@
 use clap::{Command, ArgMatches};
 
-use crate::utils::proxy_args;
-use crate::utils::sub_process;
-use crate::utils::docker;
+use crate::utils::{proxy_args, sub_process, docker};
 
 pub fn command() -> Command<'static> {
     Command::new("exec")

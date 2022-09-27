@@ -4,6 +4,8 @@ use std::process;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
+use utils::{proxy_args, docker, check_db_url};
+
 mod dump;
 mod restore;
 mod reset;
@@ -56,7 +58,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
         .subcommand(dump::command())
         .subcommand(restore::command())
         .subcommand(reset::command())
-        .arg(utils::proxy_args::set_proxy_args(false))
+        .arg(proxy_args::set_proxy_args(false))
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str) {
@@ -65,23 +67,23 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
     match matches.subcommand() {
         Some(("show", _)) => println!("{}", db_url),
         Some(("dump", sub_matches)) => {
-            utils::check_db_url(db_name, &db_url, true);
+            check_db_url(db_name, &db_url, true);
             dump::execute(sub_matches, &db_url);
         },
         Some(("restore", sub_matches)) => {
-            utils::check_db_url(db_name, &db_url, false);
+            check_db_url(db_name, &db_url, false);
             restore::execute(sub_matches, &db_url);
         },
         Some(("reset", sub_matches)) => {
-            utils::check_db_url(db_name, &db_url, false);
+            check_db_url(db_name, &db_url, false);
             reset::execute(sub_matches, &db_url);
         },
         _ => {
-            utils::check_db_url(db_name, &db_url, true);
-            utils::docker::run(
+            check_db_url(db_name, &db_url, true);
+            docker::run(
                 [
                     vec!["psql", &db_url],
-                    utils::proxy_args::get_values_from_proxy_args(matches),
+                    proxy_args::get_values_from_proxy_args(matches),
                 ]
                     .concat(),
             );

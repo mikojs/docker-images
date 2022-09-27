@@ -1,7 +1,6 @@
 use clap::{Command, ArgMatches};
 
-use crate::utils::proxy_args;
-use crate::utils::docker;
+use crate::utils::{proxy_args, docker};
 
 pub fn command() -> Command<'static> {
     Command::new("run")
