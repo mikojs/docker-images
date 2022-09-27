@@ -3,9 +3,7 @@ use std::process;
 use clap::{Command, Arg, ArgMatches};
 use regex::Regex;
 
-#[path = "../utils/proxy_args.rs"] mod proxy_args;
-
-#[path = "./utils/docker_run.rs"] mod docker_run;
+use crate::psql::utils::{proxy_args, docker};
 
 pub fn command() -> Command<'static> {
     Command::new("dump")
@@ -32,7 +30,7 @@ pub fn execute(matches: &ArgMatches, db_url: &str) {
             process::exit(1);
         }
 
-        docker_run::main(
+        docker::run(
             vec![
                 "psql",
                 "-c",
@@ -42,7 +40,7 @@ pub fn execute(matches: &ArgMatches, db_url: &str) {
         return;
     }
 
-    docker_run::main(
+    docker::run(
         [
             vec![
                 "pg_dump",

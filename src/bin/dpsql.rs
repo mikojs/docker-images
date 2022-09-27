@@ -2,7 +2,7 @@ use std::env;
 
 use clap::{crate_version, Command};
 
-#[path = "../psql/main.rs"] mod psql;
+use docker_images::psql;
 
 fn main() {
     let mut app = psql::command(

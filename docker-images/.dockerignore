@@ -1,6 +1,3 @@
 # docker
 .dockerignore
 Dockerfile
-
-# ignore build-readme command
-bin/build-readme

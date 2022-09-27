@@ -1,10 +1,6 @@
 use clap::{crate_version, Command};
 
-#[path = "../name.rs"] mod name;
-#[path = "../run.rs"] mod run;
-#[path = "../exec.rs"] mod exec;
-#[path = "../rm.rs"] mod rm;
-#[path = "../rmi.rs"] mod rmi;
+use docker_images::{name, run, exec, rm, rmi};
 
 fn main() {
     let matches = Command::new("ddocker")

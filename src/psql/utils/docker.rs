@@ -1,7 +1,7 @@
-#[path = "../../utils/docker_run.rs"] mod docker_run;
+use crate::utils::docker;
 
-pub fn main(args: Vec<&str>) {
-    docker_run::main(
+pub fn run(args: Vec<&str>) {
+    docker::run(
         [
             vec![
                 "-it",

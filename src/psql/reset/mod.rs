@@ -1,7 +1,7 @@
 use clap::{Command, ArgMatches};
 
-#[path = "./table.rs"] mod table;
-#[path = "./sequence.rs"] mod sequence;
+mod table;
+mod sequence;
 
 pub fn command() -> Command<'static> {
     Command::new("reset")

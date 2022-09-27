@@ -3,6 +3,10 @@ use std::process;
 
 use inquire::Confirm;
 
+pub use crate::utils::proxy_args;
+
+pub mod docker;
+
 fn is_protected_db(db_name: &str) -> bool {
     if let Ok(not_protected_db_names_str) = env::var("NOT_PROTECTED_DBS") {
         return not_protected_db_names_str
@@ -14,7 +18,7 @@ fn is_protected_db(db_name: &str) -> bool {
     true
 }
 
-pub fn main(db_name: &str, db_url: &str, skip_protected_db_checking: bool) -> bool {
+pub fn check_db_url(db_name: &str, db_url: &str, skip_protected_db_checking: bool) -> bool {
     if !skip_protected_db_checking && is_protected_db(db_name) {
         eprint!("The `{}` database is protected", db_name);
         process::exit(1);
