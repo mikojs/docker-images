@@ -8,10 +8,6 @@ publish = false
 strip = true
 
 [[bin]]
-name = "build-readme"
-path = "src/bin/build-readme.rs"
-
-[[bin]]
 name = "entrypoint"
 path = "src/bin/entrypoint.rs"
 
