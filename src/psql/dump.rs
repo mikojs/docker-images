@@ -32,12 +32,14 @@ pub fn execute(matches: &ArgMatches, db: Database) {
         }
 
         docker::run(
-            vec![
-                "psql",
-                db_url,
-                "-c",
-                &format!("\\copy {} TO '{}' WITH csv", args[0], file_name),
-            ],
+            db.check_sql(
+                vec![
+                    "psql",
+                    db_url,
+                    "-c",
+                    &format!("\\copy ({}) TO '{}' WITH csv", args[0], file_name),
+                ],
+            ),
         );
         return;
     }

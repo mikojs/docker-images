@@ -1,8 +1,10 @@
+use std::fs;
 use std::fmt;
 use std::env;
 use std::process;
 
 use inquire::Confirm;
+use regex::Regex;
 
 pub struct Database {
     name: String,
@@ -49,10 +51,14 @@ impl Database {
         true
     }
 
+    fn protected_error(&self) {
+        eprint!("The `{}` database is protected", &self.name);
+        process::exit(1);
+    }
+
     pub fn url<'a>(&'a self, danger_command: bool) -> &'a str {
         if danger_command && self.is_protected() {
-            eprint!("The `{}` database is protected", &self.name);
-            process::exit(1);
+            self.protected_error();
         }
 
         let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
@@ -66,5 +72,34 @@ impl Database {
         }
 
         &self.url
+    }
+
+    pub fn check_sql<'a>(&'a self, args: Vec<&'a str>) -> Vec<&'a str> {
+        let keyword_regexs = vec![
+            Regex::new(r"INSERT"),
+            Regex::new(r"UPDATE"),
+            Regex::new(r"DELETE"),
+            Regex::new(r"ALTER"),
+            Regex::new(r"TRUNCATE"),
+        ];
+
+        for arg in args.iter() {
+            for keyword_regex in &keyword_regexs {
+                let mut content = arg.to_string();
+
+                if Regex::new(r"\.sql$").unwrap().is_match(&arg) {
+                    content = match fs::read_to_string(arg) {
+                        Ok(new_content) => new_content,
+                        _ => content,
+                    }
+                }
+
+                if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) && self.is_protected() {
+                    self.protected_error();
+                }
+            }
+        }
+
+        args
     }
 }
