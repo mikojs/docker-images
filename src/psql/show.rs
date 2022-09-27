@@ -8,5 +8,5 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute(db: Database) {
-    println!("{}", db.url(false));
+    println!("{}", db);
 }

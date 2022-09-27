@@ -1,3 +1,4 @@
+use std::fmt;
 use std::env;
 use std::process;
 
@@ -6,6 +7,12 @@ use inquire::Confirm;
 pub struct Database {
     name: String,
     url: String,
+}
+
+impl fmt::Display for Database {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.url)
+    }
 }
 
 impl Database {
