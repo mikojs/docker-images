@@ -3,7 +3,7 @@ use std::env;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-use utils::{proxy_args, docker, check_db_url, Database};
+use utils::{proxy_args, docker, Database};
 
 mod show;
 mod dump;
@@ -46,27 +46,15 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
 
     match matches.subcommand() {
         Some(("show", _)) => show::execute(db),
-        Some(("dump", sub_matches)) => {
-            check_db_url(db_name, &db_url, true);
-            dump::execute(sub_matches, db);
-        },
-        Some(("restore", sub_matches)) => {
-            check_db_url(db_name, &db_url, false);
-            restore::execute(sub_matches, db);
-        },
-        Some(("reset", sub_matches)) => {
-            check_db_url(db_name, &db_url, false);
-            reset::execute(sub_matches, db);
-        },
-        _ => {
-            check_db_url(db_name, &db_url, true);
-            docker::run(
-                [
-                    vec!["psql", &db_url],
-                    proxy_args::get_values_from_proxy_args(matches),
-                ]
-                    .concat(),
-            );
-        },
+        Some(("dump", sub_matches)) => dump::execute(sub_matches, db),
+        Some(("restore", sub_matches)) => restore::execute(sub_matches, db),
+        Some(("reset", sub_matches)) => reset::execute(sub_matches, db),
+        _ => docker::run(
+            [
+                vec!["psql", &db_url],
+                proxy_args::get_values_from_proxy_args(matches),
+            ]
+                .concat(),
+        ),
     }
 }
