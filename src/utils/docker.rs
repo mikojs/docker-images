@@ -1,12 +1,24 @@
 use std::fs;
 use std::env;
 use std::process;
+use std::path::Path;
 
 use regex::Regex;
 
 use crate::utils::sub_process;
-use crate::utils::get_container_name;
 use crate::utils::get_working_dir;
+
+const HOSTNAME_PATH: &str = "/etc/hostname";
+
+pub fn name() -> String {
+    if !Path::new(HOSTNAME_PATH).exists() {
+        return "".to_string();
+    }
+
+    fs::read_to_string(HOSTNAME_PATH)
+        .expect("Couldn't read the file")
+        .replace("\n", "")
+}
 
 fn get_network_name(container_name: &str) -> String {
     sub_process::exec_result(
@@ -112,7 +124,7 @@ fn transform_image_version(arg: &str) -> String {
 }
 
 pub fn run(args: Vec<&str>) {
-    let container_name = get_container_name::main();
+    let container_name = name();
 
     sub_process::exec(
         "docker",

@@ -1,6 +1,6 @@
 use clap::Command;
 
-use crate::utils::get_container_name;
+use crate::utils::docker;
 
 pub fn command() -> Command<'static> {
     Command::new("name")
@@ -8,5 +8,5 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute() {
-    println!("{}", get_container_name::main());
+    println!("{}", docker::name());
 }
