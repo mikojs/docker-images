@@ -36,10 +36,17 @@ pub fn get(container_name: &str) -> String {
 
 #[test]
 fn check_env_file() {
-    let result = r#"env1=bar
-env2=bar"#;
+    let testings = vec![
+        "PATH=foo env1=bar env2=bar",
+        "env1=bar PATH=foo env2=bar",
+        "env1=bar env2=bar PATH=foo",
+    ];
 
-    assert_eq!(generate_env_content("PATH=foo env1=bar env2=bar".to_string()), result);
-    assert_eq!(generate_env_content("env1=bar PATH=foo env2=bar".to_string()), result);
-    assert_eq!(generate_env_content("env1=bar env2=bar PATH=foo".to_string()), result);
+    for testing in testings {
+        assert_eq!(
+            generate_env_content(testing.to_string()),
+            r#"env1=bar
+env2=bar"#,
+        );
+    }
 }
