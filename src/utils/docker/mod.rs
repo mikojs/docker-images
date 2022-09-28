@@ -7,6 +7,8 @@ use regex::Regex;
 
 use crate::utils::sub_process;
 
+mod env_file;
+
 const HOSTNAME_PATH: &str = "/etc/hostname";
 
 pub fn name() -> String {
@@ -46,31 +48,6 @@ fn get_network_name(container_name: &str) -> String {
         ],
     )
         .replace("\n", "")
-}
-
-fn get_env_file(container_name: &str) -> String {
-    let file_path = "/root/.ddocker.env";
-    let content = sub_process::exec_result(
-        "docker",
-        vec![
-            "inspect",
-            container_name,
-            "--format",
-            "{{.Config.Env}}",
-        ],
-    )
-        .replace("[", "")
-        .replace("]", "");
-    let contents: Vec<&str> = content
-        .split(" ")
-        .filter(|x| !Regex::new(r"^PATH=.+").unwrap().is_match(x))
-        .collect();
-    let new_content = contents.join("\n");
-
-    match fs::write(file_path, new_content) {
-        Ok(_) => file_path.to_string(),
-        _ => unreachable!(),
-    }
 }
 
 fn filter_args(args: Vec<&str>) -> Vec<&str> {
@@ -149,7 +126,7 @@ pub fn run(args: Vec<&str>) {
                 "-w",
                 &working_dir(),
                 "--env-file",
-                &get_env_file(&container_name),
+                &env_file::get(&container_name),
             ],
             filter_args(
                 vec!["--volumes-from", &container_name],
