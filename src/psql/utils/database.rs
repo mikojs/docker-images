@@ -74,32 +74,82 @@ impl Database {
         &self.url
     }
 
-    pub fn check_sql<'a>(&'a self, args: Vec<&'a str>) -> Vec<&'a str> {
+    fn is_danger_sql(&self, arg: &str) -> bool {
         let keyword_regexs = vec![
             Regex::new(r"INSERT"),
+            Regex::new(r"CREATE"),
             Regex::new(r"UPDATE"),
             Regex::new(r"DELETE"),
             Regex::new(r"ALTER"),
             Regex::new(r"TRUNCATE"),
         ];
 
+        for keyword_regex in &keyword_regexs {
+            let mut content = arg.to_string();
+
+            if Regex::new(r"\.sql$").unwrap().is_match(&arg) {
+                content = match fs::read_to_string(arg) {
+                    Ok(new_content) => new_content,
+                    _ => content,
+                }
+            }
+
+            if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) && self.is_protected() {
+                return true
+            }
+        }
+
+        false
+    }
+
+    pub fn check_sql<'a>(&'a self, args: Vec<&'a str>) -> Vec<&'a str> {
         for arg in args.iter() {
-            for keyword_regex in &keyword_regexs {
-                let mut content = arg.to_string();
-
-                if Regex::new(r"\.sql$").unwrap().is_match(&arg) {
-                    content = match fs::read_to_string(arg) {
-                        Ok(new_content) => new_content,
-                        _ => content,
-                    }
-                }
-
-                if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) && self.is_protected() {
-                    self.protected_error();
-                }
+            if self.is_danger_sql(arg) {
+                self.protected_error();
             }
         }
 
         args
     }
+}
+
+#[test]
+fn set_testing_env() {
+    env::set_var("DEFAULT_DB_URL", "test");
+    env::set_var("PROTECTED_DB_URL", "test");
+    env::set_var("NOT_PROTECTED_DBS", "default,foo,bar");
+}
+
+#[test]
+fn check_url() {
+    set_testing_env();
+    assert_eq!(Database::new("default".to_string()).url, "test");
+}
+
+#[test]
+fn check_db_is_protected() {
+    set_testing_env();
+    assert_eq!(Database::new("default".to_string()).is_protected(), false);
+    assert_eq!(Database::new("protected".to_string()).is_protected(), true);
+}
+
+#[test]
+fn check_sql() {
+    let testing_sql_file_path = "./testing.sql";
+    let testings = vec![
+        "CREATE",
+        "DELETE",
+        testing_sql_file_path,
+    ];
+
+    set_testing_env();
+    fs::write(testing_sql_file_path, "DELETE")
+        .expect("Couldn't create the testing file");
+
+    for testing in testings {
+        assert_eq!(Database::new("protected".to_string()).is_danger_sql(testing), true);
+    }
+
+    fs::remove_file(testing_sql_file_path)
+        .expect("Couldn't remove the testing file");
 }
