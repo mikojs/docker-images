@@ -77,6 +77,7 @@ impl Database {
     pub fn check_sql<'a>(&'a self, args: Vec<&'a str>) -> Vec<&'a str> {
         let keyword_regexs = vec![
             Regex::new(r"INSERT"),
+            Regex::new(r"CREATE"),
             Regex::new(r"UPDATE"),
             Regex::new(r"DELETE"),
             Regex::new(r"ALTER"),
