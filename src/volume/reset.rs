@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgMatches};
 
-use crate::utils::{docker};
+use crate::utils::sub_process;
 
 pub fn command() -> Command<'static> {
     Command::new("reset")
@@ -16,6 +16,14 @@ pub fn execute(matches: &ArgMatches) {
         .value_of("volume-name")
         .unwrap();
 
-    docker::run(vec!["volume", "rm", volume_name]);
-    docker::run(vec!["volume", "create", volume_name]);
+    println!(
+        "Remove `{}` volume",
+        sub_process::exec_result("docker", vec!["volume", "rm", volume_name])
+            .replace("\n", ""),
+    );
+    println!(
+        "Create `{}` volume",
+        sub_process::exec_result("docker", vec!["volume", "create", volume_name])
+            .replace("\n", ""),
+    );
 }
