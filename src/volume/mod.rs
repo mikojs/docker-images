@@ -6,6 +6,7 @@ pub fn command() -> Command<'static> {
     Command::new("volume")
         .about("Docker volume command")
         .subcommand(reset::command())
+        .subcommand_required(true)
 }
 
 pub fn execute(matches: &ArgMatches) {
