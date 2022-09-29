@@ -26,5 +26,8 @@ COPY ./bin/entrypoint /bin/entrypoint
 COPY ./bin/code /bin/code
 COPY ./bin/ddocker /bin/ddocker
 
+# volumes
+VOLUME ["/root/work"]
+
 # run
-ENTRYPOINT ["entrypoint", "code-server"]
+ENTRYPOINT ["entrypoint", "code-server /root/work"]
