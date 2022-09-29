@@ -9,4 +9,4 @@ RUN apk add \
 COPY ./bin/entrypoint /bin/entrypoint
 
 # run
-ENTRYPOINT ["entrypoint", "rust"]
+ENTRYPOINT ["entrypoint", "rustc"]
