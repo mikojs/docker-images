@@ -4,3 +4,9 @@ FROM rust:alpine
 # install packages
 RUN apk add \
   musl-dev
+
+# bin
+COPY ./bin/entrypoint /bin/entrypoint
+
+# run
+ENTRYPOINT ["entrypoint", "rust"]
