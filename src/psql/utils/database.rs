@@ -76,12 +76,12 @@ impl Database {
 
     fn is_danger_sql(&self, arg: &str) -> bool {
         let keyword_regexs = vec![
-            Regex::new(r"INSERT"),
-            Regex::new(r"CREATE"),
-            Regex::new(r"UPDATE"),
-            Regex::new(r"DELETE"),
-            Regex::new(r"ALTER"),
-            Regex::new(r"TRUNCATE"),
+            Regex::new(r"INSERT "),
+            Regex::new(r"CREATE "),
+            Regex::new(r"UPDATE "),
+            Regex::new(r"DELETE "),
+            Regex::new(r"ALTER "),
+            Regex::new(r"TRUNCATE "),
         ];
 
         for keyword_regex in &keyword_regexs {
