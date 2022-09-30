@@ -76,12 +76,12 @@ impl Database {
 
     fn is_danger_sql(&self, arg: &str) -> bool {
         let keyword_regexs = vec![
-            Regex::new(r"INSERT"),
-            Regex::new(r"CREATE"),
-            Regex::new(r"UPDATE"),
-            Regex::new(r"DELETE"),
-            Regex::new(r"ALTER"),
-            Regex::new(r"TRUNCATE"),
+            Regex::new(r"INSERT "),
+            Regex::new(r"CREATE "),
+            Regex::new(r"UPDATE "),
+            Regex::new(r"DELETE "),
+            Regex::new(r"ALTER "),
+            Regex::new(r"TRUNCATE "),
         ];
 
         for keyword_regex in &keyword_regexs {
@@ -137,13 +137,13 @@ fn check_db_is_protected() {
 fn check_sql() {
     let testing_sql_file_path = "./testing.sql";
     let testings = vec![
-        "CREATE",
-        "DELETE",
+        "CREATE ",
+        "DELETE ",
         testing_sql_file_path,
     ];
 
     set_testing_env();
-    fs::write(testing_sql_file_path, "DELETE")
+    fs::write(testing_sql_file_path, "DELETE ")
         .expect("Couldn't create the testing file");
 
     for testing in testings {
