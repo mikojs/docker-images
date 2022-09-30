@@ -137,13 +137,13 @@ fn check_db_is_protected() {
 fn check_sql() {
     let testing_sql_file_path = "./testing.sql";
     let testings = vec![
-        "CREATE",
-        "DELETE",
+        "CREATE ",
+        "DELETE ",
         testing_sql_file_path,
     ];
 
     set_testing_env();
-    fs::write(testing_sql_file_path, "DELETE")
+    fs::write(testing_sql_file_path, "DELETE ")
         .expect("Couldn't create the testing file");
 
     for testing in testings {
