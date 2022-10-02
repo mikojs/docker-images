@@ -3,41 +3,21 @@ name: build
 on: [push]
 
 jobs:
-  build-bin:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-unknown-linux-musl
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
-      - uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release --target x86_64-unknown-linux-musl
-      - run: mkdir ./bin
-      - run: find ./target/x86_64-unknown-linux-musl/release -type f -maxdepth 1 -executable -exec cp {} ./bin \;
-      - run: tar -cvf bin.tar bin
-      - uses: actions/upload-artifact@v3
-        with:
-          name: bin
-          path: ./bin.tar
+  build-rust:
+    uses: mikojs/actions/.github/workflows/build-rust.yml@main
+    with:
+      name: bin
 
   build-docker:
     uses: mikojs/actions/.github/workflows/build-docker.yml@main
-    needs: build-bin
+    needs: build-rust
     strategy:
       matrix:
         name: [base, code-server, act, rust]
     with:
+      cache: bin.tar
       name: mikojs/${{ matrix.name }}
-      use-cache: true
-      pre-build: tar -xvf ./bin/bin.tar -C ./docker-images
-      context: ./docker-images
-      file: ./docker-images/${{ matrix.name }}/Dockerfile
+      context: ./docker-images/${{ matrix.name }}
       push: ${{ github.ref == 'refs/heads/main' }}
 
   final-check:
