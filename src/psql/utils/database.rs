@@ -142,18 +142,30 @@ fn check_sql() {
     let testing_sql_file_path = "./testing.sql";
     let testings = vec![
         "CREATE ",
+        r#"CREATE
+"#,
         "DELETE ",
-        testing_sql_file_path,
+        r#"DELETE
+"#,
     ];
 
     set_testing_env();
-    fs::write(testing_sql_file_path, "DELETE ")
-        .expect("Couldn't create the testing file");
-
     for testing in testings {
-        assert_eq!(Database::new("protected".to_string()).is_danger_sql(testing), true);
-    }
+        fs::write(testing_sql_file_path, testing)
+            .expect("Couldn't create the testing file");
 
-    fs::remove_file(testing_sql_file_path)
-        .expect("Couldn't remove the testing file");
+        assert_eq!(
+            Database::new("protected".to_string())
+                .is_danger_sql(testing),
+            true,
+        );
+        assert_eq!(
+            Database::new("protected".to_string())
+                .is_danger_sql(testing_sql_file_path),
+            true,
+        );
+
+        fs::remove_file(testing_sql_file_path)
+            .expect("Couldn't remove the testing file");
+    }
 }
