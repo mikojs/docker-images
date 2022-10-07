@@ -9,6 +9,7 @@ pub fn command() -> Command<'static> {
         .about("Reset a docker volume")
         .arg(
             Arg::new("volume-name")
+                .help("This docker volume would be reset")
                 .required(true)
         )
 }

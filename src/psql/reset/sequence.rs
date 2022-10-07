@@ -7,6 +7,7 @@ pub fn command() -> Command<'static> {
         .about("Reset a sequence in the database")
         .arg(
             Arg::new("sequence-name")
+                .help("This sequence would be reset")
                 .required(true)
         )
 }

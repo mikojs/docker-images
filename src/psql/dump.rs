@@ -7,10 +7,12 @@ pub fn command() -> Command<'static> {
         .about("Dump the database to a file")
         .arg(
             Arg::new("file-name")
+                .help("Dump the data to this file")
                 .required(true)
         )
         .arg(
             Arg::new("format")
+                .help("Use SQL to format the data when dumping the CSV file")
                 .long("format")
                 .action(ArgAction::Set)
         )

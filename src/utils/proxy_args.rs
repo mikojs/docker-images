@@ -2,6 +2,7 @@ use clap::{Arg, ArgMatches};
 
 pub fn set_proxy_args(required: bool) -> Arg<'static> {
     Arg::new("args")
+        .help("Those arguments would be proxied to the sub command")
         .required(required)
         .multiple_values(true)
         .allow_hyphen_values(true)

@@ -7,6 +7,7 @@ pub fn command() -> Command<'static> {
         .about("Reset a table in the database")
         .arg(
             Arg::new("table-name")
+                .help("This table would be reset")
                 .required(true)
         )
 }

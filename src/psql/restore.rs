@@ -7,10 +7,12 @@ pub fn command() -> Command<'static> {
         .about("Restore the database from a file")
         .arg(
             Arg::new("file-name")
+                .help("The file name is used to restore the data")
                 .required(true)
         )
         .arg(
             Arg::new("format")
+                .help("Use SQL to format the data when restoring the data from the CSV file")
                 .long("format")
                 .action(ArgAction::Set)
         )
