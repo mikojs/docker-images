@@ -86,6 +86,7 @@ impl Database {
             Regex::new(r"DELETE[ \n]"),
             Regex::new(r"ALTER[ \n]"),
             Regex::new(r"TRUNCATE[ \n]"),
+            Regex::new(r"DROP[ \n]"),
         ];
 
         for keyword_regex in &keyword_regexs {
