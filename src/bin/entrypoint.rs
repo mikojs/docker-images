@@ -27,7 +27,7 @@ fn main() {
         .about("Use this command in the dockerfile entrypoint command")
         .arg(
             Arg::new("main-command")
-                .help("This command would be executed if the proxy arguments don't work.")
+                .help("This command would be executed if the proxy arguments don't work")
                 .required(true)
         )
         .arg(proxy_args::set_proxy_args(false))
