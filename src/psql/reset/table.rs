@@ -16,7 +16,6 @@ pub fn command() -> Command<'static> {
 If you want to use `DELETE`, you could use this option"#)
                 .long("delete")
                 .action(ArgAction::SetTrue)
-                .default_value("false")
         )
 }
 
