@@ -57,18 +57,22 @@ impl Database {
     }
 
     pub fn url<'a>(&'a self, danger_command: bool) -> &'a str {
-        if danger_command && self.is_protected() {
-            self.protected_error();
-        }
+        if danger_command {
+            if self.is_protected() {
+                self.protected_error();
+            }
 
-        let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
-        let result = match Confirm::new(&message).prompt() {
-            Ok(true) => true,
-            _ => false,
-        };
+            let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
+            let result = match Confirm::new(&message).prompt() {
+                Ok(true) => true,
+                _ => false,
+            };
 
-        if !result {
-            process::exit(0);
+            if !result {
+                process::exit(0);
+            }
+        } else {
+            println!("DB url: {}", &self.url);
         }
 
         &self.url
