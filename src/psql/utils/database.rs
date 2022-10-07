@@ -57,18 +57,22 @@ impl Database {
     }
 
     pub fn url<'a>(&'a self, danger_command: bool) -> &'a str {
-        if danger_command && self.is_protected() {
-            self.protected_error();
-        }
+        if danger_command {
+            if self.is_protected() {
+                self.protected_error();
+            }
 
-        let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
-        let result = match Confirm::new(&message).prompt() {
-            Ok(true) => true,
-            _ => false,
-        };
+            let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
+            let result = match Confirm::new(&message).prompt() {
+                Ok(true) => true,
+                _ => false,
+            };
 
-        if !result {
-            process::exit(0);
+            if !result {
+                process::exit(0);
+            }
+        } else {
+            println!("DB url: {}", &self.url);
         }
 
         &self.url
@@ -76,12 +80,13 @@ impl Database {
 
     fn is_danger_sql(&self, arg: &str) -> bool {
         let keyword_regexs = vec![
-            Regex::new(r"INSERT "),
-            Regex::new(r"CREATE "),
-            Regex::new(r"UPDATE "),
-            Regex::new(r"DELETE "),
-            Regex::new(r"ALTER "),
-            Regex::new(r"TRUNCATE "),
+            Regex::new(r"INSERT[ \n]"),
+            Regex::new(r"CREATE[ \n]"),
+            Regex::new(r"UPDATE[ \n]"),
+            Regex::new(r"DELETE[ \n]"),
+            Regex::new(r"ALTER[ \n]"),
+            Regex::new(r"TRUNCATE[ \n]"),
+            Regex::new(r"DROP[ \n]"),
         ];
 
         for keyword_regex in &keyword_regexs {
@@ -138,18 +143,30 @@ fn check_sql() {
     let testing_sql_file_path = "./testing.sql";
     let testings = vec![
         "CREATE ",
+        r#"CREATE
+"#,
         "DELETE ",
-        testing_sql_file_path,
+        r#"DELETE
+"#,
     ];
 
     set_testing_env();
-    fs::write(testing_sql_file_path, "DELETE ")
-        .expect("Couldn't create the testing file");
-
     for testing in testings {
-        assert_eq!(Database::new("protected".to_string()).is_danger_sql(testing), true);
-    }
+        fs::write(testing_sql_file_path, testing)
+            .expect("Couldn't create the testing file");
 
-    fs::remove_file(testing_sql_file_path)
-        .expect("Couldn't remove the testing file");
+        assert_eq!(
+            Database::new("protected".to_string())
+                .is_danger_sql(testing),
+            true,
+        );
+        assert_eq!(
+            Database::new("protected".to_string())
+                .is_danger_sql(testing_sql_file_path),
+            true,
+        );
+
+        fs::remove_file(testing_sql_file_path)
+            .expect("Couldn't remove the testing file");
+    }
 }

@@ -1,7 +1,4 @@
-use std::process;
-
-use clap::{Command, Arg, ArgMatches};
-use regex::Regex;
+use clap::{Command, Arg, ArgAction, ArgMatches};
 
 use crate::psql::utils::{proxy_args, docker, Database};
 
@@ -10,7 +7,14 @@ pub fn command() -> Command<'static> {
         .about("Dump the database to a file")
         .arg(
             Arg::new("file-name")
+                .help("Dump the data to this file")
                 .required(true)
+        )
+        .arg(
+            Arg::new("format")
+                .help("Use SQL to format the data when dumping the CSV file")
+                .long("format")
+                .action(ArgAction::Set)
         )
         .arg(proxy_args::set_proxy_args(false))
 }
@@ -19,27 +23,23 @@ pub fn execute(matches: &ArgMatches, db: Database) {
     let file_name = matches
         .value_of("file-name")
         .unwrap();
-    let is_csv = Regex::new(r"\.csv$")
-        .unwrap()
-        .is_match(file_name);
     let db_url = db.url(false);
     let args = proxy_args::get_values_from_proxy_args(matches);
 
-    if is_csv {
-        if args.len() != 1 {
-            eprint!("If you want to dump data into a CSV file, only one argument about SQL query could be accepted");
-            process::exit(1);
-        }
-
+    if let Some(format) = matches.get_one::<String>("format") {
         docker::run(
             db.check_sql(
-                vec![
-                    "psql",
-                    db_url,
-                    "-c",
-                    &format!("\\copy ({}) TO '{}' WITH csv", args[0], file_name),
-                ],
-            ),
+                [
+                    vec![
+                        "psql",
+                        db_url,
+                        "-c",
+                        &format!("\\copy ({}) TO '{}' WITH csv", format, file_name),
+                    ],
+                    args,
+                ]
+                    .concat(),
+            )
         );
         return;
     }
