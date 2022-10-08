@@ -1,25 +1,41 @@
 use std::process;
 use std::process::Command;
+use std::io::{Error, ErrorKind};
 
-const FAIL_TO_START: &str = "command failed to start";
+pub fn command_exist(command: &str) -> bool {
+    match process::Command::new(command).output() {
+        Ok(_) => true,
+        Err(_) => false,
+    }
+}
 
-pub fn exec(command: &str, args: Vec<&str>) {
+pub fn exec(command: &str, args: Vec<&str>) -> Result<(), Error> {
+    if !command_exist(command) {
+        return Err(
+            Error::new(
+                ErrorKind::NotFound,
+                format!("Couldn't find the command: {}", command)
+            ),
+        );
+    }
+
     let status = Command::new(command)
         .args(args)
-        .status()
-        .expect(FAIL_TO_START);
+        .status()?;
 
     if !status.success() {
         process::exit(1);
     }
+    Ok(())
 }
 
-pub fn exec_result(command: &str, args: Vec<&str>) -> String {
+pub fn exec_result(command: &str, args: Vec<&str>) -> Result<String, Error> {
     let output = Command::new(command)
         .args(args)
-        .output()
-        .expect(FAIL_TO_START);
+        .output()?;
 
-    String::from_utf8(output.stdout)
-        .unwrap()
+    Ok(
+        String::from_utf8(output.stdout)
+            .unwrap()
+    )
 }

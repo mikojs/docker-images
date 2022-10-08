@@ -1,10 +1,11 @@
 use std::env;
+use std::io::Error;
 
 use clap::{crate_version, Command};
 
 use docker_images::psql;
 
-fn main() {
+fn main() -> Result<(), Error> {
     let mut app = psql::command(
         Command::new("dpsql")
             .version(crate_version!())
@@ -27,11 +28,12 @@ fn main() {
     if let Some((sub_command, sub_matches)) = matches.subcommand() {
         for db_name in psql::get_db_names() {
             if sub_command == db_name {
-                psql::execute(sub_matches, sub_command);
-                return;
+                psql::execute(sub_matches, sub_command)?;
+                return Ok(());
             }
         }
     }
 
-    psql::execute(&matches, "default");
+    psql::execute(&matches, "default")?;
+    Ok(())
 }

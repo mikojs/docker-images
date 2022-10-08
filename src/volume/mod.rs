@@ -1,3 +1,5 @@
+use std::io::Error;
+
 use clap::{Command, ArgMatches};
 
 mod reset;
@@ -9,9 +11,10 @@ pub fn command() -> Command<'static> {
         .subcommand_required(true)
 }
 
-pub fn execute(matches: &ArgMatches) {
+pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     match matches.subcommand() {
-        Some(("reset", sub_matches)) => reset::execute(sub_matches),
+        Some(("reset", sub_matches)) => reset::execute(sub_matches)?,
         _ => unreachable!(),
-    }
+    };
+    Ok(())
 }

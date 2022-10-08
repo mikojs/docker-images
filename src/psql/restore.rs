@@ -1,3 +1,5 @@
+use std::io::Error;
+
 use clap::{Command, Arg, ArgAction, ArgMatches};
 
 use crate::psql::utils::{proxy_args, Database};
@@ -19,7 +21,7 @@ pub fn command() -> Command<'static> {
         .arg(proxy_args::set_proxy_args(false))
 }
 
-pub fn execute(matches: &ArgMatches, db: Database) {
+pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
     let file_name = matches
         .value_of("file-name")
         .unwrap();
@@ -37,8 +39,8 @@ pub fn execute(matches: &ArgMatches, db: Database) {
                 args,
             ]
                 .concat(),
-        );
-        return;
+        )?;
+        return Ok(());
     }
 
     db.run(
@@ -54,5 +56,6 @@ pub fn execute(matches: &ArgMatches, db: Database) {
             args,
         ]
             .concat(),
-    );
+    )?;
+    Ok(())
 }

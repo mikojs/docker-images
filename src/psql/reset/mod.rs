@@ -1,3 +1,5 @@
+use std::io::Error;
+
 use clap::{Command, ArgMatches};
 
 use crate::psql::utils::Database;
@@ -13,10 +15,11 @@ pub fn command() -> Command<'static> {
         .subcommand(sequence::command())
 }
 
-pub fn execute(matches: &ArgMatches, db: Database) {
+pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
     match matches.subcommand() {
-        Some(("table", sub_matches)) => table::execute(sub_matches, db),
-        Some(("sequence", sub_matches)) => sequence::execute(sub_matches, db),
+        Some(("table", sub_matches)) => table::execute(sub_matches, db)?,
+        Some(("sequence", sub_matches)) => sequence::execute(sub_matches, db)?,
         _ => unreachable!(),
-    }
+    };
+    Ok(())
 }
