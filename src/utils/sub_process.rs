@@ -3,7 +3,7 @@ use std::process::Command;
 use std::io::{Error, ErrorKind};
 
 pub fn command_exist(command: &str) -> bool {
-    match process::Command::new(&command).output() {
+    match process::Command::new(command).output() {
         Ok(_) => true,
         Err(_) => false,
     }
