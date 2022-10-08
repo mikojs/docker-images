@@ -6,6 +6,8 @@ use std::process;
 use inquire::Confirm;
 use regex::Regex;
 
+use crate::utils::docker;
+
 pub struct Database {
     name: String,
     url: String,
@@ -114,6 +116,26 @@ impl Database {
         }
 
         args
+    }
+
+    pub fn run(&self, args: Vec<&str>) {
+        for arg in args.iter() {
+            if self.is_danger_arg(arg) {
+                self.protected_error();
+            }
+        }
+
+        docker::run(
+            [
+                vec![
+                    "-it",
+                    "--rm",
+                    "postgres:<DOCKER_POSTGRES_VERSION|alpine>",
+                ],
+                args,
+            ]
+                .concat(),
+        );
     }
 }
 
