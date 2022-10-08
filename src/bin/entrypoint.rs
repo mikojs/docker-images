@@ -1,5 +1,6 @@
 use std::env;
 use std::process;
+use std::io::Error;
 
 use clap::{crate_version, Command, Arg};
 
@@ -12,17 +13,18 @@ fn shift_args(args: &mut Vec<String>) -> String {
     command
 }
 
-fn run_main_command(args: &mut Vec<String>) {
+fn run_main_command(args: &mut Vec<String>) -> Result<(), Error> {
     sub_process::exec(
         &shift_args(args),
         args
             .iter()
             .map(AsRef::as_ref)
             .collect(),
-    );
+    )?;
+    Ok(())
 }
 
-fn main() {
+fn main() -> Result<(), Error> {
     let matches = Command::new("entrypoint")
         .version(crate_version!())
         .about("Use this command in the dockerfile entrypoint command")
@@ -45,8 +47,8 @@ fn main() {
         .collect();
 
     if args.len() == 0 {
-        run_main_command(&mut main_args);
-        return;
+        run_main_command(&mut main_args)?;
+        return Ok(());
     }
 
     let custom_command = shift_args(&mut args);
@@ -58,7 +60,8 @@ fn main() {
                 .iter()
                 .map(AsRef::as_ref)
                 .collect(),
-        ),
-        Err(_) => run_main_command(&mut main_args),
-    }
+        )?,
+        Err(_) => run_main_command(&mut main_args)?,
+    };
+    Ok(())
 }
