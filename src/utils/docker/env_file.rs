@@ -1,4 +1,5 @@
 use std::fs;
+use std::io::Error;
 
 use regex::Regex;
 use crate::utils::sub_process;
@@ -12,7 +13,7 @@ fn generate_env_content(content: String) -> String {
     contents.join("\n")
 }
 
-pub fn get(container_name: &str) -> String {
+pub fn get(container_name: &str) -> Result<String, Error> {
     let file_path = "/root/.ddocker.env";
     let content = generate_env_content(
         sub_process::exec_result(
@@ -23,16 +24,13 @@ pub fn get(container_name: &str) -> String {
                 "--format",
                 "{{.Config.Env}}",
             ],
-        )
-            .expect("TODO")
+        )?
             .replace("[", "")
             .replace("]", "")
     );
 
-    match fs::write(file_path, content) {
-        Ok(_) => file_path.to_string(),
-        _ => unreachable!(),
-    }
+    fs::write(file_path, content)?;
+    Ok(file_path.to_string())
 }
 
 #[test]

@@ -81,7 +81,8 @@ pub fn run(args: Vec<&str>) {
                 "-w",
                 &working_dir(),
                 "--env-file",
-                &env_file::get(&container_name),
+                &env_file::get(&container_name)
+                    .expect("TODO"),
             ],
             filter_args(
                 vec!["--volumes-from", &container_name],
