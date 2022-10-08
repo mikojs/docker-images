@@ -1,4 +1,5 @@
 use std::env;
+use std::io::Error;
 
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
@@ -39,20 +40,21 @@ pub fn command(app: App<'static>) -> Command<'static> {
         .arg(proxy_args::set_proxy_args(false))
 }
 
-pub fn execute(matches: &ArgMatches, db_name: &str) {
+pub fn execute(matches: &ArgMatches, db_name: &str) -> Result<(), Error> {
     let db = Database::new(db_name.to_string());
 
     match matches.subcommand() {
         Some(("show", _)) => show::execute(db),
-        Some(("dump", sub_matches)) => dump::execute(sub_matches, db),
-        Some(("restore", sub_matches)) => restore::execute(sub_matches, db),
-        Some(("reset", sub_matches)) => reset::execute(sub_matches, db),
+        Some(("dump", sub_matches)) => dump::execute(sub_matches, db)?,
+        Some(("restore", sub_matches)) => restore::execute(sub_matches, db)?,
+        Some(("reset", sub_matches)) => reset::execute(sub_matches, db)?,
         _ => db.run(
             [
                 vec!["psql", &db.url],
                 proxy_args::get_values_from_proxy_args(matches),
             ]
                 .concat(),
-        ),
-    }
+        )?,
+    };
+    Ok(())
 }

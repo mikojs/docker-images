@@ -1,3 +1,5 @@
+use std::io::Error;
+
 use clap::{Command, Arg, ArgMatches};
 
 use crate::psql::utils::Database;
@@ -12,7 +14,7 @@ pub fn command() -> Command<'static> {
         )
 }
 
-pub fn execute(matches: &ArgMatches, db: Database) {
+pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
     db.run(
         vec![
             "psql",
@@ -25,5 +27,6 @@ pub fn execute(matches: &ArgMatches, db: Database) {
                     .unwrap(),
             ),
         ],
-    );
+    )?;
+    Ok(())
 }

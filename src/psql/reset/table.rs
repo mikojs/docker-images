@@ -1,3 +1,5 @@
+use std::io::Error;
+
 use clap::{Command, Arg, ArgAction, ArgMatches};
 
 use crate::psql::utils::Database;
@@ -19,7 +21,7 @@ If you want to use `DELETE`, you could use this option"#)
         )
 }
 
-pub fn execute(matches: &ArgMatches, db: Database) {
+pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
     let command = match matches.get_one::<bool>("delete") {
         Some(true) => "DELETE FROM",
         _ => "TRUNCATE TABLE"
@@ -38,5 +40,6 @@ pub fn execute(matches: &ArgMatches, db: Database) {
                     .unwrap(),
             ),
         ],
-    );
+    )?;
+    Ok(())
 }

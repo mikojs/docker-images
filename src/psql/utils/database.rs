@@ -2,6 +2,7 @@ use std::fs;
 use std::fmt;
 use std::env;
 use std::process;
+use std::io::Error;
 
 use inquire::Confirm;
 use regex::Regex;
@@ -83,7 +84,7 @@ impl Database {
         process::exit(1);
     }
 
-    pub fn run(&self, args: Vec<&str>) {
+    pub fn run(&self, args: Vec<&str>) -> Result<(), Error> {
         let mut is_danger = false;
 
         for arg in args.iter() {
@@ -106,7 +107,7 @@ impl Database {
             };
 
             if !result {
-                return;
+                return Ok(());
             }
         } else {
             println!("DB url: {}", &self.url);
@@ -122,8 +123,8 @@ impl Database {
                 args,
             ]
                 .concat(),
-        )
-            .expect("TODO");
+        )?;
+        Ok(())
     }
 }
 
