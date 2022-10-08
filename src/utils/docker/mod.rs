@@ -1,6 +1,7 @@
 use std::fs;
 use std::env;
 use std::path::Path;
+use std::io::Error;
 
 use regex::Regex;
 
@@ -11,19 +12,19 @@ mod image;
 
 const HOSTNAME_PATH: &str = "/etc/hostname";
 
-pub fn name() -> String {
+pub fn name() -> Result<String, Error> {
     if !Path::new(HOSTNAME_PATH).exists() {
-        return "".to_string();
+        return Ok("".to_string());
     }
 
-    fs::read_to_string(HOSTNAME_PATH)
-        .expect("Couldn't read the file")
-        .replace("\n", "")
+    Ok(
+        fs::read_to_string(HOSTNAME_PATH)?
+            .replace("\n", "")
+    )
 }
 
-pub fn working_dir() -> String {
-    let cwd = env::current_dir()
-        .expect("Couldn't get the currenct directory")
+pub fn working_dir() -> Result<String, Error> {
+    let cwd = env::current_dir()?
         .display()
         .to_string();
     let is_work = Regex::new(r"^/root/work")
@@ -31,24 +32,25 @@ pub fn working_dir() -> String {
         .is_match(&cwd);
 
     if is_work {
-        return cwd;
+        return Ok(cwd);
     }
 
-    "/root/work".to_string()
+    Ok("/root/work".to_string())
 }
 
-fn get_network_name(container_name: &str) -> String {
-    sub_process::exec_result(
-        "docker",
-        vec![
-            "inspect",
-            container_name,
-            "--format",
-            "{{.HostConfig.NetworkMode}}",
-        ],
+fn get_network_name(container_name: &str) -> Result<String, Error> {
+    Ok(
+        sub_process::exec_result(
+            "docker",
+            vec![
+                "inspect",
+                container_name,
+                "--format",
+                "{{.HostConfig.NetworkMode}}",
+            ],
+        )?
+            .replace("\n", "")
     )
-        .expect("TODO")
-        .replace("\n", "")
 }
 
 fn filter_args(args: Vec<&str>) -> Vec<&str> {
@@ -70,8 +72,8 @@ fn transform_image_name(arg: &str) -> String {
     image::name(arg)
 }
 
-pub fn run(args: Vec<&str>) {
-    let container_name = name();
+pub fn run(args: Vec<&str>) -> Result<(), Error> {
+    let container_name = name()?;
 
     sub_process::exec(
         "docker",
@@ -79,10 +81,9 @@ pub fn run(args: Vec<&str>) {
             vec![
                 "run",
                 "-w",
-                &working_dir(),
+                &working_dir()?,
                 "--env-file",
-                &env_file::get(&container_name)
-                    .expect("TODO"),
+                &env_file::get(&container_name)?,
             ],
             filter_args(
                 vec!["--volumes-from", &container_name],
@@ -90,7 +91,7 @@ pub fn run(args: Vec<&str>) {
             filter_args(
                 vec![
                     "--network",
-                    &get_network_name(&container_name),
+                    &get_network_name(&container_name)?,
                 ],
             ),
             args
@@ -102,6 +103,6 @@ pub fn run(args: Vec<&str>) {
                 .collect(),
         ]
             .concat(),
-    )
-        .expect("TODO");
+    )?;
+    Ok(())
 }

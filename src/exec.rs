@@ -19,7 +19,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
             vec![
                 "exec",
                 "-w",
-                &docker::working_dir(),
+                &docker::working_dir()?,
             ],
             proxy_args::get_values_from_proxy_args(matches),
         ]

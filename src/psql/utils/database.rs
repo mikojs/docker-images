@@ -122,7 +122,8 @@ impl Database {
                 args,
             ]
                 .concat(),
-        );
+        )
+            .expect("TODO");
     }
 }
 

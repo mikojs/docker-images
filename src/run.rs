@@ -1,3 +1,5 @@
+use std::io::Error;
+
 use clap::{Command, ArgMatches};
 
 use crate::utils::{proxy_args, docker};
@@ -10,6 +12,7 @@ Otherwise, this would change to be `/root/work`"#)
         .arg(proxy_args::set_proxy_args(true))
 }
 
-pub fn execute(matches: &ArgMatches) {
-    docker::run(proxy_args::get_values_from_proxy_args(matches));
+pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
+    docker::run(proxy_args::get_values_from_proxy_args(matches))?;
+    Ok(())
 }
