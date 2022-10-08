@@ -13,7 +13,8 @@ pub fn command() -> Command<'static> {
 
 pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     match matches.subcommand() {
-        Some(("reset", sub_matches)) => Ok(reset::execute(sub_matches)?),
+        Some(("reset", sub_matches)) => reset::execute(sub_matches)?,
         _ => unreachable!(),
-    }
+    };
+    Ok(())
 }
