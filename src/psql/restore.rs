@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgAction, ArgMatches};
 
-use crate::psql::utils::{proxy_args, docker, Database};
+use crate::psql::utils::{proxy_args, Database};
 
 pub fn command() -> Command<'static> {
     Command::new("restore")
@@ -23,35 +23,32 @@ pub fn execute(matches: &ArgMatches, db: Database) {
     let file_name = matches
         .value_of("file-name")
         .unwrap();
-    let db_url = db.url(true);
     let args = proxy_args::get_values_from_proxy_args(matches);
 
     if let Some(format) = matches.get_one::<String>("format") {
-        docker::run(
-            db.check_sql(
-                [
-                    vec![
-                        "psql",
-                        db_url,
-                        "-c",
-                        &format!("\\copy {} FROM '{}' WITH csv", format, file_name),
-                    ],
-                    args,
-                ]
-                    .concat(),
-            )
+        db.run(
+            [
+                vec![
+                    "psql",
+                    &db.url,
+                    "-c",
+                    &format!("\\copy {} FROM '{}' WITH csv", format, file_name),
+                ],
+                args,
+            ]
+                .concat(),
         );
         return;
     }
 
-    docker::run(
+    db.run(
         [
             vec![
                 "pg_restore",
                 "--no-owner",
                 "-x",
                 "-d",
-                db_url,
+                &db.url,
                 file_name,
             ],
             args,

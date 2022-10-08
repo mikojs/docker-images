@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgMatches};
 
-use crate::psql::utils::{docker, Database};
+use crate::psql::utils::Database;
 
 pub fn command() -> Command<'static> {
     Command::new("sequence")
@@ -13,10 +13,10 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db: Database) {
-    docker::run(
+    db.run(
         vec![
             "psql",
-            db.url(true),
+            &db.url,
             "-c",
             &format!(
                 "ALTER SEQUENCE {} RESTART WITH 1;",
