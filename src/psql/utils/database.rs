@@ -20,6 +20,35 @@ impl fmt::Display for Database {
     }
 }
 
+fn is_danger_arg(arg: &str) -> bool {
+    let keyword_regexs = vec![
+        Regex::new(r"INSERT[ \n]"),
+        Regex::new(r"CREATE[ \n]"),
+        Regex::new(r"UPDATE[ \n]"),
+        Regex::new(r"DELETE[ \n]"),
+        Regex::new(r"ALTER[ \n]"),
+        Regex::new(r"TRUNCATE[ \n]"),
+        Regex::new(r"DROP[ \n]"),
+    ];
+
+    for keyword_regex in &keyword_regexs {
+        let mut content = arg.to_string();
+
+        if Regex::new(r"\.sql$").unwrap().is_match(&arg) {
+            content = match fs::read_to_string(arg) {
+                Ok(new_content) => new_content,
+                _ => content,
+            }
+        }
+
+        if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) {
+            return true
+        }
+    }
+
+    false
+}
+
 impl Database {
     pub fn new(name: String) -> Database {
         let env_name = format!(
@@ -75,38 +104,9 @@ impl Database {
         &self.url
     }
 
-    fn is_danger_arg(&self, arg: &str) -> bool {
-        let keyword_regexs = vec![
-            Regex::new(r"INSERT[ \n]"),
-            Regex::new(r"CREATE[ \n]"),
-            Regex::new(r"UPDATE[ \n]"),
-            Regex::new(r"DELETE[ \n]"),
-            Regex::new(r"ALTER[ \n]"),
-            Regex::new(r"TRUNCATE[ \n]"),
-            Regex::new(r"DROP[ \n]"),
-        ];
-
-        for keyword_regex in &keyword_regexs {
-            let mut content = arg.to_string();
-
-            if Regex::new(r"\.sql$").unwrap().is_match(&arg) {
-                content = match fs::read_to_string(arg) {
-                    Ok(new_content) => new_content,
-                    _ => content,
-                }
-            }
-
-            if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) && self.is_protected {
-                return true
-            }
-        }
-
-        false
-    }
-
     pub fn check_sql<'a>(&'a self, args: Vec<&'a str>) -> Vec<&'a str> {
         for arg in args.iter() {
-            if self.is_danger_arg(arg) {
+            if is_danger_arg(arg) {
                 eprint!("The `{}` database is protected", &self.name);
                 process::exit(1);
             }
@@ -119,7 +119,7 @@ impl Database {
         let mut is_danger = false;
 
         for arg in args.iter() {
-            if self.is_danger_arg(arg) {
+            if is_danger_arg(arg) {
                 is_danger = true;
                 break;
             }
@@ -179,7 +179,7 @@ fn check_db_is_protected() {
 }
 
 #[test]
-fn check_sql() {
+fn check_danger_args() {
     let testing_sql_file_path = "./testing.sql";
     let testings = vec![
         "CREATE ",
@@ -190,21 +190,12 @@ fn check_sql() {
 "#,
     ];
 
-    set_testing_env();
     for testing in testings {
         fs::write(testing_sql_file_path, testing)
             .expect("Couldn't create the testing file");
 
-        assert_eq!(
-            Database::new("protected".to_string())
-                .is_danger_arg(testing),
-            true,
-        );
-        assert_eq!(
-            Database::new("protected".to_string())
-                .is_danger_arg(testing_sql_file_path),
-            true,
-        );
+        assert_eq!(is_danger_arg(testing), true);
+        assert_eq!(is_danger_arg(testing_sql_file_path), true);
 
         fs::remove_file(testing_sql_file_path)
             .expect("Couldn't remove the testing file");
