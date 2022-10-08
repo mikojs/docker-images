@@ -1,5 +1,6 @@
 use std::fs;
 use std::env;
+use std::io::Error;
 
 use clap::{crate_version, Command};
 use glob;
@@ -14,7 +15,7 @@ const OPTIONS: glob::MatchOptions = glob::MatchOptions {
     require_literal_leading_dot: false,
 };
 
-fn confirm_to_create_file(file_name: &str) -> String {
+fn confirm_to_create_file(file_name: &str) -> Result<String, Error> {
     let message = format!("Couldn't find `{}`. Do you want to create this or not:", file_name);
     let result = match Confirm::new(&message).prompt() {
         Ok(true) => true,
@@ -22,36 +23,34 @@ fn confirm_to_create_file(file_name: &str) -> String {
     };
 
     if !result {
-        return "".to_string();
+        return Ok("".to_string());
     }
 
-    let file_path = env::current_dir()
-        .expect("Couldn't get the currenct directory")
+    let file_path = env::current_dir()?
         .join(file_name);
     let file_dir = file_path
         .parent()
-        .expect("Couldn't get the file directory");
+        .unwrap();
 
     if !file_dir.exists() {
-        fs::create_dir_all(file_dir)
-          .expect("Couldn't create the file directory");
+        fs::create_dir_all(file_dir)?;
     }
 
-    fs::File::create(&file_path)
-        .expect("Error encountered while creating file");
-    file_path
-        .display()
-        .to_string()
+    fs::File::create(&file_path)?;
+    Ok(
+        file_path
+            .display()
+            .to_string()
+    )
 }
 
-fn find_files(pattern: &str) -> Vec<String> {
+fn find_files(pattern: &str) -> Result<Vec<String>, Error> {
     let mut files = vec![];
 
     for entry in glob::glob_with(pattern, OPTIONS).unwrap() {
         if let Ok(path) = entry {
             files.push(
-                fs::canonicalize(path)
-                    .expect("Canonicalize path fail")
+                fs::canonicalize(path)?
                     .display()
                     .to_string()
             );
@@ -64,7 +63,7 @@ fn find_files(pattern: &str) -> Vec<String> {
             .is_match(pattern);
 
         if !skip_confirm {
-            let file_path = confirm_to_create_file(pattern);
+            let file_path = confirm_to_create_file(pattern)?;
 
             if !file_path.is_empty() {
                 files.push(file_path);
@@ -72,10 +71,10 @@ fn find_files(pattern: &str) -> Vec<String> {
         }
     }
 
-    files
+    Ok(files)
 }
 
-fn main() {
+fn main() -> Result<(), Error> {
     let matches = Command::new("code")
         .version(crate_version!())
         .about("Use this command to open files in a code-server")
@@ -85,11 +84,12 @@ fn main() {
     let mut files = vec![];
 
     for pattern in patterns {
-        files.append(&mut find_files(&pattern));
+        files.append(&mut find_files(&pattern)?);
     }
 
     if files.len() == 0 {
-        return println!("Couldn't find any files to open.");
+        println!("Couldn't find any files to open.");
+        return Ok(());
     }
 
     sub_process::exec(
@@ -99,4 +99,5 @@ fn main() {
             .map(AsRef::as_ref)
             .collect(),
     );
+    Ok(())
 }
