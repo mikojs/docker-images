@@ -18,7 +18,11 @@ pub fn execute(matches: &ArgMatches) {
     let volume_name = matches
         .value_of("volume-name")
         .unwrap();
-    let remove_result = sub_process::exec_result("docker", vec!["volume", "rm", volume_name])
+    let remove_result = sub_process::exec_result(
+        "docker",
+        vec!["volume", "rm", volume_name],
+    )
+        .expect("TODO")
         .replace("\n", "");
 
     if remove_result != volume_name {
@@ -27,7 +31,11 @@ pub fn execute(matches: &ArgMatches) {
 
     println!(
         "Reset `{}` volume",
-        sub_process::exec_result("docker", vec!["volume", "create", volume_name])
+        sub_process::exec_result(
+            "docker",
+            vec!["volume", "create", volume_name],
+        )
+            .expect("TODO")
             .replace("\n", ""),
     );
 }

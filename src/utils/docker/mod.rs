@@ -47,6 +47,7 @@ fn get_network_name(container_name: &str) -> String {
             "{{.HostConfig.NetworkMode}}",
         ],
     )
+        .expect("TODO")
         .replace("\n", "")
 }
 

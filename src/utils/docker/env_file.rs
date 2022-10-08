@@ -24,6 +24,7 @@ pub fn get(container_name: &str) -> String {
                 "{{.Config.Env}}",
             ],
         )
+            .expect("TODO")
             .replace("[", "")
             .replace("]", "")
     );
