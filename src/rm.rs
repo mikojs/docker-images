@@ -27,6 +27,6 @@ pub fn execute() -> Result<(), Error> {
         "docker",
         [vec!["rm"], ids]
             .concat(),
-    );
+    )?;
     Ok(())
 }

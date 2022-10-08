@@ -102,5 +102,6 @@ pub fn run(args: Vec<&str>) {
                 .collect(),
         ]
             .concat(),
-    );
+    )
+        .expect("TODO");
 }

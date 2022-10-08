@@ -98,6 +98,6 @@ fn main() -> Result<(), Error> {
             .iter()
             .map(AsRef::as_ref)
             .collect(),
-    );
+    )?;
     Ok(())
 }
