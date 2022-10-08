@@ -9,6 +9,7 @@ use regex::Regex;
 pub struct Database {
     name: String,
     url: String,
+    is_protected: bool,
 }
 
 impl fmt::Display for Database {
@@ -27,9 +28,18 @@ impl Database {
         );
 
         if let Ok(url) = env::var(&env_name) {
+            let is_protected = match env::var("NOT_PROTECTED_DBS") {
+                Ok(env) => env
+                    .split(",")
+                    .find(|&x| x == name)
+                    .is_none(),
+                _ => true,
+            };
+
             return Database {
                 name: name,
                 url: url,
+                is_protected: is_protected,
             };
         }
 
@@ -40,17 +50,6 @@ impl Database {
         process::exit(1);
     }
 
-    fn is_protected(&self) -> bool {
-        if let Ok(not_protected_names) = env::var("NOT_PROTECTED_DBS") {
-            return not_protected_names
-                .split(",")
-                .find(|&x| x == self.name)
-                .is_none();
-        }
-
-        true
-    }
-
     fn protected_error(&self) {
         eprint!("The `{}` database is protected", &self.name);
         process::exit(1);
@@ -58,7 +57,7 @@ impl Database {
 
     pub fn url<'a>(&'a self, danger_command: bool) -> &'a str {
         if danger_command {
-            if self.is_protected() {
+            if self.is_protected {
                 self.protected_error();
             }
 
@@ -99,7 +98,7 @@ impl Database {
                 }
             }
 
-            if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) && self.is_protected() {
+            if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) && self.is_protected {
                 return true
             }
         }
@@ -134,8 +133,8 @@ fn check_url() {
 #[test]
 fn check_db_is_protected() {
     set_testing_env();
-    assert_eq!(Database::new("default".to_string()).is_protected(), false);
-    assert_eq!(Database::new("protected".to_string()).is_protected(), true);
+    assert_eq!(Database::new("default".to_string()).is_protected, false);
+    assert_eq!(Database::new("protected".to_string()).is_protected, true);
 }
 
 #[test]
