@@ -116,11 +116,32 @@ impl Database {
     }
 
     pub fn run(&self, args: Vec<&str>) {
+        let mut is_danger = false;
+
         for arg in args.iter() {
             if self.is_danger_arg(arg) {
+                is_danger = true;
+                break;
+            }
+        }
+
+        if is_danger {
+            if self.is_protected {
                 eprint!("The `{}` database is protected", &self.name);
                 process::exit(1);
             }
+
+            let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
+            let result = match Confirm::new(&message).prompt() {
+                Ok(true) => true,
+                _ => false,
+            };
+
+            if !result {
+                return;
+            }
+        } else {
+            println!("DB url: {}", &self.url);
         }
 
         docker::run(
