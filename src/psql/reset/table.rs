@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgAction, ArgMatches};
 
-use crate::psql::utils::{docker, Database};
+use crate::psql::utils::Database;
 
 pub fn command() -> Command<'static> {
     Command::new("table")
@@ -25,10 +25,10 @@ pub fn execute(matches: &ArgMatches, db: Database) {
         _ => "TRUNCATE TABLE"
     };
 
-    docker::run(
+    db.run(
         vec![
             "psql",
-            db.url(true),
+            &db.url,
             "-c",
             &format!(
                 "{} {};",

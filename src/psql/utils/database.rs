@@ -10,8 +10,8 @@ use crate::utils::docker;
 
 pub struct Database {
     name: String,
-    url: String,
     is_protected: bool,
+    pub url: String,
 }
 
 impl fmt::Display for Database {
@@ -69,8 +69,8 @@ impl Database {
 
             return Database {
                 name: name,
-                url: url,
                 is_protected: is_protected,
+                url: url,
             };
         }
 
@@ -79,40 +79,6 @@ impl Database {
             env_name,
         );
         process::exit(1);
-    }
-
-    pub fn url<'a>(&'a self, danger_command: bool) -> &'a str {
-        if danger_command {
-            if self.is_protected {
-                eprint!("The `{}` database is protected", &self.name);
-                process::exit(1);
-            }
-
-            let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
-            let result = match Confirm::new(&message).prompt() {
-                Ok(true) => true,
-                _ => false,
-            };
-
-            if !result {
-                process::exit(0);
-            }
-        } else {
-            println!("DB url: {}", &self.url);
-        }
-
-        &self.url
-    }
-
-    pub fn check_sql<'a>(&'a self, args: Vec<&'a str>) -> Vec<&'a str> {
-        for arg in args.iter() {
-            if is_danger_arg(arg) {
-                eprint!("The `{}` database is protected", &self.name);
-                process::exit(1);
-            }
-        }
-
-        args
     }
 
     pub fn run(&self, args: Vec<&str>) {

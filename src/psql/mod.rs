@@ -3,7 +3,7 @@ use std::env;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-use utils::{proxy_args, docker, Database};
+use utils::{proxy_args, Database};
 
 mod show;
 mod dump;
@@ -47,10 +47,10 @@ pub fn execute(matches: &ArgMatches, db_name: &str) {
         Some(("dump", sub_matches)) => dump::execute(sub_matches, db),
         Some(("restore", sub_matches)) => restore::execute(sub_matches, db),
         Some(("reset", sub_matches)) => reset::execute(sub_matches, db),
-        _ => docker::run(
+        _ => db.run(
             [
-                vec!["psql", db.url(false)],
-                db.check_sql(proxy_args::get_values_from_proxy_args(matches)),
+                vec!["psql", &db.url],
+                proxy_args::get_values_from_proxy_args(matches),
             ]
                 .concat(),
         ),
