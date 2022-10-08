@@ -1,4 +1,5 @@
 use std::process;
+use std::io::Error;
 
 use clap::{Command, Arg, ArgMatches};
 
@@ -14,15 +15,14 @@ pub fn command() -> Command<'static> {
         )
 }
 
-pub fn execute(matches: &ArgMatches) {
+pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     let volume_name = matches
         .value_of("volume-name")
         .unwrap();
     let remove_result = sub_process::exec_result(
         "docker",
         vec!["volume", "rm", volume_name],
-    )
-        .expect("TODO")
+    )?
         .replace("\n", "");
 
     if remove_result != volume_name {
@@ -34,8 +34,8 @@ pub fn execute(matches: &ArgMatches) {
         sub_process::exec_result(
             "docker",
             vec!["volume", "create", volume_name],
-        )
-            .expect("TODO")
+        )?
             .replace("\n", ""),
     );
+    Ok(())
 }
