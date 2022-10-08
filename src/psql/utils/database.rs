@@ -29,6 +29,8 @@ fn is_danger_arg(arg: &str) -> bool {
         Regex::new(r"ALTER[ \n]"),
         Regex::new(r"TRUNCATE[ \n]"),
         Regex::new(r"DROP[ \n]"),
+        Regex::new(r"PG_RESTORE"),
+        Regex::new(r"\\COPY .+ FROM '.+' WITH CSV"),
     ];
 
     for keyword_regex in &keyword_regexs {
@@ -126,25 +128,37 @@ impl Database {
 
 #[test]
 fn check_danger_args() {
-    let testing_sql_file_path = "./testing.sql";
-    let testings = vec![
+    let danger_testings = vec![
         "CREATE ",
         r#"CREATE
 "#,
-        "DELETE ",
-        r#"DELETE
-"#,
+        "pg_restore",
+        "\\copy test(key, value) FROM 'test.csv' WITH csv",
+    ];
+    let not_danger_testings = vec![
+        "pg_dump",
+        "\\copy (SELECT * FROM test) TO 'test.csv' WITH csv",
     ];
 
-    for testing in testings {
+    fn check_danger_arg(testing: &str, expected: bool) {
+        let testing_sql_file_path = "./testing.sql";
+
         fs::write(testing_sql_file_path, testing)
             .expect("Couldn't create the testing file");
 
-        assert_eq!(is_danger_arg(testing), true);
-        assert_eq!(is_danger_arg(testing_sql_file_path), true);
+        assert_eq!(is_danger_arg(testing), expected);
+        assert_eq!(is_danger_arg(testing_sql_file_path), expected);
 
         fs::remove_file(testing_sql_file_path)
             .expect("Couldn't remove the testing file");
+    }
+
+
+    for danger_testing in danger_testings {
+        check_danger_arg(danger_testing, true);
+    }
+    for not_danger_testing in not_danger_testings {
+        check_danger_arg(not_danger_testing, false);
     }
 }
 
