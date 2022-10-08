@@ -1,5 +1,4 @@
 use std::env;
-use std::process;
 use std::io::Error;
 
 use clap::{crate_version, Command, Arg};
@@ -53,15 +52,16 @@ fn main() -> Result<(), Error> {
 
     let custom_command = shift_args(&mut args);
 
-    match process::Command::new(&custom_command).output() {
-        Ok(_) => sub_process::exec(
+    if sub_process::command_exist(&custom_command) {
+        sub_process::exec(
             &custom_command,
             args
                 .iter()
                 .map(AsRef::as_ref)
                 .collect(),
-        )?,
-        Err(_) => run_main_command(&mut main_args)?,
-    };
+        )?;
+    } else {
+        run_main_command(&mut main_args)?;
+    }
     Ok(())
 }

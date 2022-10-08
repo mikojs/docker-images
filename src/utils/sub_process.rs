@@ -1,8 +1,24 @@
 use std::process;
 use std::process::Command;
-use std::io::Error;
+use std::io::{Error, ErrorKind};
+
+pub fn command_exist(command: &str) -> bool {
+    match process::Command::new(&command).output() {
+        Ok(_) => true,
+        Err(_) => false,
+    }
+}
 
 pub fn exec(command: &str, args: Vec<&str>) -> Result<(), Error> {
+    if !command_exist(command) {
+        return Err(
+            Error::new(
+                ErrorKind::NotFound,
+                format!("Couldn't find the command: {}", command)
+            ),
+        );
+    }
+
     let status = Command::new(command)
         .args(args)
         .status()?;
