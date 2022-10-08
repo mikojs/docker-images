@@ -77,7 +77,7 @@ impl Database {
         &self.url
     }
 
-    fn is_danger_sql(&self, arg: &str) -> bool {
+    fn is_danger_arg(&self, arg: &str) -> bool {
         let keyword_regexs = vec![
             Regex::new(r"INSERT[ \n]"),
             Regex::new(r"CREATE[ \n]"),
@@ -108,7 +108,7 @@ impl Database {
 
     pub fn check_sql<'a>(&'a self, args: Vec<&'a str>) -> Vec<&'a str> {
         for arg in args.iter() {
-            if self.is_danger_sql(arg) {
+            if self.is_danger_arg(arg) {
                 self.protected_error();
             }
         }
@@ -156,12 +156,12 @@ fn check_sql() {
 
         assert_eq!(
             Database::new("protected".to_string())
-                .is_danger_sql(testing),
+                .is_danger_arg(testing),
             true,
         );
         assert_eq!(
             Database::new("protected".to_string())
-                .is_danger_sql(testing_sql_file_path),
+                .is_danger_arg(testing_sql_file_path),
             true,
         );
 
