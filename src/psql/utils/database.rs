@@ -52,15 +52,11 @@ impl Database {
         process::exit(1);
     }
 
-    fn protected_error(&self) {
-        eprint!("The `{}` database is protected", &self.name);
-        process::exit(1);
-    }
-
     pub fn url<'a>(&'a self, danger_command: bool) -> &'a str {
         if danger_command {
             if self.is_protected {
-                self.protected_error();
+                eprint!("The `{}` database is protected", &self.name);
+                process::exit(1);
             }
 
             let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
@@ -111,7 +107,8 @@ impl Database {
     pub fn check_sql<'a>(&'a self, args: Vec<&'a str>) -> Vec<&'a str> {
         for arg in args.iter() {
             if self.is_danger_arg(arg) {
-                self.protected_error();
+                eprint!("The `{}` database is protected", &self.name);
+                process::exit(1);
             }
         }
 
@@ -121,7 +118,8 @@ impl Database {
     pub fn run(&self, args: Vec<&str>) {
         for arg in args.iter() {
             if self.is_danger_arg(arg) {
-                self.protected_error();
+                eprint!("The `{}` database is protected", &self.name);
+                process::exit(1);
             }
         }
 
