@@ -159,26 +159,6 @@ impl Database {
 }
 
 #[test]
-fn set_testing_env() {
-    env::set_var("DEFAULT_DB_URL", "test");
-    env::set_var("PROTECTED_DB_URL", "test");
-    env::set_var("NOT_PROTECTED_DBS", "default,foo,bar");
-}
-
-#[test]
-fn check_url() {
-    set_testing_env();
-    assert_eq!(Database::new("default".to_string()).url, "test");
-}
-
-#[test]
-fn check_db_is_protected() {
-    set_testing_env();
-    assert_eq!(Database::new("default".to_string()).is_protected, false);
-    assert_eq!(Database::new("protected".to_string()).is_protected, true);
-}
-
-#[test]
 fn check_danger_args() {
     let testing_sql_file_path = "./testing.sql";
     let testings = vec![
@@ -200,4 +180,15 @@ fn check_danger_args() {
         fs::remove_file(testing_sql_file_path)
             .expect("Couldn't remove the testing file");
     }
+}
+
+#[test]
+fn db_init() {
+    env::set_var("DEFAULT_DB_URL", "test");
+    env::set_var("PROTECTED_DB_URL", "test");
+    env::set_var("NOT_PROTECTED_DBS", "default,foo,bar");
+
+    assert_eq!(Database::new("default".to_string()).url, "test");
+    assert_eq!(Database::new("default".to_string()).is_protected, false);
+    assert_eq!(Database::new("protected".to_string()).is_protected, true);
 }
