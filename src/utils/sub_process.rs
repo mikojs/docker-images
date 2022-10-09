@@ -14,7 +14,7 @@ pub fn exec(command: &str, args: Vec<&str>) -> Result<(), Error> {
     if !command_exist(command) {
         return Err(
             Error::new(
-                ErrorKind::CommandNotFound,
+                ErrorKind::Custom,
                 format!("Couldn't find the command: {}", command),
             ),
         );

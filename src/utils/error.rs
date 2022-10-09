@@ -1,15 +1,9 @@
 use std::io;
-use std::fmt;
 
 #[derive(Debug)]
 pub enum ErrorKind {
-    InvalidDockerName,
-    NoDockerVersion,
-    DockerVolumeNotExpected,
-    CommandNotFound,
     CommandFail,
-    DatabaseNotFound,
-    DatabasePermissionDenied,
+    Custom,
     Io,
 }
 
@@ -24,14 +18,6 @@ impl From<io::Error> for Error {
         Error {
             kind: ErrorKind::Io,
             message: error.to_string(),
-        }
-    }
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self.kind {
-            _ => write!(f, "{}", self.message),
         }
     }
 }

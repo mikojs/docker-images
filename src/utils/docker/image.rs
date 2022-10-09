@@ -30,7 +30,7 @@ pub fn name(arg: &str) -> Result<String, Error> {
     if data.len() != 2 {
         return Err(
             Error::new(
-                ErrorKind::InvalidDockerName,
+                ErrorKind::Custom,
                 format!("Couldn't parse {}", arg),
             ),
         );
@@ -46,7 +46,7 @@ pub fn name(arg: &str) -> Result<String, Error> {
     if versions.len() == 0 {
         return Err(
             Error::new(
-                ErrorKind::NoDockerVersion,
+                ErrorKind::Custom,
                 format!("Couldn't find any version from {}", arg),
             ),
         );

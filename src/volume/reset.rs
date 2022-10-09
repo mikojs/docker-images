@@ -25,7 +25,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     if removed_result != volume_name {
         return Err(
             Error::new(
-                ErrorKind::DockerVolumeNotExpected,
+                ErrorKind::Custom,
                 format!("Volume {} is removed, but the expected volume is {}", removed_result, volume_name),
             ),
         );
