@@ -1,12 +1,12 @@
-use std::fs;
 use std::env;
+use std::fs;
 use std::path::Path;
 
 use clap::{crate_version, Command};
 use glob;
 use regex::Regex;
 
-use docker_images::utils::{Error, args, sub_process, prompt};
+use docker_images::utils::{args, prompt, sub_process, Error};
 
 const OPTIONS: glob::MatchOptions = glob::MatchOptions {
     case_sensitive: false,
@@ -15,12 +15,14 @@ const OPTIONS: glob::MatchOptions = glob::MatchOptions {
 };
 
 fn confirm_to_create_file(file_name: &str) -> Result<String, Error> {
-    if !prompt(&format!("Couldn't find `{}`. Do you want to create this or not:", file_name)) {
+    if !prompt(&format!(
+        "Couldn't find `{}`. Do you want to create this or not:",
+        file_name
+    )) {
         return Ok("".to_string());
     }
 
-    let file_path = env::current_dir()?
-        .join(file_name);
+    let file_path = env::current_dir()?.join(file_name);
     let file_dir = match file_path.parent() {
         Some(value) => value,
         _ => Path::new("/"),
@@ -31,11 +33,7 @@ fn confirm_to_create_file(file_name: &str) -> Result<String, Error> {
     }
 
     fs::File::create(&file_path)?;
-    Ok(
-        file_path
-            .display()
-            .to_string()
-    )
+    Ok(file_path.display().to_string())
 }
 
 fn find_files(pattern: &str) -> Result<Vec<String>, Error> {
@@ -43,17 +41,12 @@ fn find_files(pattern: &str) -> Result<Vec<String>, Error> {
 
     for entry in glob::glob_with(pattern, OPTIONS)? {
         if let Ok(path) = entry {
-            files.push(
-                fs::canonicalize(path)?
-                    .display()
-                    .to_string()
-            );
+            files.push(fs::canonicalize(path)?.display().to_string());
         }
     }
 
     if files.len() == 0 {
-        let skip_confirm = Regex::new(r"\*")?
-            .is_match(pattern);
+        let skip_confirm = Regex::new(r"\*")?.is_match(pattern);
 
         if !skip_confirm {
             let file_path = confirm_to_create_file(pattern)?;
@@ -85,12 +78,6 @@ fn main() -> Result<(), Error> {
         return Ok(());
     }
 
-    sub_process::exec(
-        "code-server",
-        files
-            .iter()
-            .map(AsRef::as_ref)
-            .collect(),
-    )?;
+    sub_process::exec("code-server", files.iter().map(AsRef::as_ref).collect())?;
     Ok(())
 }

@@ -1,10 +1,10 @@
-use std::fs;
 use std::env;
+use std::fs;
 use std::path::Path;
 
 use regex::Regex;
 
-use crate::utils::{Error, sub_process};
+use crate::utils::{sub_process, Error};
 
 mod env_file;
 mod image;
@@ -16,18 +16,12 @@ pub fn name() -> Result<String, Error> {
         return Ok("".to_string());
     }
 
-    Ok(
-        fs::read_to_string(HOSTNAME_PATH)?
-            .replace("\n", "")
-    )
+    Ok(fs::read_to_string(HOSTNAME_PATH)?.replace("\n", ""))
 }
 
 pub fn working_dir() -> Result<String, Error> {
-    let cwd = env::current_dir()?
-        .display()
-        .to_string();
-    let is_work = Regex::new(r"^/root/work")?
-        .is_match(&cwd);
+    let cwd = env::current_dir()?.display().to_string();
+    let is_work = Regex::new(r"^/root/work")?.is_match(&cwd);
 
     if is_work {
         return Ok(cwd);
@@ -37,18 +31,16 @@ pub fn working_dir() -> Result<String, Error> {
 }
 
 fn get_network_name(container_name: &str) -> Result<String, Error> {
-    Ok(
-        sub_process::exec_result(
-            "docker",
-            vec![
-                "inspect",
-                container_name,
-                "--format",
-                "{{.HostConfig.NetworkMode}}",
-            ],
-        )?
-            .replace("\n", "")
-    )
+    Ok(sub_process::exec_result(
+        "docker",
+        vec![
+            "inspect",
+            container_name,
+            "--format",
+            "{{.HostConfig.NetworkMode}}",
+        ],
+    )?
+    .replace("\n", ""))
 }
 
 fn filter_args(args: Vec<&str>) -> Vec<&str> {
@@ -64,13 +56,11 @@ pub fn run(args: Vec<&str>) -> Result<(), Error> {
     let mut new_args = vec![];
 
     for arg in &args {
-        let is_specific_image_version = Regex::new(image::NAME_PATTERN)?
-            .is_match(arg);
+        let is_specific_image_version = Regex::new(image::NAME_PATTERN)?.is_match(arg);
 
         if is_specific_image_version {
             new_args.push(image::name(arg)?);
-        }
-        else {
+        } else {
             new_args.push(arg.to_string());
         }
     }
@@ -85,21 +75,11 @@ pub fn run(args: Vec<&str>) -> Result<(), Error> {
                 "--env-file",
                 &env_file::get(&container_name)?,
             ],
-            filter_args(
-                vec!["--volumes-from", &container_name],
-            ),
-            filter_args(
-                vec![
-                    "--network",
-                    &get_network_name(&container_name)?,
-                ],
-            ),
-            new_args
-                .iter()
-                .map(AsRef::as_ref)
-                .collect(),
+            filter_args(vec!["--volumes-from", &container_name]),
+            filter_args(vec!["--network", &get_network_name(&container_name)?]),
+            new_args.iter().map(AsRef::as_ref).collect(),
         ]
-            .concat(),
+        .concat(),
     )?;
     Ok(())
 }

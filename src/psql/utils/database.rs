@@ -1,10 +1,10 @@
-use std::fs;
-use std::fmt;
 use std::env;
+use std::fmt;
+use std::fs;
 
 use regex::Regex;
 
-use crate::utils::{Error, ErrorKind, docker, prompt};
+use crate::utils::{docker, prompt, Error, ErrorKind};
 
 fn is_danger_arg(arg: &str) -> Result<bool, Error> {
     let keyword_regexs = vec![
@@ -30,7 +30,7 @@ fn is_danger_arg(arg: &str) -> Result<bool, Error> {
         }
 
         if Regex::new(keyword_regex)?.is_match(&content.to_uppercase()) {
-            return Ok(true)
+            return Ok(true);
         }
     }
 
@@ -51,37 +51,25 @@ impl fmt::Display for Database {
 
 impl Database {
     pub fn new(name: String) -> Result<Database, Error> {
-        let env_name = format!(
-            "{}_DB_URL",
-            name
-                .replace("-", "_")
-                .to_uppercase(),
-        );
+        let env_name = format!("{}_DB_URL", name.replace("-", "_").to_uppercase(),);
 
         if let Ok(url) = env::var(&env_name) {
             let is_protected = match env::var("NOT_PROTECTED_DBS") {
-                Ok(env) => env
-                    .split(",")
-                    .find(|&x| x == name)
-                    .is_none(),
+                Ok(env) => env.split(",").find(|&x| x == name).is_none(),
                 _ => true,
             };
 
-            return Ok(
-                Database {
-                    name: name,
-                    is_protected: is_protected,
-                    url: url,
-                }
-            );
+            return Ok(Database {
+                name: name,
+                is_protected: is_protected,
+                url: url,
+            });
         }
 
-        Err(
-            Error::new(
-                ErrorKind::Custom,
-                format!("`{}` isn't in the environment variables.", env_name),
-            ),
-        )
+        Err(Error::new(
+            ErrorKind::Custom,
+            format!("`{}` isn't in the environment variables.", env_name),
+        ))
     }
 
     pub fn run(&self, args: Vec<&str>) -> Result<(), Error> {
@@ -96,15 +84,16 @@ impl Database {
 
         if is_danger {
             if self.is_protected {
-                return Err(
-                    Error::new(
-                        ErrorKind::Custom,
-                        format!("The `{}` database is protected", &self.name),
-                    ),
-                );
+                return Err(Error::new(
+                    ErrorKind::Custom,
+                    format!("The `{}` database is protected", &self.name),
+                ));
             }
 
-            if !prompt(&format!("Use `{}`. Do you want to continue or not:", &self.url)) {
+            if !prompt(&format!(
+                "Use `{}`. Do you want to continue or not:",
+                &self.url
+            )) {
                 return Ok(());
             }
         } else {
@@ -113,14 +102,10 @@ impl Database {
 
         docker::run(
             [
-                vec![
-                    "-it",
-                    "--rm",
-                    "postgres:<DOCKER_POSTGRES_VERSION|alpine>",
-                ],
+                vec!["-it", "--rm", "postgres:<DOCKER_POSTGRES_VERSION|alpine>"],
                 args,
             ]
-                .concat(),
+            .concat(),
         )?;
         Ok(())
     }
@@ -151,7 +136,6 @@ fn check_danger_args() -> Result<(), Error> {
         fs::remove_file(testing_sql_file_path)?;
         Ok(())
     }
-
 
     for danger_testing in danger_testings {
         check_danger_arg(danger_testing, true)?;

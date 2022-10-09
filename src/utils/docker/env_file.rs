@@ -2,7 +2,7 @@ use std::fs;
 
 use regex::Regex;
 
-use crate::utils::{Error, sub_process};
+use crate::utils::{sub_process, Error};
 
 fn generate_env_content(content: String) -> Result<String, Error> {
     let path_regex = Regex::new(r"^PATH=.+")?;
@@ -19,15 +19,10 @@ pub fn get(container_name: &str) -> Result<String, Error> {
     let content = generate_env_content(
         sub_process::exec_result(
             "docker",
-            vec![
-                "inspect",
-                container_name,
-                "--format",
-                "{{.Config.Env}}",
-            ],
+            vec!["inspect", container_name, "--format", "{{.Config.Env}}"],
         )?
-            .replace("[", "")
-            .replace("]", "")
+        .replace("[", "")
+        .replace("]", ""),
     )?;
 
     fs::write(file_path, content)?;

@@ -23,32 +23,23 @@ fn get_version(versions: Vec<&str>) -> Result<String, Error> {
 }
 
 pub fn name(arg: &str) -> Result<String, Error> {
-    let data: Vec<&str> = arg.split(":")
-        .collect();
+    let data: Vec<&str> = arg.split(":").collect();
 
     if data.len() != 2 {
-        return Err(
-            Error::new(
-                ErrorKind::Custom,
-                format!("Couldn't parse {}", arg),
-            ),
-        );
+        return Err(Error::new(
+            ErrorKind::Custom,
+            format!("Couldn't parse {}", arg),
+        ));
     }
 
-    let versions_str = data[1]
-        .replace("<", "")
-        .replace(">", "");
-    let versions: Vec<&str> = versions_str
-        .split("|")
-        .collect();
+    let versions_str = data[1].replace("<", "").replace(">", "");
+    let versions: Vec<&str> = versions_str.split("|").collect();
 
     if versions.len() == 0 {
-        return Err(
-            Error::new(
-                ErrorKind::Custom,
-                format!("Couldn't find any version from {}", arg),
-            ),
-        );
+        return Err(Error::new(
+            ErrorKind::Custom,
+            format!("Couldn't find any version from {}", arg),
+        ));
     }
 
     let default_version = versions[versions.len() - 1];

@@ -1,8 +1,8 @@
 use inquire::Confirm;
 
 pub mod args;
-pub mod sub_process;
 pub mod docker;
+pub mod sub_process;
 
 mod error;
 pub use error::{Error, ErrorKind};

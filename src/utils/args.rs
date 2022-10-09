@@ -24,7 +24,11 @@ pub fn value_of<'a>(matches: &'a ArgMatches, name: &'a str) -> &'a str {
     }
 }
 
-pub fn get_one<'a, T: Any + Clone + Send + Sync + 'static>(matches: &'a ArgMatches, name: &'a str, default: &'a T) -> &'a T {
+pub fn get_one<'a, T: Any + Clone + Send + Sync + 'static>(
+    matches: &'a ArgMatches,
+    name: &'a str,
+    default: &'a T,
+) -> &'a T {
     match matches.get_one::<T>(name) {
         Some(arg) => arg,
         _ => default,
@@ -33,16 +37,13 @@ pub fn get_one<'a, T: Any + Clone + Send + Sync + 'static>(matches: &'a ArgMatch
 
 #[cfg(test)]
 mod tests {
-    use clap::{Command, ArgAction};
+    use clap::{ArgAction, Command};
 
     use super::*;
 
     #[test]
     fn get_proxy_args() {
-        let testings: Vec<Vec<&str>> = vec![
-            vec!["foo", "bar"],
-            vec![],
-        ];
+        let testings: Vec<Vec<&str>> = vec![vec!["foo", "bar"], vec![]];
 
         for testing in testings {
             let matches = Command::new("test")
@@ -65,26 +66,24 @@ mod tests {
     #[test]
     fn get_one_arg() {
         let matches = Command::new("test")
-            .arg(
-                Arg::new("arg")
-                    .long("--arg")
-                    .action(ArgAction::Set)
-            )
+            .arg(Arg::new("arg").long("--arg").action(ArgAction::Set))
             .get_matches_from(["test", "--arg", "foo"]);
 
-        assert_eq!(get_one::<String>(&matches, "arg", &"default".to_string()), "foo");
+        assert_eq!(
+            get_one::<String>(&matches, "arg", &"default".to_string()),
+            "foo"
+        );
     }
 
     #[test]
     fn get_one_default_arg() {
         let matches = Command::new("test")
-            .arg(
-                Arg::new("arg")
-                    .long("--arg")
-                    .action(ArgAction::Set)
-            )
+            .arg(Arg::new("arg").long("--arg").action(ArgAction::Set))
             .get_matches_from(["test"]);
 
-        assert_eq!(get_one::<String>(&matches, "arg", &"default".to_string()), "default");
+        assert_eq!(
+            get_one::<String>(&matches, "arg", &"default".to_string()),
+            "default"
+        );
     }
 }

@@ -1,7 +1,7 @@
-use std::io;
-use std::string;
 use std::fmt;
+use std::io;
 use std::process;
+use std::string;
 
 use glob;
 use regex;
@@ -85,10 +85,7 @@ impl Error {
     pub fn new(kind: ErrorKind, message: String) -> Error {
         match kind {
             ErrorKind::CommandFail => process::exit(1),
-            _ => Error {
-                kind,
-                message,
-            }
+            _ => Error { kind, message },
         }
     }
 }

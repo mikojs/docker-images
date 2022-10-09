@@ -1,10 +1,9 @@
 use clap::Command;
 
-use crate::utils::{Error, docker};
+use crate::utils::{docker, Error};
 
 pub fn command() -> Command<'static> {
-    Command::new("name")
-        .about("Show the current container id")
+    Command::new("name").about("Show the current container id")
 }
 
 pub fn execute() -> Result<(), Error> {
