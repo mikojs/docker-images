@@ -35,9 +35,7 @@ fn main() -> Result<(), Error> {
         .arg(proxy_args::set_proxy_args(false))
         .get_matches();
     let mut main_args = shellwords::split(
-        matches
-            .value_of("main-command")
-            .unwrap(),
+        proxy_args::value_of(&matches, "main-command"),
     )?;
     let mut args: Vec<String> = proxy_args::get_values_from_proxy_args(&matches)
         .iter()

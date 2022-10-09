@@ -20,9 +20,7 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
-    let file_name = matches
-        .value_of("file-name")
-        .unwrap();
+    let file_name = proxy_args::value_of(matches, "file-name");
     let args = proxy_args::get_values_from_proxy_args(matches);
 
     if let Some(format) = matches.get_one::<String>("format") {

@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgAction, ArgMatches};
 
-use crate::psql::utils::{Error, Database};
+use crate::psql::utils::{Error, proxy_args, Database};
 
 pub fn command() -> Command<'static> {
     Command::new("table")
@@ -33,9 +33,7 @@ pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
             &format!(
                 "{} {};",
                 command,
-                matches
-                    .value_of("table-name")
-                    .unwrap(),
+                proxy_args::value_of(matches, "table-name"),
             ),
         ],
     )?;

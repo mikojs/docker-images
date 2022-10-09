@@ -15,6 +15,13 @@ pub fn get_values_from_proxy_args(matches: &ArgMatches) -> Vec<&str> {
     }
 }
 
+pub fn get_value_of<'a>(matches: &'a ArgMatches, name: &'a str) -> &'a str {
+    match matches.value_of(name) {
+        Some(arg) => arg,
+        _ => "",
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use clap::Command;
@@ -34,5 +41,14 @@ mod tests {
 
             assert_eq!(get_values_from_proxy_args(&matches), testing);
         }
+    }
+
+    #[test]
+    fn get_value_arg() {
+        let matches = Command::new("test")
+            .arg(Arg::new("arg"))
+            .get_matches_from(["test", "foo"]);
+
+        assert_eq!(get_value_of(&matches, "arg"), "foo");
     }
 }
