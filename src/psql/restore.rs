@@ -1,8 +1,6 @@
-use std::io::Error;
-
 use clap::{Command, Arg, ArgAction, ArgMatches};
 
-use crate::psql::utils::{proxy_args, Database};
+use crate::psql::utils::{Error, proxy_args, Database};
 
 pub fn command() -> Command<'static> {
     Command::new("restore")

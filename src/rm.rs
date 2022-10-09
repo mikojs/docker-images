@@ -1,8 +1,6 @@
-use std::io::Error;
-
 use clap::Command;
 
-use crate::utils::sub_process;
+use crate::utils::{Error, sub_process};
 
 pub fn command() -> Command<'static> {
     Command::new("rm")

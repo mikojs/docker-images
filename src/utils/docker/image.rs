@@ -1,7 +1,8 @@
 use std::env;
-use std::io::{Error, ErrorKind};
 
 use regex::Regex;
+
+use crate::utils::{Error, ErrorKind};
 
 pub const NAME_PATTERN: &str = r".+:<.+>";
 

@@ -1,6 +1,6 @@
-use std::io::Error;
-
 use clap::{Command, ArgMatches};
+
+use crate::utils::Error;
 
 mod reset;
 

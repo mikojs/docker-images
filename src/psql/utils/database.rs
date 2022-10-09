@@ -1,12 +1,11 @@
 use std::fs;
 use std::fmt;
 use std::env;
-use std::io::{Error, ErrorKind};
 
 use inquire::Confirm;
 use regex::Regex;
 
-use crate::utils::docker;
+use crate::utils::{Error, ErrorKind, docker};
 
 fn is_danger_arg(arg: &str) -> bool {
     let keyword_regexs = vec![

@@ -1,8 +1,6 @@
-use std::io::Error;
-
 use clap::{Command, ArgMatches};
 
-use crate::psql::utils::Database;
+use crate::psql::utils::{Error, Database};
 
 mod table;
 mod sequence;

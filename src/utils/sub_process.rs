@@ -1,6 +1,7 @@
 use std::process;
 use std::process::Command;
-use std::io::{Error, ErrorKind};
+
+use crate::utils::{Error, ErrorKind};
 
 pub fn command_exist(command: &str) -> bool {
     match process::Command::new(command).output() {

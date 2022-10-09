@@ -1,8 +1,6 @@
-use std::io::{Error, ErrorKind};
-
 use clap::{Command, Arg, ArgMatches};
 
-use crate::utils::sub_process;
+use crate::utils::{Error, ErrorKind, sub_process};
 
 pub fn command() -> Command<'static> {
     Command::new("reset")
