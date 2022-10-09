@@ -1,5 +1,4 @@
-use std::process;
-use std::io::Error;
+use std::io::{Error, ErrorKind};
 
 use clap::{Command, Arg, ArgMatches};
 
@@ -19,14 +18,19 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     let volume_name = matches
         .value_of("volume-name")
         .unwrap();
-    let remove_result = sub_process::exec_result(
+    let removed_result = sub_process::exec_result(
         "docker",
         vec!["volume", "rm", volume_name],
     )?
         .replace("\n", "");
 
-    if remove_result != volume_name {
-        process::exit(1);
+    if removed_result != volume_name {
+        return Err(
+            Error::new(
+                ErrorKind::InvalidData,
+                format!("Volume {} is removed, but the expected volume is {}", removed_result, volume_name),
+            ),
+        );
     }
 
     println!(

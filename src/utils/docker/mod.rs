@@ -60,20 +60,23 @@ fn filter_args(args: Vec<&str>) -> Vec<&str> {
 
     args
 }
-fn transform_image_name(arg: &str) -> String {
-    let is_specific_image_version = Regex::new(image::NAME_PATTERN)
-        .unwrap()
-        .is_match(arg);
-
-    if !is_specific_image_version {
-        return arg.to_string();
-    }
-
-    image::name(arg)
-}
 
 pub fn run(args: Vec<&str>) -> Result<(), Error> {
     let container_name = name()?;
+    let mut new_args = vec![];
+
+    for arg in &args {
+        let is_specific_image_version = Regex::new(image::NAME_PATTERN)
+            .unwrap()
+            .is_match(arg);
+
+        if is_specific_image_version {
+            new_args.push(image::name(arg)?);
+        }
+        else {
+            new_args.push(arg.to_string());
+        }
+    }
 
     sub_process::exec(
         "docker",
@@ -94,10 +97,7 @@ pub fn run(args: Vec<&str>) -> Result<(), Error> {
                     &get_network_name(&container_name)?,
                 ],
             ),
-            args
-                .iter()
-                .map(|&x| transform_image_name(x))
-                .collect::<Vec<String>>()
+            new_args
                 .iter()
                 .map(AsRef::as_ref)
                 .collect(),
