@@ -40,8 +40,5 @@ pub fn exec_result(command: &str, args: Vec<&str>) -> Result<String, Error> {
         .args(args)
         .output()?;
 
-    Ok(
-        String::from_utf8(output.stdout)
-            .unwrap()
-    )
+    Ok(String::from_utf8(output.stdout)?)
 }

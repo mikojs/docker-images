@@ -7,7 +7,7 @@ use regex::Regex;
 
 use crate::utils::{Error, ErrorKind, docker};
 
-fn is_danger_arg(arg: &str) -> bool {
+fn is_danger_arg(arg: &str) -> Result<bool, Error> {
     let keyword_regexs = vec![
         Regex::new(r"INSERT[ \n]"),
         Regex::new(r"CREATE[ \n]"),
@@ -23,7 +23,7 @@ fn is_danger_arg(arg: &str) -> bool {
     for keyword_regex in &keyword_regexs {
         let mut content = arg.to_string();
 
-        if Regex::new(r"\.sql$").unwrap().is_match(&arg) {
+        if Regex::new(r"\.sql$")?.is_match(&arg) {
             content = match fs::read_to_string(arg) {
                 Ok(new_content) => new_content,
                 _ => content,
@@ -31,11 +31,11 @@ fn is_danger_arg(arg: &str) -> bool {
         }
 
         if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) {
-            return true
+            return Ok(true)
         }
     }
 
-    false
+    Ok(false)
 }
 
 pub struct Database {
@@ -89,7 +89,7 @@ impl Database {
         let mut is_danger = false;
 
         for arg in args.iter() {
-            if is_danger_arg(arg) {
+            if is_danger_arg(arg)? {
                 is_danger = true;
                 break;
             }
@@ -152,8 +152,8 @@ fn check_danger_args() -> Result<(), Error> {
 
         fs::write(testing_sql_file_path, testing)?;
 
-        assert_eq!(is_danger_arg(testing), expected);
-        assert_eq!(is_danger_arg(testing_sql_file_path), expected);
+        assert_eq!(is_danger_arg(testing)?, expected);
+        assert_eq!(is_danger_arg(testing_sql_file_path)?, expected);
 
         fs::remove_file(testing_sql_file_path)?;
         Ok(())

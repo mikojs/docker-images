@@ -1,4 +1,5 @@
 use std::io;
+use std::string;
 use std::fmt;
 use std::process;
 
@@ -11,6 +12,7 @@ pub enum ErrorKind {
     CommandFail,
     Custom,
     Io,
+    String,
     Glob,
     Regex,
     Shellwords,
@@ -25,6 +27,15 @@ impl From<io::Error> for Error {
     fn from(error: io::Error) -> Self {
         Error {
             kind: ErrorKind::Io,
+            message: error.to_string(),
+        }
+    }
+}
+
+impl From<string::FromUtf8Error> for Error {
+    fn from(error: string::FromUtf8Error) -> Self {
+        Error {
+            kind: ErrorKind::String,
             message: error.to_string(),
         }
     }
@@ -61,6 +72,7 @@ impl fmt::Debug for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.kind {
             ErrorKind::Io => write!(f, "[IO] {}", self.message),
+            ErrorKind::String => write!(f, "[String] {}", self.message),
             ErrorKind::Glob => write!(f, "[Glob] {}", self.message),
             ErrorKind::Regex => write!(f, "[Regex] {}", self.message),
             ErrorKind::Shellwords => write!(f, "[Shellwords] {}", self.message),

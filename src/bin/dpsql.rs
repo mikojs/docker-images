@@ -12,7 +12,7 @@ fn main() -> Result<(), Error> {
             .about("Use psql command in the docker container")
     );
 
-    for db_name in psql::get_db_names() {
+    for db_name in psql::get_db_names()? {
         if db_name != "default" {
             app = app.subcommand(
                 psql::command(
@@ -26,7 +26,7 @@ fn main() -> Result<(), Error> {
     let matches = app.get_matches();
 
     if let Some((sub_command, sub_matches)) = matches.subcommand() {
-        for db_name in psql::get_db_names() {
+        for db_name in psql::get_db_names()? {
             if sub_command == db_name {
                 psql::execute(sub_matches, sub_command)?;
                 return Ok(());

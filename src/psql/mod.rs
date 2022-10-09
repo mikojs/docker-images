@@ -11,9 +11,8 @@ mod restore;
 mod reset;
 pub mod utils;
 
-pub fn get_db_names() -> Vec<String> {
-    let db_regex = Regex::new(r"_DB_URL$")
-        .unwrap();
+pub fn get_db_names() -> Result<Vec<String>, Error> {
+    let db_regex = Regex::new(r"_DB_URL$")?;
     let mut db_names = vec![];
 
     for (key, _) in env::vars() {
@@ -27,7 +26,7 @@ pub fn get_db_names() -> Vec<String> {
         }
     }
 
-    db_names
+    Ok(db_names)
 }
 
 pub fn command(app: App<'static>) -> Command<'static> {

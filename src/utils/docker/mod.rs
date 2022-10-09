@@ -26,8 +26,7 @@ pub fn working_dir() -> Result<String, Error> {
     let cwd = env::current_dir()?
         .display()
         .to_string();
-    let is_work = Regex::new(r"^/root/work")
-        .unwrap()
+    let is_work = Regex::new(r"^/root/work")?
         .is_match(&cwd);
 
     if is_work {
@@ -65,8 +64,7 @@ pub fn run(args: Vec<&str>) -> Result<(), Error> {
     let mut new_args = vec![];
 
     for arg in &args {
-        let is_specific_image_version = Regex::new(image::NAME_PATTERN)
-            .unwrap()
+        let is_specific_image_version = Regex::new(image::NAME_PATTERN)?
             .is_match(arg);
 
         if is_specific_image_version {
