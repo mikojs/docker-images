@@ -8,18 +8,6 @@ use regex::Regex;
 
 use crate::utils::docker;
 
-pub struct Database {
-    name: String,
-    is_protected: bool,
-    pub url: String,
-}
-
-impl fmt::Display for Database {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.url)
-    }
-}
-
 fn is_danger_arg(arg: &str) -> bool {
     let keyword_regexs = vec![
         Regex::new(r"INSERT[ \n]"),
@@ -49,6 +37,18 @@ fn is_danger_arg(arg: &str) -> bool {
     }
 
     false
+}
+
+pub struct Database {
+    name: String,
+    is_protected: bool,
+    pub url: String,
+}
+
+impl fmt::Display for Database {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.url)
+    }
 }
 
 impl Database {
