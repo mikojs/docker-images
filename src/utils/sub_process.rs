@@ -14,7 +14,7 @@ pub fn exec(command: &str, args: Vec<&str>) -> Result<(), Error> {
         return Err(
             Error::new(
                 ErrorKind::NotFound,
-                format!("Couldn't find the command: {}", command)
+                format!("Couldn't find the command: {}", command),
             ),
         );
     }
@@ -24,7 +24,12 @@ pub fn exec(command: &str, args: Vec<&str>) -> Result<(), Error> {
         .status()?;
 
     if !status.success() {
-        process::exit(1);
+        return Err(
+            Error::new(
+                ErrorKind::Interrupted,
+                "Run command fails",
+            ),
+        );
     }
     Ok(())
 }
