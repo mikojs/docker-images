@@ -79,7 +79,7 @@ impl Database {
 
         Err(
             Error::new(
-                ErrorKind::NotFound,
+                ErrorKind::DatabaseNotFound,
                 format!("`{}` isn't in the environment variables.", env_name),
             ),
         )
@@ -99,7 +99,7 @@ impl Database {
             if self.is_protected {
                 return Err(
                     Error::new(
-                        ErrorKind::PermissionDenied,
+                        ErrorKind::DatabasePermissionDenied,
                         format!("The `{}` database is protected", &self.name),
                     ),
                 );

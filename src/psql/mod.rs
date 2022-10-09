@@ -9,7 +9,7 @@ mod show;
 mod dump;
 mod restore;
 mod reset;
-mod utils;
+pub mod utils;
 
 pub fn get_db_names() -> Vec<String> {
     let db_regex = Regex::new(r"_DB_URL$")
