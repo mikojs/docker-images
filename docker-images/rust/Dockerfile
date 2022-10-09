@@ -4,6 +4,8 @@ FROM rust:alpine
 # install packages
 RUN apk add \
   musl-dev
+RUN rustup component add \
+  rustfmt
 
 # bin
 COPY ./bin/entrypoint /bin/entrypoint
