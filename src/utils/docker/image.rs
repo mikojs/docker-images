@@ -1,5 +1,5 @@
 use std::env;
-use std::process;
+use std::io::{Error, ErrorKind};
 
 use regex::Regex;
 
@@ -22,13 +22,17 @@ fn get_version(versions: Vec<&str>) -> String {
     "alpine".to_string()
 }
 
-pub fn name(arg: &str) -> String {
+pub fn name(arg: &str) -> Result<String, Error> {
     let data: Vec<&str> = arg.split(":")
         .collect();
 
     if data.len() != 2 {
-        eprintln!("Couldn't parse {}", arg);
-        process::exit(1);
+        return Err(
+            Error::new(
+                ErrorKind::InvalidInput,
+                format!("Couldn't parse {}", arg),
+            ),
+        );
     }
 
     let versions_str = data[1]
@@ -39,8 +43,12 @@ pub fn name(arg: &str) -> String {
         .collect();
 
     if versions.len() == 0 {
-        eprintln!("Couldn't parse {}", arg);
-        process::exit(1);
+        return Err(
+            Error::new(
+                ErrorKind::InvalidInput,
+                format!("Couldn't find any version from {}", arg),
+            ),
+        );
     }
 
     let default_version = versions[versions.len() - 1];
@@ -51,7 +59,7 @@ pub fn name(arg: &str) -> String {
         println!("Custom Image: `{}`", image);
     }
 
-    image
+    Ok(image)
 }
 
 #[test]
