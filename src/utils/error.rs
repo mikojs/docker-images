@@ -1,6 +1,7 @@
 use std::io;
 use std::fmt;
 
+#[derive(Debug)]
 pub enum ErrorKind {
     InvalidDockerName,
     NoDockerVersion,
@@ -9,18 +10,19 @@ pub enum ErrorKind {
     CommandFail,
     DatabaseNotFound,
     DatabasePermissionDenied,
+    Io,
 }
 
 #[derive(Debug)]
 pub struct Error {
-    kind: io::ErrorKind,
+    kind: ErrorKind,
     message: String,
 }
 
 impl From<io::Error> for Error {
     fn from(error: io::Error) -> Self {
         Error {
-            kind: error.kind(),
+            kind: ErrorKind::Io,
             message: error.to_string(),
         }
     }
@@ -35,17 +37,7 @@ impl fmt::Display for Error {
 }
 
 impl Error {
-    pub fn new(error_kind: ErrorKind, message: String) -> Error {
-        let kind = match error_kind {
-            ErrorKind::InvalidDockerName => io::ErrorKind::InvalidInput,
-            ErrorKind::NoDockerVersion => io::ErrorKind::InvalidInput,
-            ErrorKind::DockerVolumeNotExpected => io::ErrorKind::InvalidData,
-            ErrorKind::CommandNotFound => io::ErrorKind::NotFound,
-            ErrorKind::CommandFail => io::ErrorKind::Interrupted,
-            ErrorKind::DatabaseNotFound => io::ErrorKind::NotFound,
-            ErrorKind::DatabasePermissionDenied => io::ErrorKind::PermissionDenied,
-        };
-
+    pub fn new(kind: ErrorKind, message: String) -> Error {
         Error {
             kind,
             message,
