@@ -46,7 +46,7 @@ fn confirm_to_create_file(file_name: &str) -> Result<String, Error> {
 fn find_files(pattern: &str) -> Result<Vec<String>, Error> {
     let mut files = vec![];
 
-    for entry in glob::glob_with(pattern, OPTIONS).unwrap() {
+    for entry in glob::glob_with(pattern, OPTIONS)? {
         if let Ok(path) = entry {
             files.push(
                 fs::canonicalize(path)?
@@ -57,8 +57,7 @@ fn find_files(pattern: &str) -> Result<Vec<String>, Error> {
     }
 
     if files.len() == 0 {
-        let skip_confirm = Regex::new(r"\*")
-            .unwrap()
+        let skip_confirm = Regex::new(r"\*")?
             .is_match(pattern);
 
         if !skip_confirm {
