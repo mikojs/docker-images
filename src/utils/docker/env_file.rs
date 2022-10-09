@@ -4,13 +4,14 @@ use regex::Regex;
 
 use crate::utils::{Error, sub_process};
 
-fn generate_env_content(content: String) -> String {
+fn generate_env_content(content: String) -> Result<String, Error> {
+    let path_regex = Regex::new(r"^PATH=.+")?;
     let contents: Vec<&str> = content
         .split(" ")
-        .filter(|x| !Regex::new(r"^PATH=.+").unwrap().is_match(x))
+        .filter(|x| !path_regex.is_match(x))
         .collect();
 
-    contents.join("\n")
+    Ok(contents.join("\n"))
 }
 
 pub fn get(container_name: &str) -> Result<String, Error> {
@@ -27,14 +28,14 @@ pub fn get(container_name: &str) -> Result<String, Error> {
         )?
             .replace("[", "")
             .replace("]", "")
-    );
+    )?;
 
     fs::write(file_path, content)?;
     Ok(file_path.to_string())
 }
 
 #[test]
-fn check_env_file() {
+fn check_env_file() -> Result<(), Error> {
     let testings = vec![
         "PATH=foo env1=bar env2=bar",
         "env1=bar PATH=foo env2=bar",
@@ -43,9 +44,10 @@ fn check_env_file() {
 
     for testing in testings {
         assert_eq!(
-            generate_env_content(testing.to_string()),
+            generate_env_content(testing.to_string())?,
             r#"env1=bar
 env2=bar"#,
         );
     }
+    Ok(())
 }

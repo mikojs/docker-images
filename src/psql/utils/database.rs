@@ -9,15 +9,15 @@ use crate::utils::{Error, ErrorKind, docker};
 
 fn is_danger_arg(arg: &str) -> Result<bool, Error> {
     let keyword_regexs = vec![
-        Regex::new(r"INSERT[ \n]"),
-        Regex::new(r"CREATE[ \n]"),
-        Regex::new(r"UPDATE[ \n]"),
-        Regex::new(r"DELETE[ \n]"),
-        Regex::new(r"ALTER[ \n]"),
-        Regex::new(r"TRUNCATE[ \n]"),
-        Regex::new(r"DROP[ \n]"),
-        Regex::new(r"PG_RESTORE"),
-        Regex::new(r"\\COPY .+ FROM '.+' WITH CSV"),
+        r"INSERT[ \n]",
+        r"CREATE[ \n]",
+        r"UPDATE[ \n]",
+        r"DELETE[ \n]",
+        r"ALTER[ \n]",
+        r"TRUNCATE[ \n]",
+        r"DROP[ \n]",
+        r"PG_RESTORE",
+        r"\\COPY .+ FROM '.+' WITH CSV",
     ];
 
     for keyword_regex in &keyword_regexs {
@@ -30,7 +30,7 @@ fn is_danger_arg(arg: &str) -> Result<bool, Error> {
             }
         }
 
-        if keyword_regex.as_ref().unwrap().is_match(&content.to_uppercase()) {
+        if Regex::new(keyword_regex)?.is_match(&content.to_uppercase()) {
             return Ok(true)
         }
     }
