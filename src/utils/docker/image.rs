@@ -63,7 +63,7 @@ pub fn name(arg: &str) -> Result<String, Error> {
 }
 
 #[test]
-fn check_image_name() {
+fn check_image_name() -> Result<(), Error> {
     let testings = vec![
         "alpine:latest",
         "alpine:<DOCKER_NOT_ENV_VERSION|latest>",
@@ -72,6 +72,7 @@ fn check_image_name() {
 
     env::set_var("DOCKER_ALPINE_VERSION", "latest");
     for testing in testings {
-        assert_eq!(name(testing), "alpine:latest");
+        assert_eq!(name(testing)?, "alpine:latest");
     }
+    Ok(())
 }

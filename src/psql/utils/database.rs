@@ -135,7 +135,7 @@ impl Database {
 }
 
 #[test]
-fn check_danger_args() {
+fn check_danger_args() -> Result<(), Error> {
     let danger_testings = vec![
         "CREATE ",
         r#"CREATE
@@ -148,35 +148,36 @@ fn check_danger_args() {
         "\\copy (SELECT * FROM test) TO 'test.csv' WITH csv",
     ];
 
-    fn check_danger_arg(testing: &str, expected: bool) {
+    fn check_danger_arg(testing: &str, expected: bool) -> Result<(), Error> {
         let testing_sql_file_path = "./testing.sql";
 
-        fs::write(testing_sql_file_path, testing)
-            .expect("Couldn't create the testing file");
+        fs::write(testing_sql_file_path, testing)?;
 
         assert_eq!(is_danger_arg(testing), expected);
         assert_eq!(is_danger_arg(testing_sql_file_path), expected);
 
-        fs::remove_file(testing_sql_file_path)
-            .expect("Couldn't remove the testing file");
+        fs::remove_file(testing_sql_file_path)?;
+        Ok(())
     }
 
 
     for danger_testing in danger_testings {
-        check_danger_arg(danger_testing, true);
+        check_danger_arg(danger_testing, true)?;
     }
     for not_danger_testing in not_danger_testings {
-        check_danger_arg(not_danger_testing, false);
+        check_danger_arg(not_danger_testing, false)?;
     }
+    Ok(())
 }
 
 #[test]
-fn db_init() {
+fn db_init() -> Result<(), Error> {
     env::set_var("DEFAULT_DB_URL", "test");
     env::set_var("PROTECTED_DB_URL", "test");
     env::set_var("NOT_PROTECTED_DBS", "default,foo,bar");
 
-    assert_eq!(Database::new("default".to_string()).url, "test");
-    assert_eq!(Database::new("default".to_string()).is_protected, false);
-    assert_eq!(Database::new("protected".to_string()).is_protected, true);
+    assert_eq!(Database::new("default".to_string())?.url, "test");
+    assert_eq!(Database::new("default".to_string())?.is_protected, false);
+    assert_eq!(Database::new("protected".to_string())?.is_protected, true);
+    Ok(())
 }
