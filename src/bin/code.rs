@@ -4,10 +4,9 @@ use std::path::Path;
 
 use clap::{crate_version, Command};
 use glob;
-use inquire::Confirm;
 use regex::Regex;
 
-use docker_images::utils::{Error, proxy_args, sub_process};
+use docker_images::utils::{Error, args, sub_process, prompt};
 
 const OPTIONS: glob::MatchOptions = glob::MatchOptions {
     case_sensitive: false,
@@ -16,13 +15,7 @@ const OPTIONS: glob::MatchOptions = glob::MatchOptions {
 };
 
 fn confirm_to_create_file(file_name: &str) -> Result<String, Error> {
-    let message = format!("Couldn't find `{}`. Do you want to create this or not:", file_name);
-    let result = match Confirm::new(&message).prompt() {
-        Ok(true) => true,
-        _ => false,
-    };
-
-    if !result {
+    if !prompt(&format!("Couldn't find `{}`. Do you want to create this or not:", file_name)) {
         return Ok("".to_string());
     }
 
@@ -78,9 +71,9 @@ fn main() -> Result<(), Error> {
     let matches = Command::new("code")
         .version(crate_version!())
         .about("Use this command to open files in a code-server")
-        .arg(proxy_args::set_proxy_args(true))
+        .arg(args::set_proxy(true))
         .get_matches();
-    let patterns = proxy_args::get_values_from_proxy_args(&matches);
+    let patterns = args::get_values_from_proxy(&matches);
     let mut files = vec![];
 
     for pattern in patterns {

@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgAction, ArgMatches};
 
-use crate::psql::utils::{Error, proxy_args, Database};
+use crate::psql::utils::{Error, args, Database};
 
 pub fn command() -> Command<'static> {
     Command::new("restore")
@@ -16,14 +16,14 @@ pub fn command() -> Command<'static> {
                 .long("format")
                 .action(ArgAction::Set)
         )
-        .arg(proxy_args::set_proxy_args(false))
+        .arg(args::set_proxy(false))
 }
 
 pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
-    let file_name = proxy_args::value_of(matches, "file-name");
+    let file_name = args::value_of(matches, "file-name");
     let default_format = "".to_string();
-    let format = proxy_args::get_one::<String>(matches, "format", &default_format);
-    let args = proxy_args::get_values_from_proxy_args(matches);
+    let format = args::get_one::<String>(matches, "format", &default_format);
+    let args = args::get_values_from_proxy(matches);
 
     if !format.is_empty() {
         db.run(
