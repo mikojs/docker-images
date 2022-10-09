@@ -2,10 +2,9 @@ use std::fs;
 use std::fmt;
 use std::env;
 
-use inquire::Confirm;
 use regex::Regex;
 
-use crate::utils::{Error, ErrorKind, docker};
+use crate::utils::{Error, ErrorKind, docker, prompt};
 
 fn is_danger_arg(arg: &str) -> Result<bool, Error> {
     let keyword_regexs = vec![
@@ -105,13 +104,7 @@ impl Database {
                 );
             }
 
-            let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
-            let result = match Confirm::new(&message).prompt() {
-                Ok(true) => true,
-                _ => false,
-            };
-
-            if !result {
+            if !prompt(&format!("Use `{}`. Do you want to continue or not:", &self.url)) {
                 return Ok(());
             }
         } else {
