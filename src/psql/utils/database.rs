@@ -1,8 +1,7 @@
 use std::fs;
 use std::fmt;
 use std::env;
-use std::process;
-use std::io::Error;
+use std::io::{Error, ErrorKind};
 
 use inquire::Confirm;
 use regex::Regex;
@@ -53,7 +52,7 @@ fn is_danger_arg(arg: &str) -> bool {
 }
 
 impl Database {
-    pub fn new(name: String) -> Database {
+    pub fn new(name: String) -> Result<Database, Error> {
         let env_name = format!(
             "{}_DB_URL",
             name
@@ -70,18 +69,21 @@ impl Database {
                 _ => true,
             };
 
-            return Database {
-                name: name,
-                is_protected: is_protected,
-                url: url,
-            };
+            return Ok(
+                Database {
+                    name: name,
+                    is_protected: is_protected,
+                    url: url,
+                }
+            );
         }
 
-        eprint!(
-            "`{}` isn't in the environment variables.",
-            env_name,
-        );
-        process::exit(1);
+        Err(
+            Error::new(
+                ErrorKind::NotFound,
+                format!("`{}` isn't in the environment variables.", env_name),
+            ),
+        )
     }
 
     pub fn run(&self, args: Vec<&str>) -> Result<(), Error> {
@@ -96,8 +98,12 @@ impl Database {
 
         if is_danger {
             if self.is_protected {
-                eprint!("The `{}` database is protected", &self.name);
-                process::exit(1);
+                return Err(
+                    Error::new(
+                        ErrorKind::PermissionDenied,
+                        format!("The `{}` database is protected", &self.name),
+                    ),
+                );
             }
 
             let message = format!("Use `{}`. Do you want to continue or not:", &self.url);
