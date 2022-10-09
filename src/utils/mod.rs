@@ -3,4 +3,4 @@ pub mod sub_process;
 pub mod docker;
 
 mod error;
-pub use error::Error;
+pub use error::{Error, ErrorKind};

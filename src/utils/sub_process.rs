@@ -28,7 +28,7 @@ pub fn exec(command: &str, args: Vec<&str>) -> Result<(), Error> {
         return Err(
             Error::new(
                 ErrorKind::Interrupted,
-                "Run command fails",
+                "Run command fails".to_string(),
             ),
         );
     }
