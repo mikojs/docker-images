@@ -1,16 +1,15 @@
 use std::env;
-use std::io::Error;
 
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-use utils::{proxy_args, Database};
+use utils::{Error, proxy_args, Database};
 
 mod show;
 mod dump;
 mod restore;
 mod reset;
-mod utils;
+pub mod utils;
 
 pub fn get_db_names() -> Vec<String> {
     let db_regex = Regex::new(r"_DB_URL$")

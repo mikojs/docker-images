@@ -1,8 +1,6 @@
-use std::io::Error;
-
 use clap::Command;
 
-use crate::utils::docker;
+use crate::utils::{Error, docker};
 
 pub fn command() -> Command<'static> {
     Command::new("name")

@@ -1,8 +1,6 @@
-use std::io::Error;
-
 use clap::{Command, ArgMatches};
 
-use crate::utils::{proxy_args, docker};
+use crate::utils::{Error, proxy_args, docker};
 
 pub fn command() -> Command<'static> {
     Command::new("run")

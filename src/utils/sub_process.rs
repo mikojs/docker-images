@@ -1,6 +1,7 @@
 use std::process;
 use std::process::Command;
-use std::io::{Error, ErrorKind};
+
+use crate::utils::{Error, ErrorKind};
 
 pub fn command_exist(command: &str) -> bool {
     match process::Command::new(command).output() {
@@ -13,7 +14,7 @@ pub fn exec(command: &str, args: Vec<&str>) -> Result<(), Error> {
     if !command_exist(command) {
         return Err(
             Error::new(
-                ErrorKind::NotFound,
+                ErrorKind::Custom,
                 format!("Couldn't find the command: {}", command),
             ),
         );
@@ -26,8 +27,8 @@ pub fn exec(command: &str, args: Vec<&str>) -> Result<(), Error> {
     if !status.success() {
         return Err(
             Error::new(
-                ErrorKind::Interrupted,
-                "Run command fails",
+                ErrorKind::CommandFail,
+                "Run command fails".to_string(),
             ),
         );
     }

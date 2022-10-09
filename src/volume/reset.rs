@@ -1,8 +1,6 @@
-use std::io::{Error, ErrorKind};
-
 use clap::{Command, Arg, ArgMatches};
 
-use crate::utils::sub_process;
+use crate::utils::{Error, ErrorKind, sub_process};
 
 pub fn command() -> Command<'static> {
     Command::new("reset")
@@ -27,7 +25,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     if removed_result != volume_name {
         return Err(
             Error::new(
-                ErrorKind::InvalidData,
+                ErrorKind::Custom,
                 format!("Volume {} is removed, but the expected volume is {}", removed_result, volume_name),
             ),
         );

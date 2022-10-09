@@ -1,13 +1,12 @@
 use std::fs;
 use std::env;
-use std::io::Error;
 
 use clap::{crate_version, Command};
 use glob;
 use inquire::Confirm;
 use regex::Regex;
 
-use docker_images::utils::{proxy_args, sub_process};
+use docker_images::utils::{Error, proxy_args, sub_process};
 
 const OPTIONS: glob::MatchOptions = glob::MatchOptions {
     case_sensitive: false,

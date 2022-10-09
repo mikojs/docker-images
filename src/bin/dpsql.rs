@@ -1,9 +1,9 @@
 use std::env;
-use std::io::Error;
 
 use clap::{crate_version, Command};
 
 use docker_images::psql;
+use docker_images::psql::utils::Error;
 
 fn main() -> Result<(), Error> {
     let mut app = psql::command(

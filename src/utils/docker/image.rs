@@ -1,7 +1,8 @@
 use std::env;
-use std::io::{Error, ErrorKind};
 
 use regex::Regex;
+
+use crate::utils::{Error, ErrorKind};
 
 pub const NAME_PATTERN: &str = r".+:<.+>";
 
@@ -29,7 +30,7 @@ pub fn name(arg: &str) -> Result<String, Error> {
     if data.len() != 2 {
         return Err(
             Error::new(
-                ErrorKind::InvalidInput,
+                ErrorKind::Custom,
                 format!("Couldn't parse {}", arg),
             ),
         );
@@ -45,7 +46,7 @@ pub fn name(arg: &str) -> Result<String, Error> {
     if versions.len() == 0 {
         return Err(
             Error::new(
-                ErrorKind::InvalidInput,
+                ErrorKind::Custom,
                 format!("Couldn't find any version from {}", arg),
             ),
         );

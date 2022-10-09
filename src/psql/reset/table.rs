@@ -1,8 +1,6 @@
-use std::io::Error;
-
 use clap::{Command, Arg, ArgAction, ArgMatches};
 
-use crate::psql::utils::Database;
+use crate::psql::utils::{Error, Database};
 
 pub fn command() -> Command<'static> {
     Command::new("table")

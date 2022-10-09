@@ -1,8 +1,8 @@
 use std::fs;
-use std::io::Error;
 
 use regex::Regex;
-use crate::utils::sub_process;
+
+use crate::utils::{Error, sub_process};
 
 fn generate_env_content(content: String) -> String {
     let contents: Vec<&str> = content
