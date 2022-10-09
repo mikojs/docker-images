@@ -1,5 +1,6 @@
 use std::fs;
 use std::env;
+use std::path::Path;
 
 use clap::{crate_version, Command};
 use glob;
@@ -27,11 +28,13 @@ fn confirm_to_create_file(file_name: &str) -> Result<String, Error> {
 
     let file_path = env::current_dir()?
         .join(file_name);
+    let file_dir = match file_path.parent() {
+        Some(value) => value,
+        _ => Path::new("/"),
+    };
 
-    if let Some(file_dir) = file_path.parent() {
-        if !file_dir.exists() {
-            fs::create_dir_all(file_dir)?;
-        }
+    if !file_dir.exists() {
+        fs::create_dir_all(file_dir)?;
     }
 
     fs::File::create(&file_path)?;

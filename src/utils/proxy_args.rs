@@ -9,11 +9,10 @@ pub fn set_proxy_args(required: bool) -> Arg<'static> {
 }
 
 pub fn get_values_from_proxy_args(matches: &ArgMatches) -> Vec<&str> {
-    if let Some(args) = matches.values_of("args") {
-        return args.collect();
+    match matches.values_of("args") {
+        Some(args) => args.collect(),
+        _ => vec![],
     }
-
-    vec![]
 }
 
 #[cfg(test)]
