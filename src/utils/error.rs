@@ -4,6 +4,7 @@ use std::process;
 
 use glob;
 use regex;
+use shellwords;
 
 #[derive(Debug)]
 pub enum ErrorKind {
@@ -12,6 +13,7 @@ pub enum ErrorKind {
     Io,
     Glob,
     Regex,
+    Shellwords,
 }
 
 pub struct Error {
@@ -46,12 +48,22 @@ impl From<regex::Error> for Error {
     }
 }
 
+impl From<shellwords::MismatchedQuotes> for Error {
+    fn from(error: shellwords::MismatchedQuotes) -> Self {
+        Error {
+            kind: ErrorKind::Shellwords,
+            message: error.to_string(),
+        }
+    }
+}
+
 impl fmt::Debug for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.kind {
             ErrorKind::Io => write!(f, "[IO] {}", self.message),
             ErrorKind::Glob => write!(f, "[Glob] {}", self.message),
             ErrorKind::Regex => write!(f, "[Regex] {}", self.message),
+            ErrorKind::Shellwords => write!(f, "[Shellwords] {}", self.message),
             _ => write!(f, "{}", self.message),
         }
     }

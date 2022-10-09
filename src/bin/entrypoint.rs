@@ -1,6 +1,7 @@
 use std::env;
 
 use clap::{crate_version, Command, Arg};
+use shellwords;
 
 use docker_images::utils::{Error, proxy_args, sub_process};
 
@@ -37,8 +38,7 @@ fn main() -> Result<(), Error> {
         matches
             .value_of("main-command")
             .unwrap(),
-    )
-        .unwrap();
+    )?;
     let mut args: Vec<String> = proxy_args::get_values_from_proxy_args(&matches)
         .iter()
         .map(|s| s.to_string())
