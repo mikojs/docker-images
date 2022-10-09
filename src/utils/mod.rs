@@ -1,6 +1,6 @@
 use inquire::Confirm;
 
-pub mod proxy_args;
+pub mod args;
 pub mod sub_process;
 pub mod docker;
 
