@@ -6,21 +6,20 @@ use crate::utils::{Error, ErrorKind};
 
 pub const NAME_PATTERN: &str = r".+:<.+>";
 
-fn get_version(versions: Vec<&str>) -> String {
-    let env_name_regex = Regex::new(r"DOCKER_.+_VERSION")
-        .unwrap();
+fn get_version(versions: Vec<&str>) -> Result<String, Error> {
+    let env_name_regex = Regex::new(r"DOCKER_.+_VERSION")?;
 
     for version in versions {
         if env_name_regex.is_match(version) {
             if let Ok(env) = env::var(version) {
-                return env;
+                return Ok(env);
             }
         } else if !version.is_empty() {
-            return version.to_string();
+            return Ok(version.to_string());
         }
     }
 
-    "alpine".to_string()
+    Ok("alpine".to_string())
 }
 
 pub fn name(arg: &str) -> Result<String, Error> {
@@ -53,7 +52,7 @@ pub fn name(arg: &str) -> Result<String, Error> {
     }
 
     let default_version = versions[versions.len() - 1];
-    let version = get_version(versions);
+    let version = get_version(versions)?;
     let image = format!("{}:{}", data[0], version);
 
     if version != default_version {

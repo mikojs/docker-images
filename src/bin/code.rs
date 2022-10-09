@@ -1,5 +1,6 @@
 use std::fs;
 use std::env;
+use std::path::Path;
 
 use clap::{crate_version, Command};
 use glob;
@@ -27,9 +28,10 @@ fn confirm_to_create_file(file_name: &str) -> Result<String, Error> {
 
     let file_path = env::current_dir()?
         .join(file_name);
-    let file_dir = file_path
-        .parent()
-        .unwrap();
+    let file_dir = match file_path.parent() {
+        Some(value) => value,
+        _ => Path::new("/"),
+    };
 
     if !file_dir.exists() {
         fs::create_dir_all(file_dir)?;
@@ -46,7 +48,7 @@ fn confirm_to_create_file(file_name: &str) -> Result<String, Error> {
 fn find_files(pattern: &str) -> Result<Vec<String>, Error> {
     let mut files = vec![];
 
-    for entry in glob::glob_with(pattern, OPTIONS).unwrap() {
+    for entry in glob::glob_with(pattern, OPTIONS)? {
         if let Ok(path) = entry {
             files.push(
                 fs::canonicalize(path)?
@@ -57,8 +59,7 @@ fn find_files(pattern: &str) -> Result<Vec<String>, Error> {
     }
 
     if files.len() == 0 {
-        let skip_confirm = Regex::new(r"\*")
-            .unwrap()
+        let skip_confirm = Regex::new(r"\*")?
             .is_match(pattern);
 
         if !skip_confirm {

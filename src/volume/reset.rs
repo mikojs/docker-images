@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgMatches};
 
-use crate::utils::{Error, ErrorKind, sub_process};
+use crate::utils::{Error, ErrorKind, proxy_args, sub_process};
 
 pub fn command() -> Command<'static> {
     Command::new("reset")
@@ -13,9 +13,7 @@ pub fn command() -> Command<'static> {
 }
 
 pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
-    let volume_name = matches
-        .value_of("volume-name")
-        .unwrap();
+    let volume_name = proxy_args::value_of(matches, "volume-name");
     let removed_result = sub_process::exec_result(
         "docker",
         vec!["volume", "rm", volume_name],
