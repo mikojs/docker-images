@@ -21,9 +21,11 @@ pub fn command() -> Command<'static> {
 
 pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
     let file_name = proxy_args::value_of(matches, "file-name");
+    let default_format = "".to_string();
+    let format = proxy_args::get_one::<String>(matches, "format", &default_format);
     let args = proxy_args::get_values_from_proxy_args(matches);
 
-    if let Some(format) = matches.get_one::<String>("format") {
+    if !format.is_empty() {
         db.run(
             [
                 vec![

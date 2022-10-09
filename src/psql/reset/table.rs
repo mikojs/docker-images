@@ -20,9 +20,9 @@ If you want to use `DELETE`, you could use this option"#)
 }
 
 pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
-    let command = match matches.get_one::<bool>("delete") {
-        Some(true) => "DELETE FROM",
-        _ => "TRUNCATE TABLE"
+    let command = match proxy_args::get_one::<bool>(matches, "delete", &false) {
+        true => "DELETE FROM",
+        false => "TRUNCATE TABLE"
     };
 
     db.run(
