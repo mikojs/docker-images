@@ -1,6 +1,6 @@
-use clap::{Command, Arg, ArgAction, ArgMatches};
+use clap::{Arg, ArgAction, ArgMatches, Command};
 
-use crate::psql::utils::{Error, args, Database};
+use crate::psql::utils::{args, Database, Error};
 
 pub fn command() -> Command<'static> {
     Command::new("dump")
@@ -8,13 +8,13 @@ pub fn command() -> Command<'static> {
         .arg(
             Arg::new("file-name")
                 .help("Dump the data to this file")
-                .required(true)
+                .required(true),
         )
         .arg(
             Arg::new("format")
                 .help("Use SQL to format the data when dumping the CSV file")
                 .long("format")
-                .action(ArgAction::Set)
+                .action(ArgAction::Set),
         )
         .arg(args::set_proxy(false))
 }
@@ -36,23 +36,11 @@ pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
                 ],
                 args,
             ]
-                .concat(),
+            .concat(),
         )?;
         return Ok(());
     }
 
-    db.run(
-        [
-            vec![
-                "pg_dump",
-                "-Fc",
-                "-f",
-                file_name,
-                &db.url,
-            ],
-            args,
-        ]
-            .concat(),
-    )?;
+    db.run([vec!["pg_dump", "-Fc", "-f", file_name, &db.url], args].concat())?;
     Ok(())
 }

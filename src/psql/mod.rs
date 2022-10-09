@@ -1,14 +1,14 @@
 use std::env;
 
-use clap::{App, Command, ArgMatches};
+use clap::{App, ArgMatches, Command};
 use regex::Regex;
 
-use utils::{Error, args, Database};
+use utils::{args, Database, Error};
 
-mod show;
 mod dump;
-mod restore;
 mod reset;
+mod restore;
+mod show;
 pub mod utils;
 
 pub fn get_db_names() -> Result<Vec<String>, Error> {
@@ -17,12 +17,7 @@ pub fn get_db_names() -> Result<Vec<String>, Error> {
 
     for (key, _) in env::vars() {
         if db_regex.is_match(&key) {
-            db_names.push(
-                key
-                    .replace("_DB_URL", "")
-                    .replace("_", "-")
-                    .to_lowercase(),
-            );
+            db_names.push(key.replace("_DB_URL", "").replace("_", "-").to_lowercase());
         }
     }
 
@@ -30,8 +25,7 @@ pub fn get_db_names() -> Result<Vec<String>, Error> {
 }
 
 pub fn command(app: App<'static>) -> Command<'static> {
-    app
-        .subcommand(show::command())
+    app.subcommand(show::command())
         .subcommand(dump::command())
         .subcommand(restore::command())
         .subcommand(reset::command())
@@ -46,13 +40,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) -> Result<(), Error> {
         Some(("dump", sub_matches)) => dump::execute(sub_matches, db)?,
         Some(("restore", sub_matches)) => restore::execute(sub_matches, db)?,
         Some(("reset", sub_matches)) => reset::execute(sub_matches, db)?,
-        _ => db.run(
-            [
-                vec!["psql", &db.url],
-                args::get_values_from_proxy(matches),
-            ]
-                .concat(),
-        )?,
+        _ => db.run([vec!["psql", &db.url], args::get_values_from_proxy(matches)].concat())?,
     };
     Ok(())
 }

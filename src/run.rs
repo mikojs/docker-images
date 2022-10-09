@@ -1,6 +1,6 @@
-use clap::{Command, ArgMatches};
+use clap::{ArgMatches, Command};
 
-use crate::utils::{Error, args, docker};
+use crate::utils::{args, docker, Error};
 
 pub fn command() -> Command<'static> {
     Command::new("run")

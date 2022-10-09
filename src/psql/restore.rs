@@ -1,6 +1,6 @@
-use clap::{Command, Arg, ArgAction, ArgMatches};
+use clap::{Arg, ArgAction, ArgMatches, Command};
 
-use crate::psql::utils::{Error, args, Database};
+use crate::psql::utils::{args, Database, Error};
 
 pub fn command() -> Command<'static> {
     Command::new("restore")
@@ -8,13 +8,13 @@ pub fn command() -> Command<'static> {
         .arg(
             Arg::new("file-name")
                 .help("The file name is used to restore the data")
-                .required(true)
+                .required(true),
         )
         .arg(
             Arg::new("format")
                 .help("Use SQL to format the data when restoring the data from the CSV file")
                 .long("format")
-                .action(ArgAction::Set)
+                .action(ArgAction::Set),
         )
         .arg(args::set_proxy(false))
 }
@@ -36,24 +36,17 @@ pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
                 ],
                 args,
             ]
-                .concat(),
+            .concat(),
         )?;
         return Ok(());
     }
 
     db.run(
         [
-            vec![
-                "pg_restore",
-                "--no-owner",
-                "-x",
-                "-d",
-                &db.url,
-                file_name,
-            ],
+            vec!["pg_restore", "--no-owner", "-x", "-d", &db.url, file_name],
             args,
         ]
-            .concat(),
+        .concat(),
     )?;
     Ok(())
 }

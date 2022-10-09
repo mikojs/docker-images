@@ -1,6 +1,6 @@
-use clap::{Command, Arg, ArgMatches};
+use clap::{Arg, ArgMatches, Command};
 
-use crate::psql::utils::{Error, args, Database};
+use crate::psql::utils::{args, Database, Error};
 
 pub fn command() -> Command<'static> {
     Command::new("sequence")
@@ -8,21 +8,19 @@ pub fn command() -> Command<'static> {
         .arg(
             Arg::new("sequence-name")
                 .help("This sequence would be reset")
-                .required(true)
+                .required(true),
         )
 }
 
 pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
-    db.run(
-        vec![
-            "psql",
-            &db.url,
-            "-c",
-            &format!(
-                "ALTER SEQUENCE {} RESTART WITH 1;",
-                args::value_of(matches, "sequence-name"),
-            ),
-        ],
-    )?;
+    db.run(vec![
+        "psql",
+        &db.url,
+        "-c",
+        &format!(
+            "ALTER SEQUENCE {} RESTART WITH 1;",
+            args::value_of(matches, "sequence-name"),
+        ),
+    ])?;
     Ok(())
 }

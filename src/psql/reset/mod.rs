@@ -1,9 +1,9 @@
-use clap::{Command, ArgMatches};
+use clap::{ArgMatches, Command};
 
-use crate::psql::utils::{Error, Database};
+use crate::psql::utils::{Database, Error};
 
-mod table;
 mod sequence;
+mod table;
 
 pub fn command() -> Command<'static> {
     Command::new("reset")

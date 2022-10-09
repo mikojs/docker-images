@@ -1,12 +1,14 @@
-use clap::{Command, ArgMatches};
+use clap::{ArgMatches, Command};
 
-use crate::utils::{Error, args, sub_process, docker};
+use crate::utils::{args, docker, sub_process, Error};
 
 pub fn command() -> Command<'static> {
     Command::new("exec")
-        .about(r#"This command would set the working directory with `docker exec`
+        .about(
+            r#"This command would set the working directory with `docker exec`
 When the current path is under `/root/work`, the same path would be the initial working directory
-Otherwise, this would change to be `/root/work`"#)
+Otherwise, this would change to be `/root/work`"#,
+        )
         .arg(args::set_proxy(true))
 }
 
@@ -14,14 +16,10 @@ pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
     sub_process::exec(
         "docker",
         [
-            vec![
-                "exec",
-                "-w",
-                &docker::working_dir()?,
-            ],
+            vec!["exec", "-w", &docker::working_dir()?],
             args::get_values_from_proxy(matches),
         ]
-            .concat(),
+        .concat(),
     )?;
     Ok(())
 }

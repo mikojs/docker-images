@@ -9,17 +9,12 @@ fn main() -> Result<(), Error> {
     let mut app = psql::command(
         Command::new("dpsql")
             .version(crate_version!())
-            .about("Use psql command in the docker container")
+            .about("Use psql command in the docker container"),
     );
 
     for db_name in psql::get_db_names()? {
         if db_name != "default" {
-            app = app.subcommand(
-                psql::command(
-                    Command::new(&db_name)
-                        .about("Database name")
-                ),
-            );
+            app = app.subcommand(psql::command(Command::new(&db_name).about("Database name")));
         }
     }
 
