@@ -1,16 +1,16 @@
 use clap::{Command, ArgMatches};
 
-use crate::utils::{Error, proxy_args, docker};
+use crate::utils::{Error, args, docker};
 
 pub fn command() -> Command<'static> {
     Command::new("run")
         .about(r#"This command would mount the same volumes to the current container
 When the current path is under `/root/work`, a new container would use the same path as the working directory
 Otherwise, this would change to be `/root/work`"#)
-        .arg(proxy_args::set_proxy_args(true))
+        .arg(args::set_proxy(true))
 }
 
 pub fn execute(matches: &ArgMatches) -> Result<(), Error> {
-    docker::run(proxy_args::get_values_from_proxy_args(matches))?;
+    docker::run(args::get_values_from_proxy(matches))?;
     Ok(())
 }

@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgAction, ArgMatches};
 
-use crate::psql::utils::{Error, proxy_args, Database};
+use crate::psql::utils::{Error, args, Database};
 
 pub fn command() -> Command<'static> {
     Command::new("table")
@@ -20,7 +20,7 @@ If you want to use `DELETE`, you could use this option"#)
 }
 
 pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
-    let command = match proxy_args::get_one::<bool>(matches, "delete", &false) {
+    let command = match args::get_one::<bool>(matches, "delete", &false) {
         true => "DELETE FROM",
         false => "TRUNCATE TABLE"
     };
@@ -33,7 +33,7 @@ pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
             &format!(
                 "{} {};",
                 command,
-                proxy_args::value_of(matches, "table-name"),
+                args::value_of(matches, "table-name"),
             ),
         ],
     )?;

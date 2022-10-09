@@ -1,6 +1,6 @@
 use clap::{Command, Arg, ArgMatches};
 
-use crate::psql::utils::{Error, proxy_args, Database};
+use crate::psql::utils::{Error, args, Database};
 
 pub fn command() -> Command<'static> {
     Command::new("sequence")
@@ -20,7 +20,7 @@ pub fn execute(matches: &ArgMatches, db: Database) -> Result<(), Error> {
             "-c",
             &format!(
                 "ALTER SEQUENCE {} RESTART WITH 1;",
-                proxy_args::value_of(matches, "sequence-name"),
+                args::value_of(matches, "sequence-name"),
             ),
         ],
     )?;

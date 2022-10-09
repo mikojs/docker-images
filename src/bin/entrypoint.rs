@@ -3,7 +3,7 @@ use std::env;
 use clap::{crate_version, Command, Arg};
 use shellwords;
 
-use docker_images::utils::{Error, proxy_args, sub_process};
+use docker_images::utils::{Error, args, sub_process};
 
 fn shift_args(args: &mut Vec<String>) -> String {
     let command = args[0].clone();
@@ -32,12 +32,12 @@ fn main() -> Result<(), Error> {
                 .help("This command would be executed if the proxy arguments don't work")
                 .required(true)
         )
-        .arg(proxy_args::set_proxy_args(false))
+        .arg(args::set_proxy(false))
         .get_matches();
     let mut main_args = shellwords::split(
-        proxy_args::value_of(&matches, "main-command"),
+        args::value_of(&matches, "main-command"),
     )?;
-    let mut args: Vec<String> = proxy_args::get_values_from_proxy_args(&matches)
+    let mut args: Vec<String> = args::get_values_from_proxy(&matches)
         .iter()
         .map(|s| s.to_string())
         .collect();

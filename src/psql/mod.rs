@@ -3,7 +3,7 @@ use std::env;
 use clap::{App, Command, ArgMatches};
 use regex::Regex;
 
-use utils::{Error, proxy_args, Database};
+use utils::{Error, args, Database};
 
 mod show;
 mod dump;
@@ -35,7 +35,7 @@ pub fn command(app: App<'static>) -> Command<'static> {
         .subcommand(dump::command())
         .subcommand(restore::command())
         .subcommand(reset::command())
-        .arg(proxy_args::set_proxy_args(false))
+        .arg(args::set_proxy(false))
 }
 
 pub fn execute(matches: &ArgMatches, db_name: &str) -> Result<(), Error> {
@@ -49,7 +49,7 @@ pub fn execute(matches: &ArgMatches, db_name: &str) -> Result<(), Error> {
         _ => db.run(
             [
                 vec!["psql", &db.url],
-                proxy_args::get_values_from_proxy_args(matches),
+                args::get_values_from_proxy(matches),
             ]
                 .concat(),
         )?,
