@@ -13,7 +13,7 @@ jobs:
     needs: build-rust
     strategy:
       matrix:
-        name: [base, code-server, act, rust]
+        name: [base, code-server, act, rust, docker]
     with:
       cache: bin.tar
       name: mikojs/${{ matrix.name }}
