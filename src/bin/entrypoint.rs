@@ -26,7 +26,11 @@ fn main() -> Result<(), Error> {
                 .help("This command would be executed if the proxy arguments don't work")
                 .required(true),
         )
-        .arg(args::set_proxy(false))
+        .arg(
+            args::set_proxy(false)
+                .value_name("arguments")
+                .help("Those commands would be executed first if they exist"),
+        )
         .get_matches();
     let mut main_args = shellwords::split(args::value_of(&matches, "main-command"))?;
     let mut args: Vec<String> = args::get_values_from_proxy(&matches)
