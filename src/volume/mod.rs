@@ -2,8 +2,8 @@ use clap::{ArgMatches, Command};
 
 use crate::utils::Error;
 
-mod reset;
 mod backup;
+mod reset;
 
 pub fn command() -> Command<'static> {
     Command::new("volume")
