@@ -64,7 +64,11 @@ fn main() -> Result<(), Error> {
     let matches = Command::new("code")
         .version(crate_version!())
         .about("Use this command to open files in a code-server")
-        .arg(args::set_proxy(true))
+        .arg(
+            args::set_proxy(true)
+                .value_name("files")
+                .help("Open the file with filenames or regular expression"),
+        )
         .get_matches();
     let patterns = args::get_values_from_proxy(&matches);
     let mut files = vec![];
