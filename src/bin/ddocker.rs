@@ -1,7 +1,7 @@
 use clap::{crate_version, Command};
 
 use docker_images::utils::Error;
-use docker_images::{exec, name, rm, rmi, run, volume};
+use docker_images::docker::{exec, name, rm, rmi, run, volume};
 
 fn main() -> Result<(), Error> {
     let matches = Command::new("ddocker")
