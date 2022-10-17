@@ -3,6 +3,7 @@ use std::fs;
 use std::path::Path;
 
 use regex::Regex;
+use shellwords;
 
 use crate::utils::{sub_process, Error};
 
@@ -51,6 +52,14 @@ fn filter_args(args: Vec<&str>) -> Vec<&str> {
     args
 }
 
+fn get_docker_env_args() -> Result<Vec<String>, Error> {
+    if let Ok(args) = env::var("DDOCKER_OPTION") {
+        return Ok(shellwords::split(&args)?);
+    }
+
+    Ok(vec![])
+}
+
 pub fn run(args: Vec<&str>) -> Result<(), Error> {
     let container_name = name()?;
     let mut new_args = vec![];
@@ -77,6 +86,7 @@ pub fn run(args: Vec<&str>) -> Result<(), Error> {
             ],
             filter_args(vec!["--volumes-from", &container_name]),
             filter_args(vec!["--network", &get_network_name(&container_name)?]),
+            get_docker_env_args()?.iter().map(AsRef::as_ref).collect(),
             new_args.iter().map(AsRef::as_ref).collect(),
         ]
         .concat(),
