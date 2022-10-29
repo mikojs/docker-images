@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:16-alpine
 
 # install packages
 RUN apk add \
@@ -14,9 +14,21 @@ RUN apk add \
   docker \
   docker-compose
 RUN npm config set python python3
-# FIXME: https://github.com/coder/code-server/issues/5530
-RUN yarn global add \
-  code-server@4.6.0
+RUN npm install \
+  --unsafe-perm=true \
+  -g \
+  yazl \
+  yauzl \
+  @microsoft/1ds-core-js \
+  minimist \
+  vscode-regexpp \
+  vscode-proxy-agent \
+  @vscode/ripgrep \
+  xterm-headless \
+  spdlog \
+  code-server
+RUN cd /usr/local/lib/node_modules/code-server/lib/vscode && \
+  npm i -f
 
 # code-server
 RUN mkdir -p /root/.local/share/code-server/logs
