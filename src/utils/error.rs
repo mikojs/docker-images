@@ -3,7 +3,6 @@ use std::io;
 use std::process;
 use std::string;
 
-use glob;
 use regex;
 use shellwords;
 
@@ -13,7 +12,6 @@ pub enum ErrorKind {
     Custom,
     Io,
     String,
-    Glob,
     Regex,
     Shellwords,
 }
@@ -36,15 +34,6 @@ impl From<string::FromUtf8Error> for Error {
     fn from(error: string::FromUtf8Error) -> Self {
         Error {
             kind: ErrorKind::String,
-            message: error.to_string(),
-        }
-    }
-}
-
-impl From<glob::PatternError> for Error {
-    fn from(error: glob::PatternError) -> Self {
-        Error {
-            kind: ErrorKind::Glob,
             message: error.to_string(),
         }
     }
@@ -73,7 +62,6 @@ impl fmt::Debug for Error {
         match self.kind {
             ErrorKind::Io => write!(f, "[IO] {}", self.message),
             ErrorKind::String => write!(f, "[String] {}", self.message),
-            ErrorKind::Glob => write!(f, "[Glob] {}", self.message),
             ErrorKind::Regex => write!(f, "[Regex] {}", self.message),
             ErrorKind::Shellwords => write!(f, "[Shellwords] {}", self.message),
             _ => write!(f, "{}", self.message),
