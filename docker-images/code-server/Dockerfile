@@ -41,4 +41,4 @@ COPY ./entrypoint.sh /entrypoint.sh
 VOLUME ["/root/work"]
 
 # run
-ENTRYPOINT ["entrypoint", "/entrypoint.sh"]
+ENTRYPOINT ["entrypoint", "sh /entrypoint.sh"]
