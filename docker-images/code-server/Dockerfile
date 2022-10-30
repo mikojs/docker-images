@@ -35,9 +35,10 @@ RUN mkdir -p /root/.local/share/code-server/logs
 
 # bin
 COPY ./bin/entrypoint /bin/entrypoint
+COPY ./entrypoint.sh /entrypoint.sh
 
 # volumes
 VOLUME ["/root/work"]
 
 # run
-ENTRYPOINT ["entrypoint", "code-server /root/work"]
+ENTRYPOINT ["entrypoint", "/entrypoint.sh"]
