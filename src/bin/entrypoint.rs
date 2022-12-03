@@ -48,6 +48,8 @@ fn main() -> Result<(), Error> {
     if sub_process::command_exist(&custom_command) {
         sub_process::exec(&custom_command, args.iter().map(AsRef::as_ref).collect())?;
     } else {
+        main_args.push(custom_command);
+        main_args.append(&mut args);
         run_main_command(&mut main_args)?;
     }
     Ok(())
